@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CV Inbox — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- worker loaded on the page itself so PDF reading doesn't depend on a cross-site background worker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+__JSZIP__
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f3f6fa;--panel:#fff;--ink:#16304d;--muted:#5d6e84;--line:#e0e7f0;--navy:#204768;--gold:#b8862b;--teal:#1f7a7a;--field:#f7f9fc;--err:#b3261e;--ok:#1f7a3a;--chip:#eef2f7;--sel:#e7f0fa;--bar:#1f6fb2}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1724;--panel:#132233;--ink:#e3eaf3;--muted:#98a9bf;--line:#243a52;--navy:#7db7ec;--gold:#d9a94e;--teal:#4fb3b3;--field:#0f1d2c;--err:#f2867e;--ok:#6fcf8f;--chip:#1b2e44;--sel:#17304a;--bar:#7db7ec;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1724;--panel:#132233;--ink:#e3eaf3;--muted:#98a9bf;--line:#243a52;--navy:#7db7ec;--gold:#d9a94e;--teal:#4fb3b3;--field:#0f1d2c;--err:#f2867e;--ok:#6fcf8f;--chip:#1b2e44;--sel:#17304a;--bar:#7db7ec;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans","Segoe UI",system-ui,sans-serif}
+header{padding:24px 24px 6px;max-width:1500px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font:700 clamp(24px,3.4vw,32px)/1.15 "Source Serif 4",Georgia,serif;margin:6px 0 4px}
+header p{margin:0;color:var(--muted);max-width:70ch}
+.acct{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.acct .who{font-size:13px;color:var(--muted)}
+main{max-width:1500px;margin:0 auto;padding:12px 24px 40px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.card h2{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+label{display:block;font-size:12.5px;font-weight:500;margin-bottom:3px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+input[type=checkbox]{width:auto;padding:0}
+input:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.hint{font-size:11.5px;color:var(--muted);margin-top:3px}
+button{font:600 14px "IBM Plex Sans",system-ui,sans-serif;border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink);white-space:nowrap}
+button.sm{font-size:12.5px;padding:5px 10px}
+button.primary{background:#204768;color:#fff;border-color:#204768}
+button:disabled{opacity:.5;cursor:not-allowed}
+.scan{display:grid;grid-template-columns:minmax(0,3fr) repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:end}
+@media (max-width:900px){.scan{grid-template-columns:1fr 1fr}.scan .q{grid-column:1/-1}}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;margin-top:10px;color:var(--muted)}
+.progress{margin-top:12px}
+.progress .track{height:6px;border-radius:6px;background:var(--chip);overflow:hidden}
+.progress .fill{height:100%;width:0;background:var(--bar);transition:width .2s}
+.progress .txt{font-size:12.5px;color:var(--muted);margin-top:5px}
+#msg{font-size:13px;margin-top:8px}
+#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stat .n{font:700 26px/1.1 "Source Serif 4",Georgia,serif}
+.stat .l{font-size:12px;color:var(--muted);margin-top:2px}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.side{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+@media (max-width:900px){.side{position:static;max-height:none}}
+.dlist{list-style:none;margin:8px 0 0;padding:0}
+.dlist .g{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:10px 8px 4px;display:flex;justify-content:space-between}
+.dlist button{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border-radius:7px;font-size:13px}
+.dlist button:hover{background:var(--chip)}
+.dlist button[aria-pressed="true"]{background:var(--sel);font-weight:600}
+.dlist button:focus-visible{outline:2px solid var(--teal)}
+.dlist .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dlist .ct{font-size:12px;color:var(--muted);min-width:22px;text-align:right}
+.dlist .bar{height:4px;border-radius:4px;background:var(--bar);opacity:.55;flex:none}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:10px}
+.tools>div{flex:1 1 180px}
+.tools .title{flex:2 1 260px;font:600 16px/1.3 "IBM Plex Sans",sans-serif;align-self:center}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{position:sticky;top:0;background:var(--field);text-align:left;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+td .m{color:var(--muted);font-size:12px}
+td input{padding:5px 7px;font-size:12.5px;min-width:170px}
+.how{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:var(--chip);color:var(--muted);margin-top:3px}
+.how.manual{color:var(--ok)}
+.att{display:flex;flex-wrap:wrap;gap:4px}
+.empty{color:var(--muted);padding:24px;text-align:center}
+.setup{border-left:4px solid var(--gold)}
+.setup ol{margin:6px 0 0;padding-left:20px}
+.setup code{background:var(--chip);padding:1px 5px;border-radius:4px}
+</style></head><body>
+<header>
+  <div>
+    <div class="kicker">Alcove HR · Recruitment</div>
+    <h1>CV Inbox</h1>
+    <p>Finds CVs in your Gmail and sorts them by designation. Your mail is read directly by this browser — nothing is uploaded anywhere else.</p>
+  </div>
+  <div class="acct">
+    <span class="who" id="who">Not connected</span>
+    <button class="primary" id="connect" type="button">Connect Gmail</button>
+    <button class="sm" id="signout" type="button" hidden>Disconnect</button>
+  </div>
+</header>
+<main>
+  <section class="card setup" id="setup" hidden>
+    <h2>One-time setup in Google Cloud</h2>
+    <div id="setupWhy"></div>
+    <ol>
+      <li>APIs &amp; Services → Library → <b>Gmail API</b> → Enable.</li>
+      <li>OAuth consent screen → Scopes → add <code>…/auth/gmail.readonly</code>.</li>
+      <li>Credentials → your OAuth client → <b>Authorized JavaScript origins</b> must include <code id="originShow"></code>.</li>
+    </ol>
+  </section>
+
+  <section class="card" aria-labelledby="h-scan">
+    <h2 id="h-scan">Scan mailbox</h2>
+    <div class="scan">
+      <div class="q"><label for="q">Search Gmail for</label><input id="q" autocomplete="off"><div class="hint">Gmail search words. The period below is added automatically.</div></div>
+      <div><label for="period">Period</label><select id="period"><option value="30">Last 30 days</option><option value="90" selected>Last 3 months</option><option value="180">Last 6 months</option><option value="365">Last 12 months</option><option value="">All time</option></select></div>
+      <div><label for="maxn">Up to</label><select id="maxn"><option>100</option><option selected>300</option><option>600</option><option>1000</option></select></div>
+      <div><label for="lbl">Label (optional)</label><input id="lbl" placeholder="e.g. Careers"></div>
+      <div><button class="primary" id="scanBtn" type="button" disabled>Scan</button></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="readCv" checked> Read the CV files too (PDF &amp; Word) — slower, but finds the designation when the email doesn't say it</label>
+    <div class="progress" id="prog" hidden><div class="track"><div class="fill" id="fill"></div></div><div class="txt" id="ptxt"></div></div>
+    <div id="msg" role="status"></div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="sTotal">0</div><div class="l">CVs found</div></div>
+    <div class="stat"><div class="n" id="sDes">0</div><div class="l">Designations</div></div>
+    <div class="stat"><div class="n" id="sUn">0</div><div class="l">Not classified yet</div></div>
+    <div class="stat"><div class="n" id="sNew">0</div><div class="l">Received in last 7 days</div></div>
+  </div>
+
+  <div class="layout">
+    <aside class="card side" aria-label="Designations">
+      <h2>By designation</h2>
+      <input id="dq" type="search" placeholder="Filter designations" aria-label="Filter designations">
+      <ul class="dlist" id="dlist"></ul>
+    </aside>
+    <section class="card" aria-label="Candidates">
+      <div class="tools">
+        <span class="title" id="ttl">All CVs</span>
+        <div><label for="cq">Search candidates</label><input id="cq" type="search" placeholder="Name, email, subject…"></div>
+        <div style="flex:0 1 160px"><label for="sort">Sort</label><select id="sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="name">Name</option><option value="exp">Experience</option></select></div>
+        <div style="flex:0 0 auto"><button id="csv" type="button">Export CSV</button></div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Candidate</th><th>Designation</th><th>Exp.</th><th>Received</th><th>CV</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
+  </div>
+  <datalist id="desigList"></datalist>
+</main>
+<script>
+const CLIENT_ID="__CLIENT_ID__";
+const SCOPE="https://www.googleapis.com/auth/gmail.readonly";
+const API="https://gmail.googleapis.com/gmail/v1/users/me/";
+const DESIGS=__DESIG_JSON__;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+const DEFAULT_Q='has:attachment (filename:pdf OR filename:doc OR filename:docx) (cv OR resume OR "curriculum vitae" OR biodata OR application OR applying OR candidature OR "job" OR vacancy)';
+const K_CACHE="alcove-cv-cache",K_OVR="alcove-cv-overrides",K_SET="alcove-cv-settings";
+
+/* ---------- designations: your Alcove list plus common job titles ---------- */
+const EXTRA=["Site Engineer","Civil Engineer","Project Engineer","Project Manager","Construction Manager","Site Supervisor","Supervisor","Foreman","Draughtsman","AutoCAD Draughtsman","Quantity Surveyor","Billing Engineer","Planning Engineer","Estimation Engineer","Structural Engineer","Electrical Engineer","Mechanical Engineer","MEP Engineer","HVAC Engineer","Plumbing Engineer","Fire Fighting Engineer","Electrician","Plumber","Architect","Interior Designer","Landscape Architect","Safety Officer","Safety Engineer","Quality Engineer","QA/QC Engineer","Surveyor","Land Surveyor","Store Keeper","Purchase Executive","Purchase Manager","Procurement Executive","Accountant","Accounts Executive","Accounts Manager","Finance Manager","Chartered Accountant","Company Secretary","Legal Executive","Legal Manager","Lawyer","HR Executive","HR Manager","HR Generalist","Recruiter","Talent Acquisition Executive","Admin Executive","Office Assistant","Receptionist","Front Office Executive","Data Entry Operator","Computer Operator","Sales Executive","Sales Manager","Senior Sales Executive","Relationship Manager","CRM Executive","Customer Relationship Executive","Pre Sales Executive","Post Sales Executive","Telecaller","Business Development Executive","Business Development Manager","Channel Sales Manager","Leasing Manager","Marketing Executive","Marketing Manager","Digital Marketing Executive","Social Media Executive","Graphic Designer","Content Writer","Video Editor","IT Executive","System Administrator","Network Engineer","Software Developer","Web Developer","Facility Manager","Maintenance Engineer","Housekeeping Supervisor","Security Guard","Security Supervisor","Driver","Peon","Office Boy","Teacher","Trainee","Intern","Management Trainee","Graduate Engineer Trainee","Diploma Engineer Trainee"];
+function norm(s){return String(s||"").toLowerCase().replace(/&/g," and ").replace(/[^a-z0-9]+/g," ")
+  .replace(/\bsr\b/g,"senior").replace(/\bjr\b/g,"junior").replace(/\basst\b|\bassit\b/g,"assistant").replace(/\bmgr\b/g,"manager")
+  .replace(/\bengg\b|\bengr\b|\beng\b/g,"engineer").replace(/\bexec\b/g,"executive").replace(/\bdy\b/g,"deputy").replace(/\bqs\b/g,"quantity surveyor")
+  .replace(/\s+/g," ").trim();}
+const KNOWN=new Map();DESIGS.concat(EXTRA).forEach(d=>{const n=norm(d);if(n.length>=3&&!KNOWN.has(n))KNOWN.set(n,d.trim());});
+const KNOWN_RE=new RegExp("\\b("+[...KNOWN.keys()].sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")\\b","g");
+$("desigList").innerHTML=[...new Set(KNOWN.values())].sort().map(d=>'<option value="'+esc(d)+'"></option>').join("");
+function findKnown(text){if(!text)return null;const n=" "+norm(text)+" ";KNOWN_RE.lastIndex=0;let m,best=null;
+  while((m=KNOWN_RE.exec(n))){if(!best||m[1].length>best.length)best=m[1];}return best?KNOWN.get(best):null;}
+function mostCommonKnown(text){const n=norm(text),c=new Map();KNOWN_RE.lastIndex=0;let m;
+  while((m=KNOWN_RE.exec(n))){const k=m[1];if(k.split(" ").length<2&&k.length<9)continue;c.set(k,(c.get(k)||0)+1+k.split(" ").length*0.2);}
+  let best=null,bs=0;c.forEach((s,k)=>{if(s>bs){bs=s;best=k;}});return best?KNOWN.get(best):null;}
+// "application for the post of Site Engineer", "applying for Accountant position"…
+const GENERIC=/^(the|a|an|job|jobs|post|position|role|vacancy|vacancies|opening|openings|suitable|any|your|company|organisation|organization|career|employment|interview|same|this|above|mentioned|consideration|requirement|opportunity|resume|cv)$/i;
+function intent(text){if(!text)return"";text=text.replace(/\b(Sr|Jr|Asst|Dy|Mgr|Exec|Engg|Engr|Asstt)\.\s*/gi,"$1 ");
+  const re=/(?:post|position|role|vacancy|opening|profile|job)\s+(?:of|for|as)\s+(?:an?\s+|the\s+)?["“'‘]?([A-Za-z][A-Za-z&.\/\- ()]{2,60})|(?:application|applying|apply|applied|resume|cv|candidature|interested)\s+(?:for|as|in)\s+(?:the\s+)?(?:post\s+of\s+|position\s+of\s+|role\s+of\s+)?(?:an?\s+)?["“'‘]?([A-Za-z][A-Za-z&.\/\- ()]{2,60})/i;
+  const m=text.match(re);if(!m)return"";let r=(m[1]||m[2]||"").split(/\s+(?:at|in|with|from|for|on|under|having|and\s+i|i\s+am|post|position|role|job|vacancy|opening)\b|[,|:;!?\n\r–—]|\s-\s|\.\s/i)[0].trim().replace(/["”'’.]+$/,"");
+  return r.split(/\s+/).filter(w=>!GENERIC.test(w)).length?r:"";}
+const titleCase=s=>s.toLowerCase().replace(/(^|[\s\-\/(])([a-z])/g,(x,a,b)=>a+b.toUpperCase()).replace(/\b(Hr|It|Mep|Crm|Qs|Qa|Qc|Hvac|Gm|Agm|Dgm|Vp|Ca|Cs)\b/g,x=>x.toUpperCase());
+function classify(r,cvText){
+  const fileNames=r.atts.map(a=>a.name.replace(/\.[a-z0-9]+$/i,"").replace(/[_\-.]+/g," ")).join(" ");
+  const tries=[["subject",()=>{const i=intent(r.subject);return i?(findKnown(i)||(i.split(/\s+/).length<=6?titleCase(i):null)):null;}],
+    ["subject",()=>findKnown(r.subject)],
+    ["email",()=>{const i=intent(r.body);return i?(findKnown(i)||(i.split(/\s+/).length<=5?titleCase(i):null)):null;}],
+    ["file name",()=>findKnown(fileNames)],
+    ["CV",()=>cvText?(findKnown(cvText.slice(0,600))||mostCommonKnown(cvText.slice(0,4000))):null],
+    ["email",()=>findKnown(r.body.slice(0,1500))]];
+  for(const[how,f]of tries){const d=f();if(d)return{desig:d,how};}
+  return{desig:"",how:""};}
+/* department groups for the sidebar */
+const GROUPS=[["Planning, QS & Contracts",/planning|quantity|estimat|contract|tender|billing engineer/],
+ ["Marketing & Branding",/marketing|brand|digital|creative|graphic|content|social media|video|communication|\bpr\b/],
+ ["Civil & Construction",/civil|site|structur|finishing|foreman|supervisor|mason|surveyor|execution|shuttering|aluform|scaffold|bar bender|construction|project engineer|project manager|carpenter|fabricat|welder/],
+ ["MEP & Electrical",/mep|electric|plumb|hvac|mechanical|fire|phe|lift|elevator|dg operator/],
+ ["Architecture & Design",/architect|interior|design|draught|draft|cad|landscap|bim/],
+ ["Sales & CRM",/sales|crm|leasing|relationship|business development|telecall|channel|customer/],
+ ["Accounts & Finance",/account|financ|audit|tax|budget|mis|bank|cashier|chartered|billing/],
+ ["Quality & Safety",/quality|qa|qc|safety|hse/],
+ ["Purchase & Stores",/purchase|procure|store|inventory|logistic|warehouse/],
+ ["HR & Admin",/\bhr\b|human|admin|recruit|talent|payroll|office|reception|front|data entry|computer operator|peon|office boy/],
+ ["IT",/\bit\b|software|developer|network|system|web|data analyst/],
+ ["Legal & Secretarial",/legal|law|advocate|compliance|roc|secretar/],
+ ["Facility & Operations",/housekeep|security|driver|maintenance|facility|operation|mall|school|teacher|horticult|garden|canteen|dog/],
+ ["Management",/director|\bgm\b|\bagm\b|\bdgm\b|vice president|\bvp\b|head|president|ceo|coo|cfo/]];
+function groupOf(d){if(!d)return"Not classified";const n=norm(d);for(const[g,re]of GROUPS)if(re.test(n))return g;return"Other";}
+
+/* ---------- Google sign-in (token kept in memory only) ---------- */
+let token=null,tokenExp=0,tokenClient=null,pending=null;
+const ORIGIN_OK=/^https?:$/.test(location.protocol)&&location.origin!=="null";
+$("originShow").textContent=ORIGIN_OK?location.origin:"https://employees.alcoverealty.in";
+function needSetup(why){$("setup").hidden=false;$("setupWhy").innerHTML=why;}
+if(!ORIGIN_OK)needSetup("<p>This page is opened from a file on your computer, which Google sign-in doesn't allow. Open it from <b>https://employees.alcoverealty.in/p/hr-tool-box/</b> instead.</p>");
+function gisReady(){return window.google&&google.accounts&&google.accounts.oauth2;}
+function initGis(){if(tokenClient||!gisReady())return!!tokenClient;
+  tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:resp=>{
+    const p=pending;pending=null;
+    if(resp.error){if(p)p.reject(new Error(resp.error_description||resp.error));return;}
+    if(!google.accounts.oauth2.hasGrantedAllScopes(resp,SCOPE)){if(p)p.reject(new Error("Gmail read access wasn't granted. Click Connect Gmail again and tick the Gmail box."));return;}
+    token=resp.access_token;tokenExp=Date.now()+(Number(resp.expires_in||3600)-60)*1000;if(p)p.resolve(token);},
+    error_callback:err=>{const p=pending;pending=null;if(p)p.reject(new Error(err&&err.type==="popup_closed"?"The Google window was closed before signing in.":(err&&err.message)||"Google sign-in failed."));}});
+  return true;}
+function getToken(interactive){if(token&&Date.now()<tokenExp)return Promise.resolve(token);
+  if(!initGis())return Promise.reject(new Error("Google sign-in is still loading. Try again in a moment."));
+  return new Promise((resolve,reject)=>{pending={resolve,reject};tokenClient.requestAccessToken({prompt:interactive&&!token?"consent":""});});}
+async function api(path,params,retry){const qs=params?"?"+new URLSearchParams(params):"";
+  const r=await fetch(API+path+qs,{headers:{Authorization:"Bearer "+await getToken(false)}});
+  if(r.status===401&&!retry){token=null;return api(path,params,true);}
+  if((r.status===429||r.status>=500)&&(retry||0)<4){await new Promise(s=>setTimeout(s,800*Math.pow(2,retry||0)));return api(path,params,(retry||0)+1);}
+  if(!r.ok){let t="";try{t=(await r.json()).error.message;}catch(e){}
+    if(r.status===403&&/not been used|disabled/i.test(t))needSetup("<p>The <b>Gmail API</b> isn't enabled for this Google Cloud project yet.</p>");
+    throw new Error("Gmail said: "+(t||r.status));}
+  return r.json();}
+$("connect").onclick=async()=>{if(!ORIGIN_OK){say("Open this page from https://employees.alcoverealty.in to connect Gmail.","err");return;}
+  try{say("Opening Google sign-in…");await getToken(true);const p=await api("profile");$("who").textContent="Connected: "+p.emailAddress;
+    $("connect").hidden=true;$("signout").hidden=false;$("scanBtn").disabled=false;say("Connected. Choose the period and click Scan.","ok");}
+  catch(e){say(e.message,"err");if(/origin|redirect_uri|invalid_client|idpiframe/i.test(e.message))needSetup("<p>Google refused the sign-in for this address.</p>");}};
+$("signout").onclick=()=>{if(token&&gisReady())google.accounts.oauth2.revoke(token,()=>{});token=null;tokenExp=0;
+  $("who").textContent="Not connected";$("connect").hidden=false;$("signout").hidden=true;$("scanBtn").disabled=true;say("Disconnected from Gmail.");};
+
+/* ---------- reading messages ---------- */
+const b64u=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;};
+const dec=u=>new TextDecoder("utf-8").decode(u);
+const CV_EXT=/\.(pdf|docx?|rtf)$/i;
+function walk(p,out){if(!p)return;if(p.parts)p.parts.forEach(x=>walk(x,out));
+  if(p.filename&&p.body&&p.body.attachmentId){if(CV_EXT.test(p.filename))out.atts.push({name:p.filename,id:p.body.attachmentId,mime:p.mimeType,size:p.body.size||0});}
+  else if(p.body&&p.body.data){if(p.mimeType==="text/plain")out.plain+=dec(b64u(p.body.data))+"\n";else if(p.mimeType==="text/html")out.html+=dec(b64u(p.body.data));}}
+function htmlText(h){const d=document.createElement("div");d.innerHTML=h.replace(/<(script|style)[\s\S]*?<\/\1>/gi,"").replace(/<br\s*\/?>|<\/p>|<\/div>/gi,"\n");return d.textContent||"";}
+function parseFrom(f){const m=String(f||"").match(/^\s*"?([^"<]*?)"?\s*<([^>]+)>/);return m?{name:m[1].trim(),email:m[2].trim()}:{name:"",email:String(f||"").trim()};}
+const PHONE=/(?:\+?91[\s\-]?|\b0)?(?<!\d)[6-9](?:[\s\-]?\d){9}(?!\d)/;
+const PORTAL=/no-?reply|naukri|indeed|linkedin|monster|shine|foundit|apna|workindia|timesjobs|hirist|internshala/i;
+// any sign that the email is a job application / CV
+const CVISH=/\b(cv|c\.v|resume|résumé|curriculum|bio-?data|application|applying|apply|applied|candidate|candidature|job|vacancy|position|post of|opening|fresher|experience)\b/i;
+const EXP=/(\d{1,2}(?:\.\d{1,2})?)\s*\+?\s*(?:years?|yrs?)(?:\s+of)?\s+(?:of\s+)?(?:work\s+|total\s+|professional\s+|relevant\s+)?(?:experience|exp)/i;
+async function cvText(msgId,a){if(a.size>8e6)return"";
+  const r=await api("messages/"+msgId+"/attachments/"+a.id);const u=b64u(r.data);
+  if(/\.pdf$/i.test(a.name)&&window.pdfjsLib){const pdf=await pdfjsLib.getDocument({data:u}).promise;let t="";
+    for(let i=1;i<=Math.min(2,pdf.numPages);i++){const c=await (await pdf.getPage(i)).getTextContent();t+=c.items.map(x=>x.str+(x.hasEOL?"\n":" ")).join("")+"\n";}return t;}
+  if(/\.docx$/i.test(a.name)&&window.JSZip){const z=await JSZip.loadAsync(u);const f=z.file("word/document.xml");if(!f)return"";
+    return(await f.async("string")).replace(/<\/w:p>/g,"\n").replace(/<[^>]+>/g,"").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">");}
+  return"";}
+async function readMessage(id,withCv){const m=await api("messages/"+id,{format:"full"});
+  const H={};(m.payload.headers||[]).forEach(h=>{H[h.name.toLowerCase()]=h.value;});
+  const out={atts:[],plain:"",html:""};walk(m.payload,out);if(!out.atts.length)return null;
+  const from=parseFrom(H.from),body=(out.plain||htmlText(out.html)).replace(/\r/g,"").replace(/\n{3,}/g,"\n\n");
+  const rec={id,threadId:m.threadId,date:Number(m.internalDate)||Date.parse(H.date)||0,name:from.name||from.email.split("@")[0],email:from.email,
+    subject:H.subject||"",body:body.slice(0,4000),atts:out.atts,phone:"",exp:"",desig:"",how:""};
+  const best=out.atts.find(a=>/cv|resume|bio/i.test(a.name)&&/\.(pdf|docx)$/i.test(a.name))||out.atts.find(a=>/\.(pdf|docx)$/i.test(a.name));
+  let text="";if(withCv&&best){try{text=await cvText(id,best);}catch(e){text="";}}
+  const c=classify(rec,text);rec.desig=c.desig;rec.how=c.how;
+  // skip attachments that aren't job applications (invoices, statements…)
+  if(!rec.desig&&!CVISH.test(rec.subject+" "+rec.body.slice(0,1500)+" "+out.atts.map(a=>a.name).join(" ")+" "+text.slice(0,1500)))return null;
+  const blob=rec.body+"\n"+text;const ph=blob.match(PHONE);rec.phone=ph?ph[0].replace(/\D/g,"").replace(/^(?:91|0)(?=[6-9]\d{9}$)/,""):"";
+  const ex=blob.match(EXP);rec.exp=ex?ex[1]:"";
+  if(!rec.email||PORTAL.test(rec.email)){const em=text.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);if(em)rec.altEmail=em[0];
+    // job-portal mail: take the candidate's name from the top of the CV
+    const first=text.split(/\n/).map(s=>s.replace(/^(name|resume|curriculum vitae|cv)\s*[:\-]?\s*/i,"").trim()).find(s=>/^[A-Za-z][A-Za-z.' ]{2,40}$/.test(s)&&s.split(/\s+/).length>=2&&s.split(/\s+/).length<=4&&!findKnown(s));
+    if(first)rec.name=titleCase(first);}
+  rec.body=rec.body.slice(0,300);return rec;}
+
+/* ---------- scan ---------- */
+let RECS=load(K_CACHE,[]),OVR=load(K_OVR,{}),busy=false;
+(function(){const s=load(K_SET,{});$("q").value=s.q||DEFAULT_Q;if(s.period!==undefined)$("period").value=s.period;if(s.maxn)$("maxn").value=s.maxn;if(s.lbl)$("lbl").value=s.lbl;if(s.readCv===false)$("readCv").checked=false;})();
+function saveSet(){save(K_SET,{q:$("q").value,period:$("period").value,maxn:$("maxn").value,lbl:$("lbl").value,readCv:$("readCv").checked});}
+["q","period","maxn","lbl","readCv"].forEach(id=>$(id).addEventListener("change",saveSet));
+function prog(done,total,txt){$("prog").hidden=false;$("fill").style.width=(total?Math.round(done/total*100):0)+"%";$("ptxt").textContent=txt;}
+$("scanBtn").onclick=async()=>{if(busy)return;busy=true;$("scanBtn").disabled=true;
+  try{let q=$("q").value.trim()||DEFAULT_Q;const p=$("period").value,l=$("lbl").value.trim();
+    if(p)q+=" newer_than:"+p+"d";if(l)q+=' label:"'+l.replace(/"/g,"")+'"';
+    const max=Number($("maxn").value),ids=[];let pageToken="";
+    prog(0,1,"Searching Gmail…");
+    do{const r=await api("messages",{q,maxResults:Math.min(100,max-ids.length),...(pageToken?{pageToken}:{})});
+      (r.messages||[]).forEach(m=>ids.push(m.id));pageToken=r.nextPageToken||"";prog(0,1,"Searching Gmail… "+ids.length+" emails");}
+    while(pageToken&&ids.length<max);
+    const have=new Set(RECS.map(r=>r.id)),todo=ids.filter(id=>!have.has(id));
+    if(!todo.length){prog(1,1,"No new emails since the last scan ("+ids.length+" matching emails already sorted).");say("Up to date.","ok");return;}
+    let done=0,found=0;const withCv=$("readCv").checked,fresh=[];
+    async function worker(){while(todo.length){const id=todo.shift();try{const r=await readMessage(id,withCv);if(r){fresh.push(r);found++;}}catch(e){if(/Gmail API|not been used/i.test(e.message))throw e;}
+      done++;prog(done,done+todo.length,"Reading emails… "+done+" of "+(done+todo.length)+" · "+found+" CVs");if(done%25===0){RECS=RECS.concat(fresh.splice(0));persist();render();}}}
+    await Promise.all(Array.from({length:5},worker));
+    RECS=RECS.concat(fresh);persist();render();
+    say("Done — "+found+" new CVs from "+done+" emails.","ok");}
+  catch(e){say(e.message,"err");}
+  finally{busy=false;$("scanBtn").disabled=!token;}};
+function persist(){RECS.sort((a,b)=>b.date-a.date);if(!save(K_CACHE,RECS)){RECS.forEach(r=>{r.body="";});save(K_CACHE,RECS);}}
+
+/* ---------- dashboard ---------- */
+let curD=null;
+const D=r=>OVR[r.id]!==undefined?OVR[r.id]:r.desig;
+const howOf=r=>OVR[r.id]!==undefined?"manual":r.how;
+function render(){
+  const by=new Map();RECS.forEach(r=>{const d=D(r)||"";by.set(d,(by.get(d)||0)+1);});
+  const wk=Date.now()-7*864e5;
+  $("sTotal").textContent=RECS.length;$("sDes").textContent=[...by.keys()].filter(Boolean).length;$("sUn").textContent=by.get("")||0;$("sNew").textContent=RECS.filter(r=>r.date>=wk).length;
+  const groups=new Map();by.forEach((n,d)=>{const g=groupOf(d);if(!groups.has(g))groups.set(g,[]);groups.get(g).push([d,n]);});
+  const max=Math.max(1,...by.values()),dq=$("dq").value.trim().toLowerCase();
+  const order=[...groups.entries()].sort((a,b)=>a[0]==="Not classified"?1:b[0]==="Not classified"?-1:b[1].reduce((s,x)=>s+x[1],0)-a[1].reduce((s,x)=>s+x[1],0));
+  let html='<li><button data-d="*" aria-pressed="'+(curD===null)+'"><span class="nm">All CVs</span><span class="ct">'+RECS.length+"</span></button></li>";
+  order.forEach(([g,list])=>{const items=list.filter(([d])=>!dq||(d||"not classified").toLowerCase().includes(dq)||g.toLowerCase().includes(dq)).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));if(!items.length)return;
+    html+='<li class="g"><span>'+esc(g)+"</span><span>"+items.reduce((s,x)=>s+x[1],0)+"</span></li>";
+    items.forEach(([d,n])=>{html+='<li><button data-d="'+esc(d)+'" aria-pressed="'+(curD===d)+'"><span class="nm">'+esc(d||"Not classified")+'</span><span class="bar" style="width:'+Math.max(4,Math.round(n/max*40))+'px"></span><span class="ct">'+n+"</span></button></li>";});});
+  $("dlist").innerHTML=RECS.length?html:'<li class="empty">Connect Gmail and click Scan.</li>';
+  renderRows();}
+function shown(){const q=$("cq").value.trim().toLowerCase();let list=RECS.filter(r=>curD===null||(D(r)||"")===curD);
+  if(q)list=list.filter(r=>(r.name+" "+r.email+" "+(r.altEmail||"")+" "+r.subject+" "+(D(r)||"")+" "+r.phone).toLowerCase().includes(q));
+  const s=$("sort").value;list.sort(s==="old"?(a,b)=>a.date-b.date:s==="name"?(a,b)=>a.name.localeCompare(b.name):s==="exp"?(a,b)=>(parseFloat(b.exp)||0)-(parseFloat(a.exp)||0):(a,b)=>b.date-a.date);return list;}
+const fmtD=t=>t?new Date(t).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"}):"";
+function renderRows(){const list=shown();$("ttl").textContent=(curD===null?"All CVs":(curD||"Not classified"))+" · "+list.length;
+  $("rows").innerHTML=list.slice(0,500).map(r=>'<tr data-id="'+esc(r.id)+'"><td><b>'+esc(r.name)+'</b><div class="m">'+esc(r.altEmail||r.email)+(r.phone?" · "+esc(r.phone):"")+'</div><div class="m" title="'+esc(r.subject)+'">'+esc(r.subject.slice(0,90))+"</div></td>"+
+    '<td><input class="dsel" list="desigList" value="'+esc(D(r)||"")+'" placeholder="Not classified" aria-label="Designation for '+esc(r.name)+'"><span class="how '+(howOf(r)==="manual"?"manual":"")+'">'+esc(howOf(r)==="manual"?"edited by you":howOf(r)?"from "+howOf(r):"no match")+"</span></td>"+
+    "<td>"+(r.exp?esc(r.exp)+" yrs":'<span class="m">—</span>')+"</td><td>"+esc(fmtD(r.date))+"</td>"+
+    '<td><div class="att">'+r.atts.map((a,i)=>'<button class="sm open" type="button" data-i="'+i+'" title="'+esc(a.name)+'">'+(i?"File "+(i+1):"Open CV")+"</button>").join("")+'<a class="sm" href="https://mail.google.com/mail/u/0/#all/'+esc(r.threadId)+'" target="_blank" rel="noopener">Gmail ↗</a></div></td></tr>').join("")
+    ||'<tr><td colspan="5" class="empty">'+(RECS.length?"No CVs match.":"No CVs yet — connect Gmail and scan.")+"</td></tr>";}
+$("dlist").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;curD=b.dataset.d==="*"?null:b.dataset.d;render();});
+$("dq").addEventListener("input",render);$("cq").addEventListener("input",renderRows);$("sort").addEventListener("change",renderRows);
+$("rows").addEventListener("change",e=>{if(!e.target.classList.contains("dsel"))return;const id=e.target.closest("tr").dataset.id,v=e.target.value.trim();
+  const r=RECS.find(x=>x.id===id);if(!r)return;const k=findKnown(v)&&norm(findKnown(v))===norm(v)?findKnown(v):(v?titleCase(v):"");
+  if(k===r.desig)delete OVR[id];else OVR[id]=k;save(K_OVR,OVR);render();});
+$("rows").addEventListener("click",async e=>{const b=e.target.closest("button.open");if(!b)return;const r=RECS.find(x=>x.id===b.closest("tr").dataset.id),a=r&&r.atts[+b.dataset.i];if(!a)return;
+  const w=window.open("","_blank");b.disabled=true;
+  try{const d=await api("messages/"+r.id+"/attachments/"+a.id);const url=URL.createObjectURL(new Blob([b64u(d.data)],{type:a.mime||"application/octet-stream"}));
+    if(w&&/pdf/i.test(a.mime||a.name))w.location=url;else{if(w)w.close();const l=document.createElement("a");l.href=url;l.download=a.name;document.body.appendChild(l);l.click();l.remove();}
+    setTimeout(()=>URL.revokeObjectURL(url),60000);}
+  catch(err){if(w)w.close();say(token?err.message:"Connect Gmail first to open CVs.","err");}
+  b.disabled=false;});
+$("csv").onclick=()=>{const list=shown();if(!list.length){say("Nothing to export.","err");return;}
+  const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  const rows=[["Name","Email","Phone","Designation","Department group","Experience (yrs)","Received","Subject","CV file"]].concat(list.map(r=>[r.name,r.altEmail||r.email,r.phone,D(r),groupOf(D(r)),r.exp,fmtD(r.date),r.subject,r.atts.map(a=>a.name).join("; ")]));
+  const blob=new Blob(["\ufeff"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="CVs - "+(curD===null?"all":(curD||"not classified"))+" - "+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();a.remove();};
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+render();
+</script></body></html>

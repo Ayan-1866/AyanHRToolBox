@@ -61,8 +61,8 @@ button{font:inherit}
 /* journey */
 .journey{margin:26px 0 8px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px 16px;box-shadow:var(--shadow)}
 .journey h2,.sec h2{margin:0;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;position:relative}
-.steps::before{content:"";position:absolute;left:10%;right:10%;top:19px;height:2px;background:linear-gradient(90deg,var(--join) 0%,var(--join) 55%,var(--exit) 65%,var(--exit) 100%);opacity:.35}
+.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;position:relative}
+.steps::before{content:"";position:absolute;left:8.3%;right:8.3%;top:19px;height:2px;background:linear-gradient(90deg,var(--join) 0%,var(--join) 62%,var(--exit) 70%,var(--exit) 100%);opacity:.35}
 .steps li{display:flex}
 .steps button{all:unset;cursor:pointer;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:0 4px 4px;border-radius:12px}
 .steps button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
@@ -109,7 +109,7 @@ button{font:inherit}
   .nav button[aria-current="page"]::before{left:8px;right:8px;top:auto;bottom:-8px;width:auto;height:3px;border-radius:3px 3px 0 0}
   .home{padding:18px 16px 32px}
   .hero{padding:26px 22px 22px;border-radius:16px}.hero .arc{width:260px;right:-110px;top:30px;opacity:.5}
-  .steps{grid-template-columns:repeat(5,minmax(78px,1fr));overflow-x:auto;padding-bottom:4px}
+  .steps{grid-template-columns:repeat(6,minmax(78px,1fr));overflow-x:auto;padding-bottom:4px}
   .steps::before{left:40px;right:40px}
 }
 </style></head>
@@ -118,6 +118,8 @@ button{font:inherit}
   <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="Alcove Realty"><span>HR Tool</span></div>
   <nav class="nav" aria-label="Tools">
     <button data-view="home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
+    <div class="grp">Recruitment</div>
+    <button data-view="cv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg>CV Inbox</button>
     <div class="grp">Hiring &amp; joining</div>
     <button data-view="loi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>LOI Generator</button>
     <button data-view="appt"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>Appointment Letter</button>
@@ -136,19 +138,32 @@ button{font:inherit}
       <svg class="arc" viewBox="0 0 420 220" aria-hidden="true"><path d="M20 210 A190 150 0 0 1 400 210" fill="none" stroke="#EFCC25" stroke-width="16" stroke-linecap="round" opacity=".85"/><path d="M60 210 A150 115 0 0 1 360 210" fill="none" stroke="#ffffff" stroke-width="2" opacity=".14"/><path d="M210 18 l22 40 h-44 z" fill="#D82A30"/></svg>
       <div class="hi" id="greet">Welcome</div>
       <h1>What would you like to prepare today?</h1>
-      <p>Offer, joining and exit letters in the Alcove format — fill in the details, check the live preview, then print or download.</p>
-      <div class="meta"><span class="pill" id="today"></span><span class="pill"><b>5</b> tools</span><span class="pill">Works offline</span></div>
+      <p>CVs, offer, joining and exit letters in the Alcove format — fill in the details, check the live preview, then print or download.</p>
+      <div class="meta"><span class="pill" id="today"></span><span class="pill"><b>6</b> tools</span><span class="pill">Your data stays in this browser</span></div>
     </div>
 
     <section class="journey" aria-labelledby="j-h">
       <h2 id="j-h">Employee journey</h2>
       <ol class="steps">
+        <li><button data-view="cv"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="st">Sourcing</span><span class="nm">CV Inbox</span></button></li>
         <li><button data-view="loi"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span class="st">Offer</span><span class="nm">Letter of Intent</span></button></li>
         <li><button data-view="appt"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg></span><span class="st">Joining</span><span class="nm">Appointment Letter</span></button></li>
         <li><button data-view="joiner"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span><span class="st">First day</span><span class="nm">Welcome kit</span></button></li>
         <li><button class="exit" data-view="exp"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M9 13.5 7.5 21l4.5-2.5 4.5 2.5L15 13.5"/></svg></span><span class="st">Exit</span><span class="nm">Experience Letter</span></button></li>
         <li><button class="exit" data-view="rel"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/><path d="M10 16l4-4-4-4M14 12H4"/></svg></span><span class="st">Exit</span><span class="nm">Relieving Letter</span></button></li>
       </ol>
+    </section>
+
+    <section class="sec" aria-labelledby="s-rec">
+      <div class="hd"><h2 id="s-rec">Recruitment</h2><p>CVs from your Gmail, sorted by designation</p></div>
+      <div class="tiles">
+        <button class="tile" data-view="cv">
+          <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          <h3>CV Inbox</h3>
+          <p>Connect Gmail to find every CV you've received and see them grouped by department and designation, with phone, experience and a one-click Open CV.</p>
+          <div class="tags"><span class="tag">Gmail</span><span class="tag">PDF &amp; Word CVs</span><span class="tag">CSV export</span></div>
+        </button>
+      </div>
     </section>
 
     <section class="sec" aria-labelledby="s-join">
@@ -201,6 +216,7 @@ button{font:inherit}
   document.getElementById("greet").textContent=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
   document.getElementById("today").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});})();
 </script>
+  <iframe class="frame" id="v-cv" title="CV Inbox" data-url="cv.html" hidden></iframe>
   <iframe class="frame" id="v-exp" title="Experience Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-rel" title="Relieving Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-loi" title="LOI Generator" allow="clipboard-write" hidden></iframe>
@@ -216,7 +232,7 @@ button{font:inherit}
 <script id="src-joiner" type="application/octet-stream">__JOINER__</script>
 <script>
 (function(){
-  const VIEWS=["home","exp","rel","loi","appt","joiner"];
+  const VIEWS=["home","cv","exp","rel","loi","appt","joiner"];
   const $=id=>document.getElementById(id);
   function decode(id){const b=atob($(id).textContent.trim()),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder("utf-8").decode(u);}
   function show(v){
@@ -224,7 +240,7 @@ button{font:inherit}
     VIEWS.forEach(k=>{$("v-"+k).hidden=k!==v;});
     document.querySelectorAll(".nav button").forEach(b=>{if(b.dataset.view===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
     const f=$("v-"+v);
-    if(v!=="home"&&!f.dataset.loaded){f.srcdoc=decode("src-"+v);f.dataset.loaded="1";}
+    if(v!=="home"&&!f.dataset.loaded){if(f.dataset.url)f.src=f.dataset.url;else f.srcdoc=decode("src-"+v);f.dataset.loaded="1";}
     document.title=(v==="home"?"":(f.title+" · "))+"Alcove HR Tool";
     if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);
     try{localStorage.setItem("alcove-hrtool-view",v);}catch(e){}
