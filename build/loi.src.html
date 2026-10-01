@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LOI Generator — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+__JSZIP__
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef0f3;--panel:#ffffff;--ink:#14213d;--muted:#5b6478;--line:#d7dbe3;--gold:#b8862b;--teal:#1f7a7a;--field:#f7f8fa;--err:#b3261e;--tok:#fbefd5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:28px 24px 8px;max-width:1240px;margin:0 auto}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font:700 clamp(26px,4vw,36px)/1.15 "Source Serif 4",Georgia,serif;margin:6px 0 4px}
+header p{margin:0;color:var(--muted);max-width:62ch}
+main{max-width:1240px;margin:0 auto;padding:16px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;padding:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:500;margin-bottom:4px}
+label .req{color:var(--gold)}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+textarea{min-height:64px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.bad{border-color:var(--err)!important}
+.hint{font-size:12px;color:var(--muted);margin-top:3px}
+.span2{grid-column:1/-1}
+.other{display:none;margin-top:8px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+button{font:600 15px "IBM Plex Sans",system-ui,sans-serif;border-radius:9px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink)}
+button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+:root[data-theme="dark"] button.primary{background:var(--gold);color:#111;border-color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.primary{background:var(--gold);color:#111;border-color:var(--gold)}}
+button:disabled{opacity:.55;cursor:wait}
+#msg{font-size:14px;flex-basis:100%}
+#msg.err{color:var(--err)}#msg.ok{color:var(--teal)}
+/* preview: a real A4 sheet, scaled to fit */
+.pv{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+@media (max-width:900px){.pv{position:static}}
+.pvhead{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sheetwrap{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:#fff}
+.sheet{width:210mm;min-height:297mm;padding:45mm 18mm 15mm 20mm;background:#fff;color:#000;font:11pt/1.2 Cambria,"Source Serif 4",Georgia,serif;transform-origin:top left}
+.sheet p{margin:0}
+.sheet .tr{display:flex;justify-content:space-between;gap:12px}
+.sheet .bl{position:relative;padding-left:.5in}
+.sheet .bl::before{content:"•";position:absolute;left:.25in}
+.sheet .ar{font-family:Arial,"Liberation Sans",Helvetica,sans-serif}
+.f{background:var(--tok);border-radius:2px}
+.f.empty{color:#8a6d2f;font-style:italic;font-weight:400}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  header,form,.pvhead{display:none!important}
+  main{display:block;padding:0;margin:0;max-width:none}
+  .pv{position:static}
+  .sheetwrap{height:auto!important;border:0;border-radius:0;overflow:visible}
+  .sheet{transform:none!important}
+  .f{background:none}
+}
+</style></head><body>
+<header>
+<div class="kicker">Alcove HR</div>
+<h1>LOI Generator</h1>
+<p>Fill in the candidate's details to get a Letter of Intent in the Alcove format. Download it as a Word file or print it on letterhead.</p>
+</header>
+<main>
+<form class="card" id="f" onsubmit="return false" novalidate>
+<fieldset><legend>Reference</legend><div class="grid">
+<div><label for="SC">Short-company <span class="req">*</span></label><select id="SC"><option value="">Select…</option><option>ARPL</option><option>ACPL</option><option>ADLLP</option><option>SRPL</option><option>AMBA</option><option>ANI</option><option value="__other">+ Add new…</option></select><input id="SC_OTHER" class="other" placeholder="Type new short-company"><div class="hint">Picked automatically from the company</div></div>
+<div><label for="SL">Short-location <span class="req">*</span></label><select id="SL"><option value="">Select…</option><option>HO</option><option>Site</option><option value="__other">+ Add new…</option></select><input id="SL_OTHER" class="other" placeholder="Type new short-location"></div>
+<div><label for="SLNO">Sl. no. <span class="req">*</span></label><input id="SLNO" placeholder="e.g. 0161"><div class="hint">Goes up by one after each download</div></div>
+<div><label for="DATE">Letter date <span class="req">*</span></label><input id="DATE" type="date"><div class="hint" id="fyShow">Financial year is set from this date</div></div>
+</div></fieldset>
+<fieldset><legend>Candidate</legend><div class="grid">
+<div class="span2"><label for="NAME">Name <span class="req">*</span></label><input id="NAME" placeholder="Full name" autocomplete="off"></div>
+<div class="span2"><label for="ADDRESS">Address <span class="req">*</span></label><textarea id="ADDRESS" placeholder="e.g. Kolkata, West Bengal&#10;Each new line prints on a new line"></textarea></div>
+<div class="span2"><label for="DESIG">Position offered <span class="req">*</span></label><select id="DESIG">__DESIG__</select><input id="DESIG_OTHER" class="other" placeholder="Type new position, e.g. Manager - Architect"><div class="hint">Tip: click the list and type the first letters to jump</div></div>
+<div><label for="DOJ">Join on or before <span class="req">*</span></label><input id="DOJ" type="date"></div>
+</div></fieldset>
+<fieldset><legend>Company &amp; terms</legend><div class="grid">
+<div class="span2"><label for="COMPANY">Company <span class="req">*</span></label><select id="COMPANY"><option value="">Select…</option><option>Alcove Realty Pvt. Ltd.</option><option>AMBA Highrise Pvt. Ltd.</option><option>Sundarvan Realty Pvt. Ltd.</option><option>Alcove Construction Pvt. Ltd.</option><option>Alcove Developers LLP</option><option value="__other">+ Add new…</option></select><input id="COMPANY_OTHER" class="other" placeholder="Type new company name"><div class="hint">Printed in “For … ” above the signatory</div></div>
+<div class="span2"><label for="PLACE">Place of work <span class="req">*</span></label><select id="PLACE"><option value="">Select…</option><option>Alcove Realty Pvt. Ltd.</option><option>AMBA Highrise Pvt. Ltd.</option><option>Sundarvan Realty Pvt. Ltd.</option><option>Alcove Construction Pvt. Ltd.</option><option>Alcove Developers LLP</option><option>AMBA Highrise Pvt. Ltd. - The Curve</option><option>Alcove Realty Pvt. Ltd. - Alcove Origyn</option><option>Alcove Construction Pvt. Ltd. - Alcove Duets</option><option>Alcove Developers LLP - New Kolkata - Sangam(B)</option><option value="__other">+ Add new…</option></select><input id="PLACE_OTHER" class="other" placeholder="Type new place of work"><div class="hint">Follows the company unless you change it</div></div>
+<div><label for="PROB">Probation <span class="req">*</span></label><select id="PROB"><option value="three">3 months</option><option value="six" selected>6 months</option><option value="nine">9 months</option><option value="twelve">12 months</option></select><div class="hint">Extension period uses the same length</div></div>
+<div><label for="NOTICE">Notice during probation <span class="req">*</span></label><input id="NOTICE" type="number" min="1" value="30"><div class="hint">Days</div></div>
+</div></fieldset>
+<div class="actions">
+<button class="primary" id="go" type="button">Download Word LOI</button>
+<button type="button" id="prn">Print / PDF</button>
+<button type="button" id="clr">Clear candidate</button>
+<span id="msg" role="status"></span>
+</div>
+</form>
+<section class="pv" aria-label="Preview">
+<div class="pvhead"><span>Live preview — A4</span><span id="pvnote">Highlighted parts come from the form</span></div>
+<div class="sheetwrap" id="wrap"><div class="sheet" id="sheet"></div></div>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const DD=["SC","SL","DESIG","COMPANY","PLACE"];
+const REQ=["SC","SL","SLNO","DATE","NAME","ADDRESS","DESIG","DOJ","COMPANY","PLACE","PROB","NOTICE"];
+const LABEL={SC:"Short-company",SL:"Short-location",SLNO:"Sl. no.",DATE:"Date",NAME:"Name",ADDRESS:"Address",DESIG:"Position",DOJ:"Joining date",COMPANY:"Company",PLACE:"Place of work",PROB:"Probation",NOTICE:"Notice days",FY:"FY"};
+const SHORT={"Alcove Realty Pvt. Ltd.":"ARPL","AMBA Highrise Pvt. Ltd.":"AMBA","Sundarvan Realty Pvt. Ltd.":"SRPL","Alcove Construction Pvt. Ltd.":"ACPL","Alcove Developers LLP":"ADLLP"};
+const DATES=["DATE","DOJ"];
+function fmtDate(iso){if(!iso)return"";const[y,m,d]=iso.split("-");return d+"-"+m+"-"+y;}
+function fy(){const d=$("DATE").value;if(!d)return"";const[y,m]=d.split("-").map(Number);const s=m>=4?y:y-1;return s+"-"+String((s+1)%100).padStart(2,"0");}
+function val(k){if(k==="FY")return fy();let v=$(k).value.trim();if(DD.includes(k)&&v==="__other")v=$(k+"_OTHER").value.trim();return DATES.includes(k)?fmtDate(v):v;}
+
+/* ---------- letter model: one source for preview and Word ---------- */
+// run: {t, b, u, ar, k (field key), tab, br}   para: {runs, al, after (pt), before (pt), tr (right tab), bl (bullet)}
+function F(k,o){const v=val(k);return Object.assign({t:v||LABEL[k],k,empty:!v},o||{});}
+function lines(k,o){const v=val(k);if(!v)return[F(k,o)];const r=[];v.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).forEach((l,i)=>{if(i)r.push({br:1});r.push(Object.assign({t:l,k},o));});return r;}
+const B={b:1};
+function letter(){
+  const prob=F("PROB",B);prob.t+=" months";
+  const probPlain=F("PROB");probPlain.t+=" months";
+  return [
+    {tr:1,after:24,runs:[{t:"Ref no:- ",b:1},F("SC",B),{t:"/HR/",b:1},F("SL",B),{t:"/LOI/",b:1},F("FY",B),{t:"/",b:1},F("SLNO",B),{tab:1},{t:"Date:  ",b:1},F("DATE",B)]},
+    {al:"center",after:14,runs:[{t:"Letter of Intent",b:1,u:1}]},
+    {runs:[{t:"To,",b:1}]},
+    {runs:[F("NAME",B)]},
+    {after:12,runs:lines("ADDRESS",B)},
+    {al:"both",after:12,runs:[{t:"With reference to your application and subsequent interview you had with us, we are pleased to offer you the position of "},{t:"“",b:1,ar:1},F("DESIG",{b:1,ar:1}),{t:"”",b:1,ar:1},{t:" in our organization on the following terms and conditions as mutually discussed and agreed upon. You are requested to join our organization as on or before "},F("DOJ",B),{t:". A detailed letter of appointment shall be issued to you on your joining our organization."}]},
+    {runs:[{t:"Probation",b:1}]},
+    {al:"both",after:12,runs:[{t:"You will be on probation for "},prob,{t:". Depending on your performance during the aforesaid period, the probation period is liable to be extended by another "},probPlain,{t:". In case you wish to resign during the said probation period, you shall be required to furnish a prior written notice of "},F("NOTICE"),{t:" days. At the end of the probation period, your services would be confirmed and you would be informed in writing of the same."}]},
+    {runs:[{t:"Remuneration",b:1}]},
+    {after:12,runs:[{t:"The details will be shared in the appointment letter."}]},
+    {runs:[{t:"Place of Work",b:1}]},
+    {al:"both",after:12,runs:[{t:"Your current location would be at "},F("PLACE",B),{t:/\.$/.test(val("PLACE"))?"":".",b:1},{t:" However, you may be transferred/ posted in any of the company branch offices or project locations in the country or abroad, at the discretion of the company."}]},
+    {al:"both",after:12,runs:[{t:"At the time of joining you are requested to submit the following documents for verification & record:"}]},
+    {bl:1,runs:[{t:"Educational certificates and testimonials"}]},
+    {bl:1,runs:[{t:"Copy of PAN card and passport-size photographs"}]},
+    {bl:1,runs:[{t:"Address proof"}]},
+    {bl:1,after:12,runs:[{t:"Copies of experience /relieving certificates from current and all previous employers"}]},
+    {al:"both",after:12,runs:[{t:"During your stint with the company, you are duty-bound to commit your time completely to the work of the company. Moreover, you would not take up any other assignment, whether full-time, part-time or honorary, or in cash or in kind, without prior intimation and written approval from the company."}]},
+    {after:12,runs:[{t:"Please return a signed copy of this letter, which would signify your acceptance."}]},
+    {after:12,runs:[{t:"With Best Wishes,"}]},
+    {keep:1,runs:[{t:"For ",b:1},F("COMPANY",B)]},
+    {before:44,runs:[{t:"Authorized Signatory",b:1}]}
+  ];
+}
+
+/* ---------- preview ---------- */
+const escH=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function runHtml(r){if(r.br)return"<br>";let h=escH(r.t);
+  if(r.b)h="<b>"+h+"</b>";if(r.u)h="<u>"+h+"</u>";if(r.ar)h='<span class="ar">'+h+"</span>";
+  if(r.k)h='<span class="f'+(r.empty?" empty":"")+'">'+h+"</span>";return h;}
+function preview(){
+  $("sheet").innerHTML=letter().map(p=>{
+    const st=[];if(p.al)st.push("text-align:"+(p.al==="both"?"justify":p.al));if(p.after)st.push("margin-bottom:"+p.after+"pt");if(p.before)st.push("margin-top:"+p.before+"pt");
+    const s=st.length?' style="'+st.join(";")+'"':"";
+    if(p.tr){const i=p.runs.findIndex(r=>r.tab);return'<p class="tr"'+s+"><span>"+p.runs.slice(0,i).map(runHtml).join("")+"</span><span>"+p.runs.slice(i+1).map(runHtml).join("")+"</span></p>";}
+    return"<p"+(p.bl?' class="bl"':"")+s+">"+p.runs.map(runHtml).join("")+"</p>";}).join("");
+  const f=fy();$("fyShow").textContent=f?"Financial year in ref no: "+f:"Financial year is set from this date";
+  fit();
+}
+function fit(){const w=$("wrap"),s=$("sheet");const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";}
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("wrap"));else window.addEventListener("resize",fit);
+
+/* ---------- Word (.docx) ---------- */
+const escX=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const TW=11906-1134-1021; // text width in twips (A4, 20mm left / 18mm right)
+function runXml(r){if(r.br)return"<w:r><w:br/></w:r>";if(r.tab)return"<w:r><w:tab/></w:r>";
+  let pr="";if(r.ar)pr+='<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>';if(r.b)pr+="<w:b/><w:bCs/>";if(r.u)pr+='<w:u w:val="single"/>';
+  return"<w:r>"+(pr?"<w:rPr>"+pr+"</w:rPr>":"")+'<w:t xml:space="preserve">'+escX(r.t)+"</w:t></w:r>";}
+function paraXml(p){let pr=p.keep?"<w:keepNext/>":"";
+  if(p.tr)pr+='<w:tabs><w:tab w:val="right" w:pos="'+TW+'"/></w:tabs>';
+  if(p.bl)pr+='<w:tabs><w:tab w:val="left" w:pos="720"/></w:tabs>';
+  pr+='<w:spacing w:before="'+((p.before||0)*20)+'" w:after="'+((p.after||0)*20)+'"/>';
+  if(p.bl)pr+='<w:ind w:left="720" w:hanging="360"/>';
+  if(p.al)pr+='<w:jc w:val="'+p.al+'"/>';
+  const runs=(p.bl?[{t:"•"},{tab:1}]:[]).concat(p.runs);
+  return"<w:p><w:pPr>"+pr+"</w:pPr>"+runs.map(runXml).join("")+"</w:p>";}
+function docxParts(){
+  const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  return{
+    "[Content_Types].xml":'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>',
+    "_rels/.rels":'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>',
+    "word/_rels/document.xml.rels":'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>',
+    "word/styles.xml":'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles '+W+'><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Cambria" w:hAnsi="Cambria" w:eastAsia="Cambria" w:cs="Cambria"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-IN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>',
+    "word/document.xml":'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document '+W+'><w:body>'+letter().map(paraXml).join("")+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="2552" w:right="1021" w:bottom="850" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>'
+  };
+}
+
+/* ---------- dropdowns, remembered values (this browser only) ---------- */
+let LISTS={};try{LISTS=JSON.parse(localStorage.getItem("alcove-loi-lists")||"{}")||{};}catch(e){LISTS={};}
+function inList(k,v){const lv=v.toLowerCase();return[...$(k).options].some(o=>o.value.toLowerCase()===lv);}
+function addOpt(k,v){const sel=$(k),o=document.createElement("option");o.value=v;o.textContent=v;
+  if(k==="DESIG"){const after=[...sel.options].find(x=>x.value&&x.value!=="__other"&&x.value.localeCompare(v,undefined,{sensitivity:"base"})>0);sel.insertBefore(o,after||null);return;}
+  sel.insertBefore(o,sel.querySelector('option[value="__other"]'));}
+DD.forEach(k=>(LISTS[k]||[]).forEach(v=>{if(!inList(k,v))addOpt(k,v);}));
+function saveNew(k,v){if(!v||inList(k,v))return false;addOpt(k,v);(LISTS[k]=LISTS[k]||[]).push(v);try{localStorage.setItem("alcove-loi-lists",JSON.stringify(LISTS));}catch(e){}return true;}
+const KEEP=["SC","SL","SLNO","COMPANY","PLACE","PROB","NOTICE"];
+try{const s=JSON.parse(localStorage.getItem("alcove-loi")||"{}");KEEP.forEach(k=>{if(s[k])$(k).value=s[k];});}catch(e){}
+function remember(){try{const s={};KEEP.forEach(k=>s[k]=$(k).value);localStorage.setItem("alcove-loi",JSON.stringify(s));}catch(e){}}
+function nextSl(s){const m=s.match(/^(.*?)(\d+)$/);if(!m)return s;return m[1]+String(Number(m[2])+1).padStart(m[2].length,"0");}
+function ddUI(){DD.forEach(k=>{const o=$(k).value==="__other";$(k+"_OTHER").style.display=o?"block":"none";if(o&&document.activeElement===$(k))$(k+"_OTHER").focus();});}
+const today=new Date();$("DATE").value=new Date(today.getTime()-today.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+
+// company drives short-company and place of work until those are picked by hand
+let scTouched=false,placeTouched=!!$("PLACE").value&&$("PLACE").value!==$("COMPANY").value;
+$("SC").addEventListener("change",()=>{scTouched=true;});
+$("PLACE").addEventListener("change",()=>{placeTouched=true;});
+$("COMPANY").addEventListener("change",()=>{const c=val("COMPANY");
+  if(!scTouched&&SHORT[c])$("SC").value=SHORT[c];
+  if(!placeTouched&&c&&$("COMPANY").value!=="__other"){if(!inList("PLACE",c))addOpt("PLACE",c);$("PLACE").value=c;}});
+
+document.querySelectorAll("input,textarea,select").forEach(el=>el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{el.classList.remove("bad");ddUI();preview();}));
+ddUI();preview();
+
+let dl=null;
+(async()=>{try{if(window.claude&&claude.use)dl=await claude.use("downloads");}catch(e){dl=null;}})();
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+function check(){
+  const missing=REQ.filter(k=>!val(k));
+  REQ.forEach(k=>{const bad=missing.includes(k);const other=DD.includes(k)&&$(k).value==="__other";$(k).classList.toggle("bad",bad&&!other);if(DD.includes(k))$(k+"_OTHER").classList.toggle("bad",bad&&other);});
+  if(missing.length){say("Please fill: "+missing.map(k=>LABEL[k]).join(", "),"err");const k=missing[0];($(k).value==="__other"?$(k+"_OTHER"):$(k)).focus();return false;}
+  return true;}
+function afterIssue(){const added=[];DD.forEach(k=>{if($(k).value==="__other"){const v=$(k+"_OTHER").value.trim();if(saveNew(k,v))added.push(v);$(k).value=v;$(k+"_OTHER").value="";}});
+  $("SLNO").value=nextSl($("SLNO").value.trim());remember();ddUI();preview();return added;}
+
+$("clr").onclick=()=>{["NAME","ADDRESS","DOJ","DESIG_OTHER"].forEach(k=>{$(k).value="";$(k).classList.remove("bad");});$("DESIG").value="";ddUI();preview();say("");};
+$("prn").onclick=()=>{if(check()){say("");window.print();}};
+$("go").onclick=async()=>{
+  if(!check())return;
+  if(typeof JSZip==="undefined"){say("Could not load the document engine. Reload the page.","err");return;}
+  const btn=$("go");btn.disabled=true;say("Building document…");
+  try{
+    const zip=new JSZip(),parts=docxParts();Object.keys(parts).forEach(n=>zip.file(n,parts[n]));
+    const blob=await zip.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document",compression:"DEFLATE"});
+    const safe=s=>s.replace(/[\\/:*?"<>|]+/g,"-").trim();
+    const name="LOI - "+safe(val("NAME"))+" - "+safe(val("SLNO"))+".docx";
+    if(dl){
+      try{await dl.save({filename:name,data:blob});}
+      catch(e){if(e&&e.code==="declined"){say("Download cancelled.");btn.disabled=false;return;}
+        if(e&&e.code==="rate_limited"){say("A save prompt is already open — finish that first.","err");btn.disabled=false;return;}
+        throw e;}
+    }else{
+      const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    }
+    const added=afterIssue();
+    say("Done — "+name+". Sl. no. advanced to "+$("SLNO").value+"."+(added.length?" Added to dropdown: "+added.join(", ")+".":""),"ok");
+  }catch(e){say("Something went wrong: "+(e&&e.message||e),"err");}
+  btn.disabled=false;
+};
+</script></body></html>
