@@ -34,6 +34,6 @@ foreach($mode in @(@("exp","Experience Letter","experience.html"),@("rel","Relie
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}
-$out=$shell.Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html'))
+$out=$shell.Replace("__LOGO__",$logo).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html'))
 [IO.File]::WriteAllText("$code\index.html",$out,$u8)
 "built loi.html, experience.html, relieving.html and index.html"
