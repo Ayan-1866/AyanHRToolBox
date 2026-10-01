@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>__TITLE__ — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef0f3;--panel:#ffffff;--ink:#14213d;--muted:#5b6478;--line:#d7dbe3;--gold:#b8862b;--teal:#1f7a7a;--field:#f7f8fa;--err:#b3261e;--ok:#1f7a3a;--tok:#fbefd5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:28px 24px 8px;max-width:1240px;margin:0 auto}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font:700 clamp(26px,4vw,36px)/1.15 "Source Serif 4",Georgia,serif;margin:6px 0 4px}
+header p{margin:0;color:var(--muted);max-width:62ch}
+main{max-width:1240px;margin:0 auto;padding:16px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;padding:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:500;margin-bottom:4px}
+label .req{color:var(--gold)}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+input[type=checkbox]{width:auto;padding:0}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.bad{border-color:var(--err)!important}
+.hint{font-size:12px;color:var(--muted);margin-top:3px}
+.span2{grid-column:1/-1}
+.also{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:500;background:var(--field);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin:0 0 16px;cursor:pointer}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+button{font:600 15px "IBM Plex Sans",system-ui,sans-serif;border-radius:9px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink)}
+button.sm{font-size:13px;padding:6px 11px}
+button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+:root[data-theme="dark"] button.primary{background:var(--gold);color:#111;border-color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.primary{background:var(--gold);color:#111;border-color:var(--gold)}}
+#msg{font-size:14px;flex-basis:100%}
+#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+#used{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.pv{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));min-width:0}
+@media (max-width:900px){.pv{position:static}}
+.pvhead{margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pages{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.pages>div{min-width:0}
+.cap{font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:4px}
+.sw{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:#fff}
+.sw .sheet{transform-origin:top left}
+
+/* ---------- A4 letterhead sheets ---------- */
+.sheet{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff;color:#000}
+.sheet p{margin:0}
+.sheet .logo{position:absolute;left:20mm;width:39mm;height:auto}
+.sheet .bd{position:absolute;left:20mm;right:14mm;top:0}
+.cam{font-family:Cambria,"Source Serif 4",Georgia,serif;font-size:11pt}
+.cal{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif;font-size:11pt}
+.sheet .r{text-align:right}
+.sheet .ttl{text-align:center;font-weight:700;text-decoration:underline}
+.sheet .j{text-align:justify}
+.sheet .sig{font-family:Cambria,"Source Serif 4",Georgia,serif;font-weight:700;font-size:11pt;line-height:1.25}
+.sheet .ft{position:absolute;left:12mm;right:12mm;bottom:8mm;text-align:center;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;font-size:6.6pt;line-height:1.3;color:#000}
+.sheet .ft .n{color:#1f78d1;font-weight:700;font-size:9pt}
+.sheet .ft .em{color:#1f5fbf;text-decoration:underline}
+.f.empty{background:var(--tok);border-radius:2px;color:#8a6d2f;font-style:italic;font-weight:400}
+#printArea{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  #printArea .sheet{break-after:page;page-break-after:always}
+  #printArea .sheet:last-child{break-after:auto;page-break-after:auto}
+}
+</style></head><body>
+<header>
+<div class="kicker">Alcove HR</div>
+<h1>__TITLE__</h1>
+<p id="intro"></p>
+</header>
+<main>
+<form class="card" id="f" onsubmit="return false" novalidate>
+<label class="also"><input type="checkbox" id="ALSO"> <span id="alsoText"></span></label>
+<fieldset><legend>Reference</legend><div class="grid">
+<div class="span2"><label for="ENT">Company <span class="req">*</span></label><select id="ENT"><option value="">Select…</option></select><div class="hint" id="entShow">Printed in the letter and the footer</div></div>
+<div><label for="SL">Short-location <span class="req">*</span></label><input id="SL" value="HO" list="sl_list"><datalist id="sl_list"><option value="HO"></option><option value="Site"></option></datalist></div>
+<div><label for="SLNO">Sl. no. <span class="req">*</span></label><input id="SLNO" placeholder="e.g. 364"><div class="hint">Experience &amp; Relieving share it</div></div>
+<div><label for="DATE">Letter date <span class="req">*</span></label><input id="DATE" type="date"><div class="hint" id="fyShow"></div></div>
+</div></fieldset>
+<fieldset><legend>Employee</legend><div class="grid">
+<div class="span2"><label for="NAME">Name <span class="req">*</span></label><input id="NAME" placeholder="Full name" autocomplete="off"></div>
+<div data-need="rel"><label for="EMPID">Emp ID <span class="req">*</span></label><input id="EMPID" placeholder="e.g. AR000455" autocomplete="off"></div>
+<div data-need="exp"><label for="PRON">Pronoun <span class="req">*</span></label><select id="PRON"><option value="">Select…</option><option value="she">She / her</option><option value="he">He / his</option><option value="they">They / their</option></select><div class="hint">Used in “we found her / him / them …”</div></div>
+<div class="span2"><label for="DESIG">Designation <span class="req">*</span></label><input id="DESIG" list="desig_list" placeholder="Type to search or pick from the list" autocomplete="off"><datalist id="desig_list">__DESIG__</datalist></div>
+<div class="span2"><label for="DEPT">Department</label><input id="DEPT" placeholder="e.g. Branding &amp; Communication" autocomplete="off"><div class="hint">Optional — printed on its own line under the designation</div></div>
+<div class="span2" data-need="rel"><label for="PROJ">Project / office <span class="req">*</span></label><input id="PROJ" list="proj_list" placeholder="e.g. New Kolkata - Sangam (B)" autocomplete="off"><datalist id="proj_list"></datalist><div class="hint">Relieving Letter: “… services of COMPANY, <i>project</i> Project …”</div></div>
+<div data-need="exp"><label for="DOJ">Date of joining <span class="req">*</span></label><input id="DOJ" type="date"></div>
+<div><label for="DOL">Relieving date <span class="req">*</span></label><input id="DOL" type="date"><div class="hint">Last working day</div></div>
+</div></fieldset>
+<div class="actions">
+<button class="primary" id="prn" type="button">Print / Save as PDF</button>
+<button type="button" id="clr">Clear employee</button>
+<span id="msg" role="status"></span>
+<span id="used" hidden></span>
+</div>
+</form>
+<section class="pv" aria-label="Preview">
+<div class="pvhead">Live preview — A4 letterhead</div>
+<div class="pages" id="pages"></div>
+</section>
+</main>
+<div id="printArea"></div>
+<script>
+const MODE="__MODE__"; // "exp" or "rel": which letter this page is for
+const FOOTS=__FOOTS__;
+const LOGO_B64="__LOGO__";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt=iso=>{if(!iso)return"";const[y,m,d]=iso.slice(0,10).split("-");return d+"-"+m+"-"+y;};
+function fyOf(iso){if(!iso)return"";const[y,m]=iso.split("-").map(Number);const s=m>=4?y:y-1;return s+"-"+String((s+1)%100).padStart(2,"0");}
+function nextSl(s){const m=String(s||"").match(/^(.*?)(\d+)$/);if(!m)return s;return m[1]+String(Number(m[2])+1).padStart(m[2].length,"0");}
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+const OTHER=MODE==="exp"?"rel":"exp";
+const NAMES={exp:"Experience Letter",rel:"Relieving Letter"};
+$("intro").textContent=MODE==="exp"
+  ?"Fill in the employee's details to get an Experience Letter on the Alcove letterhead. Tick the box to add the Relieving Letter as page 2 of the same PDF."
+  :"Fill in the employee's details to get a Relieving Letter on the Alcove letterhead. Tick the box to add the Experience Letter as page 1 of the same PDF.";
+$("alsoText").textContent=MODE==="exp"?"Also add the Relieving Letter (page 2)":"Also add the Experience Letter (page 1)";
+
+/* ---------- companies ---------- */
+const findFoot=kw=>FOOTS.find(f=>f[0].toLowerCase().includes(kw))||["","",""];
+const ENT={
+  ADLLP:{short:"Alcove Developers LLP",foot:findFoot("developers")},
+  ARPL:{short:"Alcove Realty Pvt. Ltd.",foot:findFoot("alcove realty")},
+  AMBA:{short:"AMBA Highrise Pvt. Ltd.",foot:findFoot("amba")},
+  ACPL:{short:"Alcove Construction Pvt. Ltd.",foot:findFoot("construction")},
+  SRPL:{short:"Sundarvan Realty Pvt. Ltd.",foot:findFoot("sundarvan")}
+};
+// letterhead footer exactly as printed on the Experience / Relieving samples
+const LH_FOOT={ADLLP:["Alcove Developers LLP","Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E info@alcoverealty.in W alcoverealty.in","(LLPIN: AAC - 2250)"]};
+const legal=c=>ENT[c]?ENT[c].foot[0].toUpperCase():"";
+Object.keys(ENT).forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=ENT[c].short+" ("+c+")";$("ENT").appendChild(o);});
+function guessEnt(p){p=(p||"").toLowerCase();
+  if(/sangam|triveni|new kolkata/.test(p))return"ADLLP";if(/arpl|origyn/.test(p))return"ARPL";
+  if(/srpl|sundarvan/.test(p))return"SRPL";if(/amba|curve/.test(p))return"AMBA";return"";}
+const PROJECTS=["New Kolkata - Sangam (B)","New Kolkata - Sangam","New Kolkata - Triveni","New Kolkata - Triveni Mall","New Kolkata Triveni - CAM","Triveni - Mall & Multiplex","Triveni - Play School","Maintenance-Sangam","Head Office","ARPL - ORIGYN","SRPL","The Curve","AMBA HO","AMBA - North Block","Alcove - North Block","Diamond Chamber","ANI-2","Delhi","Jessore Road","Gurusaday Road","AMRAVATI","ASPS-Site"];
+const K_PROJ="alcove-exit-projects";
+function fillProjects(){const l=$("proj_list");l.innerHTML="";PROJECTS.concat(load(K_PROJ,[])).forEach(p=>{const o=document.createElement("option");o.value=p;l.appendChild(o);});}
+fillProjects();
+[...$("desig_list").options].forEach(o=>{if(!o.value||o.value==="__other")o.remove();});
+
+/* ---------- shared draft: the Experience and Relieving pages fill each other ---------- */
+const PERSON=["ENT","NAME","EMPID","PRON","DESIG","DEPT","PROJ","DOJ","DOL"],REF=["SL","SLNO","DATE"];
+const K_DRAFT="alcove-exit-draft",K_REF="alcove-exit-ref",K_ALSO="alcove-exit-also-"+MODE;
+function restore(){const d=load(K_DRAFT,{}),r=load(K_REF,{});
+  PERSON.forEach(k=>{if(d[k]!==undefined&&document.activeElement!==$(k))$(k).value=d[k];});
+  REF.forEach(k=>{if(r[k]!==undefined&&document.activeElement!==$(k))$(k).value=r[k];});}
+restore();
+$("ALSO").checked=!!load(K_ALSO,false);
+if(!$("DATE").value){const t=new Date();$("DATE").value=new Date(t.getTime()-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);}
+if(!$("SL").value)$("SL").value="HO";
+function persist(){const d={},r={};PERSON.forEach(k=>d[k]=$(k).value);REF.forEach(k=>r[k]=$(k).value);save(K_DRAFT,d);save(K_REF,r);}
+window.addEventListener("storage",e=>{if(e.key===K_DRAFT||e.key===K_REF){restore();render();}});
+
+/* ---------- letters ---------- */
+const v=k=>$(k).value.trim();
+const docs=()=>MODE==="exp"?($("ALSO").checked?["exp","rel"]:["exp"]):($("ALSO").checked?["exp","rel"]:["rel"]);
+const NEED={exp:["NAME","DESIG","ENT","DOJ","DOL","PRON","SLNO","SL","DATE"],rel:["NAME","EMPID","DESIG","ENT","PROJ","DOL","SLNO","SL","DATE"]};
+const LABEL={ENT:"Company",SL:"Short-location",SLNO:"Sl. no.",DATE:"Letter date",NAME:"Name",EMPID:"Emp ID",PRON:"Pronoun",DESIG:"Designation",PROJ:"Project / office",DOJ:"Date of joining",DOL:"Relieving date"};
+const PR={she:["her","her"],he:["his","him"],they:["their","them"]};
+function V(x,label){return x?esc(x):'<span class="f empty">['+esc(label)+"]</span>";}
+let LOGO="data:image/png;base64,"+LOGO_B64;
+try{const b=atob(LOGO_B64),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);LOGO=URL.createObjectURL(new Blob([u],{type:"image/png"}));}catch(e){}
+function footer(c){const f=LH_FOOT[c]||(ENT[c]&&ENT[c].foot);if(!f||!f[0])return"";
+  const l2=esc(f[1]).replace(/(^|\s)([PFEW])(?=\s)/g,'$1<b>$2</b>').replace(/([\w.+-]+@[\w-]+(?:\.[\w-]+)+)/,'<span class="em">$1</span>');
+  return'<div class="ft"><div class="n">'+esc(f[0])+"</div><div>"+l2+"</div>"+(f[2]?"<div><b>"+esc(f[2])+"</b></div>":"")+"</div>";}
+function ref(){return V(v("ENT"),"Company code")+"/"+V(v("SL"),"Location")+"/HR/EXP./"+V(fyOf(v("DATE")),"FY")+"/"+V(v("SLNO"),"Sl. no.");}
+function expSheet(){const c=v("ENT"),p=PR[v("PRON")],dept=v("DEPT");
+  const poss=p?p[0]:'<span class="f empty">[her/his]</span>',obj=p?p[1]:'<span class="f empty">[her/him]</span>';
+  return'<div class="sheet"><img class="logo" style="top:12.5mm" src="'+LOGO+'" alt=""><div class="bd cam" style="padding-top:44mm">'+
+   "<p>Ref. No: "+ref()+'</p><p class="r">Date: '+V(fmt(v("DATE")),"Date")+"</p>"+
+   '<p class="ttl" style="margin-top:31mm">To Whomsoever It May Concern</p>'+
+   '<p style="margin-top:24mm;line-height:1.45">This is to certify that&nbsp; <b class="cal">'+V(v("NAME"),"Name")+'</b> was employed with us as <b class="cal">'+V(v("DESIG"),"Designation")+"</b>"+(dept?'<br><b class="cal">'+esc(dept)+"</b>":"")+" from "+V(fmt(v("DOJ")),"Joining date")+" to "+V(fmt(v("DOL")),"Relieving date")+".</p>"+
+   '<p style="margin-top:7mm">During the tenure of '+poss+" service with us, we found "+obj+" to be sincere and hard working.</p>"+
+   '<p style="margin-top:8.5mm">We wish '+obj+" all the best in "+poss+" future endeavors.</p>"+
+   '<p style="margin-top:26mm"><b>For '+V(legal(c),"Company")+"</b></p>"+
+   '<p class="sig" style="margin-top:22mm">_________________________<br>(Authorized Signatory)</p></div>'+footer(c)+"</div>";}
+function relSheet(){const c=v("ENT"),dept=v("DEPT"),pj=v("PROJ");
+  return'<div class="sheet"><img class="logo" style="top:8mm" src="'+LOGO+'" alt=""><div class="bd cal" style="padding-top:46mm">'+
+   '<p class="cam">Ref. No: '+ref()+'</p><p class="r">Date: '+V(fmt(v("DATE")),"Date")+"</p>"+
+   '<p style="margin-top:16mm;font-weight:700;line-height:1.36">'+V(v("NAME"),"Name")+"<br>Emp ID: "+V(v("EMPID"),"Emp ID")+"<br>"+V(v("DESIG"),"Designation")+(dept?"<br>"+esc(dept):"")+"<br>"+V(legal(c),"Company")+"<br>"+V(pj,"Project")+"</p>"+
+   '<p class="ttl" style="margin-top:4mm">Sub: - Relieving Letter</p>'+
+   '<p style="margin-top:12mm">Dear <b>'+V(v("NAME"),"Name")+",</b></p>"+
+   '<p class="j" style="margin-top:5mm;line-height:2.15">We do hereby confirm that you are being relieved from the services of <b>'+V(legal(c),"Company")+"</b>, <b>"+V(pj,"Project")+"</b> Project after ensuring Clearance Certificate from all departments as on "+V(fmt(v("DOL")),"Relieving date")+" at the close of working hours. We wish you all the best for your future career.</p>"+
+   '<p style="margin-top:16mm"><b>For '+V(legal(c),"Company")+"</b></p>"+
+   '<p class="sig" style="margin-top:22mm">_______________________<br>(Authorized Signatory)</p></div>'+footer(c)+"</div>";}
+const SHEET={exp:expSheet,rel:relSheet};
+
+/* ---------- preview ---------- */
+function render(){
+  const ds=docs();
+  document.querySelectorAll("[data-need]").forEach(el=>{el.hidden=!ds.includes(el.dataset.need);});
+  $("pages").innerHTML=ds.map(d=>'<div><div class="cap">'+NAMES[d]+'</div><div class="sw">'+SHEET[d]()+"</div></div>").join("");
+  const f=fyOf(v("DATE"));$("fyShow").textContent=f?"Financial year in ref no: "+f:"";
+  const c=v("ENT");$("entShow").textContent=c?"Signed “For "+legal(c)+"”":"Printed in the letter and the footer";
+  fit();}
+function fit(){document.querySelectorAll(".sw").forEach(w=>{const s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";});}
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("pages"));else window.addEventListener("resize",fit);
+
+/* ---------- inputs ---------- */
+let entTouched=!!v("ENT");
+$("ENT").addEventListener("change",()=>{entTouched=!!v("ENT");});
+$("PROJ").addEventListener("input",()=>{if(!entTouched){const g=guessEnt(v("PROJ"));if(g)$("ENT").value=g;}});
+document.querySelectorAll("#f input,#f select").forEach(el=>el.addEventListener(el.tagName==="SELECT"||el.type==="checkbox"?"change":"input",()=>{
+  el.classList.remove("bad");if(el.id==="ALSO")save(K_ALSO,el.checked);else persist();render();}));
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+$("clr").onclick=()=>{["NAME","EMPID","PRON","DESIG","DEPT","DOJ","DOL"].forEach(k=>{$(k).value="";$(k).classList.remove("bad");});persist();render();say("");$("used").hidden=true;};
+$("prn").onclick=()=>{
+  const need=[...new Set(docs().flatMap(d=>NEED[d]))],missing=need.filter(k=>!v(k));
+  PERSON.concat(REF).forEach(k=>$(k).classList.toggle("bad",missing.includes(k)));
+  if(missing.length){say("Please fill: "+missing.map(k=>LABEL[k]).join(", "),"err");$(missing[0]).focus();return;}
+  const p=v("PROJ");if(p&&!PROJECTS.concat(load(K_PROJ,[])).some(x=>x.toLowerCase()===p.toLowerCase())){save(K_PROJ,load(K_PROJ,[]).concat([p]));fillProjects();}
+  $("printArea").innerHTML=docs().map(d=>SHEET[d]()).join("");
+  say("Opening print… choose “Save as PDF” as the printer to get "+(docs().length>1?"one PDF with both letters.":"a PDF."),"ok");
+  setTimeout(()=>{window.print();const used=v("SLNO"),u=$("used");u.hidden=false;
+    u.innerHTML="Ref Sl. no. "+esc(used)+' used? <button class="sm primary" id="uYes" type="button">Mark as used → '+esc(nextSl(used))+'</button> <button class="sm" id="uNo" type="button">Not now</button>';
+    $("uYes").onclick=()=>{$("SLNO").value=nextSl(used);persist();render();u.hidden=true;say("Next Sl. no. is "+$("SLNO").value+".","ok");};
+    $("uNo").onclick=()=>{u.hidden=true;};},60);};
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+render();
+</script></body></html>
