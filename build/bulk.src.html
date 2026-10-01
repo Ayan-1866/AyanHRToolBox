@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bulk Letters — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+__JSZIP__
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef0f3;--panel:#ffffff;--ink:#14213d;--muted:#5b6478;--line:#d7dbe3;--gold:#b8862b;--teal:#1f7a7a;--field:#f7f8fa;--err:#b3261e;--ok:#1f7a3a;--tok:#fbefd5;--rowsel:#fff7e0;--rowfocus:#e7f3f3}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;--rowsel:#2a2616;--rowfocus:#14302f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;--rowsel:#2a2616;--rowfocus:#14302f;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:24px 24px 4px;max-width:1500px;margin:0 auto}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font:700 clamp(24px,3.4vw,32px)/1.15 "Source Serif 4",Georgia,serif;margin:6px 0 4px}
+header p{margin:0;color:var(--muted);max-width:80ch}
+main{max-width:1500px;margin:0 auto;padding:14px 24px 110px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:1050px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+label{display:block;font-size:12.5px;font-weight:500;margin-bottom:3px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:7px;padding:7px 9px}
+textarea{min-height:56px;resize:vertical}
+input[type=checkbox]{width:auto;padding:0}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.hint{font-size:11.5px;color:var(--muted);margin-top:2px}
+.docs{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:12px}
+.docs label{display:flex;align-items:center;gap:7px;font-size:14px;margin:0;cursor:pointer}
+.docs small{color:var(--muted);font-weight:400}
+button{font:600 14px "IBM Plex Sans",system-ui,sans-serif;border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink);white-space:nowrap}
+button.sm{font-size:12.5px;padding:6px 10px}
+button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+:root[data-theme="dark"] button.primary{background:var(--gold);color:#111;border-color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.primary{background:var(--gold);color:#111;border-color:var(--gold)}}
+button:disabled{opacity:.5;cursor:not-allowed}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:10px}
+.bar>div{flex:1 1 130px}
+.bar>div.wide{flex:2 1 220px}
+.bulk{display:flex;flex-wrap:wrap;gap:8px;align-items:end;background:var(--rowsel);border:1px solid var(--line);border-radius:9px;padding:9px;margin-bottom:10px}
+.bulk>div{flex:1 1 130px}
+.bulk b{flex-basis:100%;font-size:12.5px}
+.count{font-size:12.5px;color:var(--muted);margin:0 0 6px}
+.tw{overflow:auto;max-height:62vh;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{position:sticky;top:0;background:var(--field);text-align:left;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:7px 8px;border-bottom:1px solid var(--line);z-index:1}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr{cursor:pointer}
+tr.sel td{background:var(--rowsel)}
+tr.focus td{background:var(--rowfocus)}
+td .m{color:var(--muted);font-size:11.5px}
+td input,td select{padding:4px 6px;font-size:12.5px;min-width:0}
+td.ck{width:30px}
+.ok{color:var(--ok);font-weight:600}
+.need{color:var(--err);font-size:11.5px}
+.more{display:block;margin:8px auto 0}
+.pv{position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+@media (max-width:1050px){.pv{position:static}}
+.ed{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ed .span2{grid-column:1/-1}
+.edhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.edhead b{font-size:15px}
+.pages{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:12px}
+.pages>div,.pv,.pv .card{min-width:0}
+.pages .cap{font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.sw{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:3px;background:#fff}
+.sw .sheet{transform-origin:top left}
+.empty-note{color:var(--muted);font-size:13px}
+.foot-bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);padding:10px 24px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+.foot-bar .in{max-width:1500px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+#sum{font-size:13px;flex:1 1 260px}
+#msg{flex-basis:100%;font-size:13px}
+#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+#used{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex-basis:100%;font-size:13px}
+
+/* ---------- A4 sheets ---------- */
+.sheet{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff;color:#000}
+.sheet p{margin:0}
+.sheet .logo{position:absolute;left:20mm;width:39mm;height:auto}
+.sheet .bd{position:absolute;left:20mm;right:14mm;top:0}
+.cam{font-family:Cambria,"Source Serif 4",Georgia,serif;font-size:11pt}
+.cal{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif;font-size:11pt}
+.sheet .r{text-align:right}
+.sheet .ttl{text-align:center;font-weight:700;text-decoration:underline}
+.sheet .j{text-align:justify}
+.sheet .sig{font-family:Cambria,"Source Serif 4",Georgia,serif;font-weight:700;font-size:11pt;line-height:1.25}
+.sheet .ft{position:absolute;left:12mm;right:12mm;bottom:8mm;text-align:center;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;font-size:6.6pt;line-height:1.3;color:#000}
+.sheet .ft .n{color:#1f78d1;font-weight:700;font-size:9pt}
+.sheet .ft .em{color:#1f5fbf;text-decoration:underline}
+.sheet.loi{padding:45mm 18mm 15mm 20mm;font:11pt/1.2 Cambria,"Source Serif 4",Georgia,serif}
+.sheet.loi .tr{display:flex;justify-content:space-between;gap:12px}
+.sheet.loi .bl{position:relative;padding-left:.5in}
+.sheet.loi .bl::before{content:"•";position:absolute;left:.25in}
+.sheet.loi .ar{font-family:Arial,"Liberation Sans",Helvetica,sans-serif}
+.f{background:var(--tok);border-radius:2px}
+.f.empty{color:#8a6d2f;font-style:italic;font-weight:400}
+#printArea{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  #printArea .sheet{break-after:page;page-break-after:always}
+  #printArea .sheet:last-child{break-after:auto;page-break-after:auto}
+  .f{background:none}
+}
+</style></head><body>
+<header>
+<div class="kicker">Alcove HR</div>
+<h1>Bulk Letters</h1>
+<p>Pick one employee or many from the employee list, tick the documents, and generate. Experience, Relieving and LOI come out as one merged PDF; Appointment Letters as Word files.</p>
+</header>
+<main>
+<div>
+<section class="card" aria-labelledby="h-docs">
+  <h2 id="h-docs">1 · Documents &amp; numbering</h2>
+  <div class="docs">
+    <label><input type="checkbox" id="d_exp" checked> Experience Letter <small>PDF</small></label>
+    <label><input type="checkbox" id="d_rel" checked> Relieving Letter <small>PDF</small></label>
+    <label><input type="checkbox" id="d_loi"> LOI <small>PDF + Word</small></label>
+    <label><input type="checkbox" id="d_appt"> Appointment Letter <small>Word</small></label>
+  </div>
+  <div class="grid">
+    <div><label for="s_date">Letter date</label><input id="s_date" type="date"><div class="hint" id="fyShow"></div></div>
+    <div><label for="s_sl">Short-location</label><input id="s_sl" value="HO" list="sl_list"><datalist id="sl_list"><option value="HO"></option><option value="Site"></option></datalist></div>
+    <div data-doc="exprel"><label for="s_exp">Next EXP. no.</label><input id="s_exp" placeholder="e.g. 364"><div class="hint">Experience &amp; Relieving share it</div></div>
+    <div data-doc="loi"><label for="s_loi">Next LOI no.</label><input id="s_loi" placeholder="e.g. 0162"></div>
+    <div data-doc="appt"><label for="s_appt">Next A.O. no.</label><input id="s_appt" placeholder="e.g. 045"></div>
+    <div data-doc="loi"><label for="s_prob">LOI probation</label><select id="s_prob"><option value="three">3 months</option><option value="six" selected>6 months</option><option value="nine">9 months</option><option value="twelve">12 months</option></select></div>
+    <div data-doc="loi"><label for="s_notice">LOI notice (days)</label><input id="s_notice" type="number" min="1" value="30"></div>
+  </div>
+</section>
+
+<section class="card" aria-labelledby="h-emp">
+  <h2 id="h-emp">2 · Employees</h2>
+  <div class="bar">
+    <div class="wide"><label for="q">Search</label><input id="q" type="search" placeholder="Name, Emp Code or designation" autocomplete="off"></div>
+    <div><label for="f_status">Status</label><select id="f_status"><option value="">All</option><option value="ACTIVE">Active</option><option value="NOTICE PERIOD">Notice period</option><option value="INACTIVE">Inactive</option></select></div>
+    <div><label for="f_proj">Project / office</label><select id="f_proj"><option value="">All</option></select></div>
+    <div><label for="f_show">Show</label><select id="f_show"><option value="">Everyone</option><option value="sel">Selected only</option><option value="need">Selected, needs info</option></select></div>
+  </div>
+  <div class="bar" style="align-items:center">
+    <button class="sm" id="selAll" type="button">Select all shown</button>
+    <button class="sm" id="selNone" type="button">Clear selection</button>
+    <button class="sm" id="addP" type="button">+ Add person</button>
+    <button class="sm" id="imp" type="button">Import employee file…</button>
+    <input type="file" id="impFile" accept=".json,.txt,application/json,text/plain" hidden>
+  </div>
+  <div class="bulk" id="bulk" hidden>
+    <b id="bulkTitle">Set for selected</b>
+    <div><label for="b_dol">Relieving date</label><input id="b_dol" type="date"></div>
+    <div><label for="b_pron">Pronoun</label><select id="b_pron"><option value="">— keep —</option><option value="she">She / her</option><option value="he">He / his</option><option value="they">They / their</option></select></div>
+    <div><label for="b_ent">Company</label><select id="b_ent" class="entSel"><option value="">— keep —</option></select></div>
+    <div style="flex:0 0 auto"><button class="sm primary" id="bApply" type="button">Apply</button></div>
+  </div>
+  <p class="count" id="count"></p>
+  <div class="tw"><table><thead><tr><th></th><th>Employee</th><th>Designation</th><th>Project → Company</th><th>Joined</th><th>Relieving</th><th>Pronoun</th><th>Ready</th></tr></thead><tbody id="rows"></tbody></table></div>
+  <button class="sm more" id="more" type="button" hidden>Show more</button>
+</section>
+</div>
+
+<aside class="pv">
+<section class="card" aria-labelledby="h-ed">
+  <h2 id="h-ed">3 · Selected person</h2>
+  <div id="edEmpty" class="empty-note">Click a row to check and edit that person's details and see their letters.</div>
+  <div id="ed" hidden>
+    <div class="edhead"><b id="edName"></b><span><button class="sm" id="edReset" type="button">Reset to employee list</button> <button class="sm" id="edDel" type="button" hidden>Remove</button></span></div>
+    <div class="ed">
+      <div><label for="e_name">Name</label><input id="e_name" data-f="name"></div>
+      <div><label for="e_code">Emp ID</label><input id="e_code" data-f="code"></div>
+      <div><label for="e_desig">Designation</label><input id="e_desig" data-f="desig"></div>
+      <div><label for="e_dept">Department</label><input id="e_dept" data-f="dept"></div>
+      <div><label for="e_project">Project / office</label><input id="e_project" data-f="project"></div>
+      <div><label for="e_entity">Company</label><select id="e_entity" data-f="entity" class="entSel"><option value="">Select…</option></select></div>
+      <div><label for="e_doj">Date of joining</label><input id="e_doj" type="date" data-f="doj"></div>
+      <div><label for="e_dol">Relieving date</label><input id="e_dol" type="date" data-f="dol"></div>
+      <div><label for="e_pron">Pronoun</label><select id="e_pron" data-f="pron"><option value="">Select…</option><option value="she">She / her</option><option value="he">He / his</option><option value="they">They / their</option></select></div>
+      <div><label for="e_dob">Date of birth</label><input id="e_dob" type="date" data-f="dob"></div>
+      <div class="span2"><label for="e_addr">Address</label><textarea id="e_addr" data-f="addr"></textarea></div>
+      <div class="span2" data-doc="appt"><label for="e_offloc">Office location <small>(Appointment)</small></label><select id="e_offloc" data-f="offloc">__OFFLOC__</select></div>
+      <div class="span2" data-doc="appt"><label for="e_offaddr">Office address <small>(Appointment)</small></label><select id="e_offaddr" data-f="offaddr">__OFFADDR__</select></div>
+    </div>
+    <div class="pages" id="pages"></div>
+  </div>
+</section>
+</aside>
+</main>
+
+<div class="foot-bar"><div class="in">
+  <span id="sum"></span>
+  <button class="primary" id="goPdf" type="button">Print / Save as PDF</button>
+  <button id="goWord" type="button">Download Word (.zip)</button>
+  <span id="msg" role="status"></span>
+  <span id="used" hidden></span>
+</div></div>
+<div id="printArea"></div>
+
+<script>
+__LOI_MODEL__
+__APPT_TPL__
+const FOOTS=__FOOTS__;
+const LOGO_B64="__LOGO__";
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt=iso=>{if(!iso)return"";const[y,m,d]=iso.slice(0,10).split("-");return d+"-"+m+"-"+y;};
+function fyOf(iso){if(!iso)return"";const[y,m]=iso.split("-").map(Number);const s=m>=4?y:y-1;return s+"-"+String((s+1)%100).padStart(2,"0");}
+function addN(s,i){const m=String(s||"").trim().match(/^(.*?)(\d+)$/);if(!m)return"";return m[1]+String(Number(m[2])+i).padStart(m[2].length,"0");}
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+/* ---------- companies ---------- */
+const findFoot=kw=>FOOTS.find(f=>f[0].toLowerCase().includes(kw))||["","",""];
+const ENT={
+  ADLLP:{short:"Alcove Developers LLP",foot:findFoot("developers")},
+  ARPL:{short:"Alcove Realty Pvt. Ltd.",foot:findFoot("alcove realty")},
+  AMBA:{short:"AMBA Highrise Pvt. Ltd.",foot:findFoot("amba")},
+  ACPL:{short:"Alcove Construction Pvt. Ltd.",foot:findFoot("construction")},
+  SRPL:{short:"Sundarvan Realty Pvt. Ltd.",foot:findFoot("sundarvan")}
+};
+// letterhead footer exactly as printed on the Experience / Relieving samples
+const LH_FOOT={ADLLP:["Alcove Developers LLP","Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E info@alcoverealty.in W alcoverealty.in","(LLPIN: AAC - 2250)"]};
+const legal=c=>ENT[c]?ENT[c].foot[0].toUpperCase():"";
+function guessEnt(p){p=(p||"").toLowerCase();
+  if(/sangam|triveni|new kolkata/.test(p))return"ADLLP";if(/arpl|origyn/.test(p))return"ARPL";
+  if(/srpl|sundarvan/.test(p))return"SRPL";if(/amba|curve/.test(p))return"AMBA";return"";}
+document.querySelectorAll(".entSel").forEach(s=>Object.keys(ENT).forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=ENT[c].short+" ("+c+")";s.appendChild(o);}));
+["e_offloc","e_offaddr"].forEach(id=>{const s=$(id);[...s.options].forEach(o=>{if(o.value==="__other")o.remove();});s.options[0].textContent="Select…";});
+const OFFLOCS=[...$("e_offloc").options].map(o=>o.value).filter(Boolean);
+const OFFADDRS=[...$("e_offaddr").options].map(o=>o.value).filter(Boolean);
+const defOffloc=c=>ENT[c]?(OFFLOCS.find(v=>v.toLowerCase().startsWith(ENT[c].short.toLowerCase()))||""):"";
+function defOffaddr(p){p=(p||"").toLowerCase();const f=re=>OFFADDRS.find(v=>re.test(v.toLowerCase()))||"";
+  if(/triveni/.test(p))return f(/^triveni/);if(/sangam|new kolkata/.test(p))return f(/^sangam/);return f(/^ganapati/);}
+
+/* ---------- people: employee list + your edits ---------- */
+const K_EMPS="alcove-hrtool-emps",K_EDITS="alcove-bulk-edits",K_MAN="alcove-bulk-manual",K_PROJ="alcove-bulk-proj-company",K_SET="alcove-bulk-settings",K_SEL="alcove-bulk-selected";
+let EMPS=[],BYKEY=new Map(),EDITS=load(K_EDITS,{}),MANUAL=load(K_MAN,[]),PROJENT=load(K_PROJ,{});
+const SEL=new Set(load(K_SEL,[]));let focusKey=null,limit=200;
+function loadEmps(){const c=load(K_EMPS,null);EMPS=(c&&Array.isArray(c.list))?c.list:[];
+  BYKEY=new Map();EMPS.forEach(e=>BYKEY.set(e.code,e));MANUAL.forEach(k=>BYKEY.set(k,{code:"",manual:true}));
+  const projs=[...new Set(EMPS.map(e=>e.company).filter(Boolean))].sort();
+  const sel=$("f_proj"),cur=sel.value;sel.length=1;projs.forEach(p=>{const o=document.createElement("option");o.value=o.textContent=p;sel.appendChild(o);});sel.value=cur;}
+function keys(){return MANUAL.concat(EMPS.map(e=>e.code));}
+function get(key,f){const e=EDITS[key];if(e&&e[f]!==undefined)return e[f];const b=BYKEY.get(key)||{};
+  switch(f){case"project":return b.company||"";case"entity":{const p=get(key,"project");return PROJENT[p]||guessEnt(p);}
+    case"offloc":return defOffloc(get(key,"entity"));case"offaddr":return defOffaddr(get(key,"project"));
+    case"dol":case"pron":return"";default:return b[f]||"";}}
+function setEdit(key,f,v){(EDITS[key]=EDITS[key]||{})[f]=v;
+  if(f==="entity"&&v){const p=get(key,"project");if(p&&!guessEnt(p)&&!PROJENT[p]){PROJENT[p]=v;save(K_PROJ,PROJENT);}}
+  save(K_EDITS,EDITS);}
+const status=key=>(BYKEY.get(key)||{}).manual?"MANUAL":((BYKEY.get(key)||{}).status||"");
+
+/* ---------- settings ---------- */
+const SETF=["d_exp","d_rel","d_loi","d_appt","s_date","s_sl","s_exp","s_loi","s_appt","s_prob","s_notice"];
+(function(){const s=load(K_SET,{});SETF.forEach(id=>{if(s[id]===undefined)return;const el=$(id);if(el.type==="checkbox")el.checked=!!s[id];else el.value=s[id];});
+  if(!$("s_date").value){const t=new Date();$("s_date").value=new Date(t.getTime()-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);}})();
+function saveSet(){const s={};SETF.forEach(id=>{const el=$(id);s[id]=el.type==="checkbox"?el.checked:el.value;});save(K_SET,s);}
+const D=()=>({exp:$("d_exp").checked,rel:$("d_rel").checked,loi:$("d_loi").checked,appt:$("d_appt").checked});
+function docUI(){const d=D();document.querySelectorAll("[data-doc]").forEach(el=>{const k=el.dataset.doc;el.hidden=k==="exprel"?!(d.exp||d.rel):!d[k];});
+  const f=fyOf($("s_date").value);$("fyShow").textContent=f?"Financial year: "+f:"";}
+
+/* ---------- what each document needs ---------- */
+const FL={name:"name",code:"Emp ID",desig:"designation",dept:"department",project:"project",entity:"company",doj:"joining date",dol:"relieving date",pron:"pronoun",addr:"address",dob:"date of birth",offloc:"office location",offaddr:"office address"};
+const NEED={exp:["name","desig","entity","doj","dol","pron"],rel:["name","code","desig","entity","project","dol"],loi:["name","addr","desig","doj","entity"],appt:["name","code","desig","dob","addr","entity","doj","offloc","offaddr"]};
+function missing(key){const d=D(),m=new Set();Object.keys(NEED).forEach(k=>{if(d[k])NEED[k].forEach(f=>{if(!String(get(key,f)).trim())m.add(f);});});return[...m];}
+function setMissing(){const d=D(),m=[];
+  if(!$("s_date").value)m.push("Letter date");if(!$("s_sl").value.trim())m.push("Short-location");
+  if((d.exp||d.rel)&&!addN($("s_exp").value,0))m.push("Next EXP. no.");
+  if(d.loi&&!addN($("s_loi").value,0))m.push("Next LOI no.");if(d.appt&&!addN($("s_appt").value,0))m.push("Next A.O. no.");
+  if(d.loi&&!$("s_notice").value)m.push("LOI notice");return m;}
+
+/* ---------- table ---------- */
+function shownKeys(){const q=$("q").value.trim().toLowerCase(),st=$("f_status").value,pj=$("f_proj").value,sh=$("f_show").value;
+  return keys().filter(k=>{const man=(BYKEY.get(k)||{}).manual;
+    if(st&&!man&&status(k)!==st)return false;if(pj&&get(k,"project")!==pj)return false;
+    if(sh==="sel"&&!SEL.has(k))return false;if(sh==="need"&&!(SEL.has(k)&&missing(k).length))return false;
+    if(q&&!(get(k,"name").toLowerCase().includes(q)||get(k,"code").toLowerCase().includes(q)||get(k,"desig").toLowerCase().includes(q)))return false;
+    return true;});}
+const PRON=[["","—"],["she","She"],["he","He"],["they","They"]];
+function readyCell(k){const m=missing(k);return m.length?'<span class="need">needs '+esc(m.map(f=>FL[f]).join(", "))+"</span>":'<span class="ok">✓ Ready</span>';}
+function rowHtml(k){const ent=get(k,"entity"),st=status(k);
+  return'<tr data-k="'+esc(k)+'" class="'+(SEL.has(k)?"sel ":"")+(k===focusKey?"focus":"")+'">'+
+   '<td class="ck"><input type="checkbox" class="rsel" aria-label="Select '+esc(get(k,"name")||"person")+'"'+(SEL.has(k)?" checked":"")+"></td>"+
+   "<td><b>"+esc(get(k,"name")||"(new person)")+'</b><div class="m">'+esc([get(k,"code"),st].filter(Boolean).join(" · "))+"</div></td>"+
+   "<td>"+esc(get(k,"desig"))+'<div class="m">'+esc(get(k,"dept"))+"</div></td>"+
+   "<td>"+esc(get(k,"project"))+'<div class="m">'+(ent?esc(ent):'<span class="need">company?</span>')+"</div></td>"+
+   "<td>"+esc(fmt(get(k,"doj")))+"</td>"+
+   '<td><input type="date" class="rdol" value="'+esc(get(k,"dol"))+'" aria-label="Relieving date"></td>'+
+   '<td><select class="rpron" aria-label="Pronoun">'+PRON.map(([v,t])=>'<option value="'+v+'"'+(get(k,"pron")===v?" selected":"")+">"+t+"</option>").join("")+"</select></td>"+
+   '<td class="rd">'+readyCell(k)+"</td></tr>";}
+function render(){const ks=shownKeys();
+  $("rows").innerHTML=ks.slice(0,limit).map(rowHtml).join("")||'<tr><td colspan="8" class="empty-note">'+(EMPS.length||MANUAL.length?"No one matches these filters.":"No employee list yet. Use “Import employee file…”, load it from the dashboard's employee bar, or + Add person.")+"</td></tr>";
+  $("more").hidden=ks.length<=limit;$("more").textContent="Show more ("+(ks.length-limit)+" more)";
+  $("count").textContent="Showing "+Math.min(limit,ks.length).toLocaleString("en-IN")+" of "+ks.length.toLocaleString("en-IN")+" · "+SEL.size+" selected";
+  bulkUI();summary();}
+function refreshRow(k){const tr=$("rows").querySelector('tr[data-k="'+CSS.escape(k)+'"]');if(tr)tr.outerHTML=rowHtml(k);}
+function bulkUI(){$("bulk").hidden=!SEL.size;$("bulkTitle").textContent="Set for "+SEL.size+" selected";}
+function saveSel(){save(K_SEL,[...SEL]);}
+let qT;$("q").addEventListener("input",()=>{clearTimeout(qT);qT=setTimeout(()=>{limit=200;render();},150);});
+["f_status","f_proj","f_show"].forEach(id=>$(id).addEventListener("change",()=>{limit=200;render();}));
+$("more").onclick=()=>{limit+=200;render();};
+$("selAll").onclick=()=>{shownKeys().forEach(k=>SEL.add(k));saveSel();render();};
+$("selNone").onclick=()=>{SEL.clear();saveSel();render();};
+$("rows").addEventListener("change",e=>{const tr=e.target.closest("tr[data-k]");if(!tr)return;const k=tr.dataset.k;
+  if(e.target.classList.contains("rsel")){if(e.target.checked)SEL.add(k);else SEL.delete(k);saveSel();tr.classList.toggle("sel",e.target.checked);bulkUI();summary();$("count").textContent=$("count").textContent.replace(/\d+ selected/,SEL.size+" selected");}
+  else if(e.target.classList.contains("rdol")){setEdit(k,"dol",e.target.value);tr.querySelector(".rd").innerHTML=readyCell(k);summary();if(k===focusKey)editor();}
+  else if(e.target.classList.contains("rpron")){setEdit(k,"pron",e.target.value);tr.querySelector(".rd").innerHTML=readyCell(k);summary();if(k===focusKey)editor();}});
+$("rows").addEventListener("click",e=>{if(e.target.closest("input,select,button"))return;const tr=e.target.closest("tr[data-k]");if(tr)focus(tr.dataset.k);});
+$("bApply").onclick=()=>{const dol=$("b_dol").value,pr=$("b_pron").value,en=$("b_ent").value;
+  if(!dol&&!pr&&!en){say("Choose a relieving date, pronoun or company to apply.","err");return;}
+  SEL.forEach(k=>{if(dol)setEdit(k,"dol",dol);if(pr)setEdit(k,"pron",pr);if(en)setEdit(k,"entity",en);});
+  say("Applied to "+SEL.size+" selected.","ok");render();if(focusKey)editor();};
+$("addP").onclick=()=>{const k="M"+Date.now();MANUAL.unshift(k);save(K_MAN,MANUAL);BYKEY.set(k,{code:"",manual:true});SEL.add(k);saveSel();
+  $("q").value="";$("f_status").value="";$("f_proj").value="";$("f_show").value="";render();focus(k);$("e_name").focus();};
+
+/* ---------- editor + preview ---------- */
+function focus(k){focusKey=k;document.querySelectorAll("#rows tr.focus").forEach(t=>t.classList.remove("focus"));
+  const tr=$("rows").querySelector('tr[data-k="'+CSS.escape(k)+'"]');if(tr)tr.classList.add("focus");editor();}
+function editor(){const k=focusKey;$("edEmpty").hidden=!!k;$("ed").hidden=!k;if(!k)return;
+  $("edName").textContent=get(k,"name")||"New person";$("edDel").hidden=!(BYKEY.get(k)||{}).manual;$("edReset").hidden=!!(BYKEY.get(k)||{}).manual;
+  document.querySelectorAll("#ed [data-f]").forEach(el=>{if(document.activeElement!==el)el.value=get(k,el.dataset.f);});
+  pages();}
+document.querySelectorAll("#ed [data-f]").forEach(el=>el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{
+  const k=focusKey;if(!k)return;setEdit(k,el.dataset.f,el.value);$("edName").textContent=get(k,"name")||"New person";refreshRow(k);
+  if(el.dataset.f==="entity"){const ol=$("e_offloc");if(!(EDITS[k]||{}).offloc)ol.value=get(k,"offloc");}
+  summary();pages();}));
+$("edReset").onclick=()=>{const k=focusKey;if(!k)return;const keep={dol:get(k,"dol"),pron:get(k,"pron")};EDITS[k]=keep;save(K_EDITS,EDITS);refreshRow(k);editor();summary();};
+$("edDel").onclick=()=>{const k=focusKey;if(!k)return;MANUAL=MANUAL.filter(x=>x!==k);save(K_MAN,MANUAL);delete EDITS[k];save(K_EDITS,EDITS);SEL.delete(k);saveSel();BYKEY.delete(k);focusKey=null;editor();render();};
+
+/* serials: selected people in list order get consecutive numbers */
+function plan(){const order=keys().filter(k=>SEL.has(k));const pos=new Map(order.map((k,i)=>[k,i]));return{order,pos};}
+function nums(k){const{pos}=plan();const i=pos.has(k)?pos.get(k):SEL.size;return{exp:addN($("s_exp").value,i),loi:addN($("s_loi").value,i),appt:addN($("s_appt").value,i)};}
+
+const PR={she:["her","her"],he:["his","him"],they:["their","them"]};
+function V(v,label){return v?esc(v):'<span class="f empty">['+esc(label)+"]</span>";}
+let LOGO="data:image/png;base64,"+LOGO_B64;
+try{const b=atob(LOGO_B64),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);LOGO=URL.createObjectURL(new Blob([u],{type:"image/png"}));}catch(e){}
+function footer(c){const f=LH_FOOT[c]||(ENT[c]&&ENT[c].foot)||["","",""];if(!f[0])return"";
+  const l2=esc(f[1]).replace(/(^|\s)([PFEW])(?=\s)/g,'$1<b>$2</b>').replace(/([\w.+-]+@[\w-]+(?:\.[\w-]+)+)/,'<span class="em">$1</span>');
+  return'<div class="ft"><div class="n">'+esc(f[0])+"</div><div>"+l2+"</div>"+(f[2]?"<div><b>"+esc(f[2])+"</b></div>":"")+"</div>";}
+function ref(k,n){const c=get(k,"entity");return V(c,"Company code")+"/"+V($("s_sl").value.trim(),"Location")+"/HR/EXP./"+V(fyOf($("s_date").value),"FY")+"/"+V(n.exp,"No.");}
+function expSheet(k,n){const c=get(k,"entity"),p=PR[get(k,"pron")],dept=get(k,"dept");
+  const poss=p?p[0]:'<span class="f empty">[her/his]</span>',obj=p?p[1]:'<span class="f empty">[her/him]</span>';
+  return'<div class="sheet lh"><img class="logo" style="top:12.5mm" src="'+LOGO+'" alt=""><div class="bd cam" style="padding-top:44mm">'+
+   "<p>Ref. No: "+ref(k,n)+'</p><p class="r">Date: '+V(fmt($("s_date").value),"Date")+"</p>"+
+   '<p class="ttl" style="margin-top:31mm">To Whomsoever It May Concern</p>'+
+   '<p style="margin-top:24mm;line-height:1.45">This is to certify that&nbsp; <b class="cal">'+V(get(k,"name"),"Name")+"</b> was employed with us as <b class=\"cal\">"+V(get(k,"desig"),"Designation")+"</b>"+(dept?'<br><b class="cal">'+esc(dept)+"</b>":"")+" from "+V(fmt(get(k,"doj")),"Joining date")+" to "+V(fmt(get(k,"dol")),"Relieving date")+".</p>"+
+   '<p style="margin-top:7mm">During the tenure of '+poss+" service with us, we found "+obj+" to be sincere and hard working.</p>"+
+   '<p style="margin-top:8.5mm">We wish '+obj+" all the best in "+poss+" future endeavors.</p>"+
+   '<p style="margin-top:26mm"><b>For '+V(legal(c),"Company")+"</b></p>"+
+   '<p class="sig" style="margin-top:22mm">_________________________<br>(Authorized Signatory)</p></div>'+footer(c)+"</div>";}
+function relSheet(k,n){const c=get(k,"entity"),dept=get(k,"dept"),pj=get(k,"project");
+  return'<div class="sheet lh"><img class="logo" style="top:8mm" src="'+LOGO+'" alt=""><div class="bd cal" style="padding-top:46mm">'+
+   '<p class="cam">Ref. No: '+ref(k,n)+'</p><p class="r">Date: '+V(fmt($("s_date").value),"Date")+"</p>"+
+   '<p style="margin-top:16mm;font-weight:700;line-height:1.36">'+V(get(k,"name"),"Name")+"<br>Emp ID: "+V(get(k,"code"),"Emp ID")+"<br>"+V(get(k,"desig"),"Designation")+(dept?"<br>"+esc(dept):"")+"<br>"+V(legal(c),"Company")+"<br>"+V(pj,"Project")+"</p>"+
+   '<p class="ttl" style="margin-top:4mm">Sub: - Relieving Letter</p>'+
+   '<p style="margin-top:12mm">Dear <b>'+V(get(k,"name"),"Name")+",</b></p>"+
+   '<p class="j" style="margin-top:5mm;line-height:2.15">We do hereby confirm that you are being relieved from the services of <b>'+V(legal(c),"Company")+"</b>, <b>"+V(pj,"Project")+"</b> Project after ensuring Clearance Certificate from all departments as on "+V(fmt(get(k,"dol")),"Relieving date")+" at the close of working hours. We wish you all the best for your future career.</p>"+
+   '<p style="margin-top:16mm"><b>For '+V(legal(c),"Company")+"</b></p>"+
+   '<p class="sig" style="margin-top:22mm">_______________________<br>(Authorized Signatory)</p></div>'+footer(c)+"</div>";}
+function loiGet(k,n){const c=get(k,"entity");const m={SC:c,SL:$("s_sl").value.trim(),SLNO:n.loi,DATE:fmt($("s_date").value),FY:fyOf($("s_date").value),NAME:get(k,"name"),ADDRESS:get(k,"addr"),DESIG:get(k,"desig"),DOJ:fmt(get(k,"doj")),COMPANY:ENT[c]?ENT[c].short:"",PLACE:ENT[c]?ENT[c].short:"",PROB:$("s_prob").value,NOTICE:$("s_notice").value};return f=>m[f]||"";}
+function loiSheet(k,n){return'<div class="sheet loi">'+LOI.html(LOI.build(loiGet(k,n)))+"</div>";}
+function sheetsFor(k){const d=D(),n=nums(k),out=[];
+  if(d.exp)out.push(["Experience Letter",expSheet(k,n)]);if(d.rel)out.push(["Relieving Letter",relSheet(k,n)]);if(d.loi)out.push(["LOI",loiSheet(k,n)]);return out;}
+function pages(){const k=focusKey;if(!k)return;const s=sheetsFor(k);
+  $("pages").innerHTML=s.map(([t,h])=>'<div><div class="cap">'+t+(SEL.has(k)?"":" · not selected")+'</div><div class="sw">'+h+"</div></div>").join("")+(D().appt?'<div class="empty-note">Appointment Letter: Word file, built from your appointment template when you download.</div>':"");
+  fitPages();}
+function fitPages(){document.querySelectorAll(".sw").forEach(w=>{const s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";});}
+if(window.ResizeObserver)new ResizeObserver(fitPages).observe($("pages"));else window.addEventListener("resize",fitPages);
+
+/* ---------- summary + generate ---------- */
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+function summary(){const d=D(),n=SEL.size;let ready=0;SEL.forEach(k=>{if(!missing(k).length)ready++;});
+  const pdfPer=(d.exp?1:0)+(d.rel?1:0)+(d.loi?1:0),wordPer=(d.appt?1:0)+(d.loi?1:0);
+  $("sum").innerHTML="<b>"+n+"</b> selected · <span class=\""+(ready===n?"ok":"")+"\">"+ready+" ready</span>"+(n-ready?' · <span class="need">'+(n-ready)+" need info</span>":"")+(pdfPer?" · PDF: "+ready*pdfPer+" pages":"");
+  $("goPdf").disabled=!pdfPer||!n;$("goWord").disabled=!wordPer||!n;}
+function preflight(){const sm=setMissing();if(sm.length){say("Fill in section 1 first: "+sm.join(", "),"err");return null;}
+  if(!SEL.size){say("Select at least one person.","err");return null;}
+  const bad=[...SEL].filter(k=>missing(k).length);
+  if(bad.length){say(bad.length+" selected "+(bad.length===1?"person needs":"people need")+" more details (see the Ready column). Showing them now.","err");$("f_show").value="need";render();focus(bad[0]);return null;}
+  return plan().order;}
+let pending=null;
+function offerUsed(count,kinds){pending={count,kinds};const d=[];kinds.forEach(k=>{const id={exp:"s_exp",loi:"s_loi",appt:"s_appt"}[k];d.push(k.toUpperCase().replace("APPT","A.O.")+" "+addN($(id).value,0)+(count>1?"–"+addN($(id).value,count-1):""));});
+  const u=$("used");u.hidden=false;u.innerHTML="Numbers used: "+esc(d.join(", "))+'. <button class="sm primary" id="uYes" type="button">Mark as used</button> <button class="sm" id="uNo" type="button">Not now</button>';
+  $("uYes").onclick=()=>{pending.kinds.forEach(k=>{const id={exp:"s_exp",loi:"s_loi",appt:"s_appt"}[k];$(id).value=addN($(id).value,pending.count);});saveSet();u.hidden=true;say("Next numbers updated.","ok");pages();};
+  $("uNo").onclick=()=>{u.hidden=true;};}
+$("goPdf").onclick=()=>{const order=preflight();if(!order)return;
+  const area=$("printArea");area.innerHTML=order.map(k=>sheetsFor(k).map(s=>s[1]).join("")).join("");
+  const d=D();say("Opening print… choose “Save as PDF” as the printer to get one PDF.","ok");
+  setTimeout(()=>{window.print();const kinds=[];if(d.exp||d.rel)kinds.push("exp");if(d.loi)kinds.push("loi");offerUsed(order.length,kinds);},60);};
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+
+let dl=null;(async()=>{try{if(window.claude&&claude.use)dl=await claude.use("downloads");}catch(e){dl=null;}})();
+const DOCX="application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+const escX=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const toXml=s=>String(s).split(/\r?\n/).map(l=>escX(l.trim())).filter((l,i,a)=>l||i<a.length-1).join('</w:t><w:br/><w:t xml:space="preserve">');
+async function apptDocx(k,n){const c=get(k,"entity");
+  const V2={SC:c,SL:$("s_sl").value.trim(),SLNO:n.appt,DATE:fmt($("s_date").value),NAME:get(k,"name"),EMPID:get(k,"code"),DESIG:get(k,"desig"),DOB:fmt(get(k,"dob")),ADDRESS:get(k,"addr"),COMPANY:ENT[c].short,OFFLOC:get(k,"offloc"),DOJ:fmt(get(k,"doj")),OFFADDR:get(k,"offaddr")};
+  const zip=await JSZip.loadAsync(TPL,{base64:true});let xml=await zip.file("word/document.xml").async("string");
+  Object.keys(V2).forEach(key=>{xml=xml.split("{{"+key+"}}").join(toXml(V2[key]));});zip.file("word/document.xml",xml);
+  const fv=ENT[c].foot;for(const fn of ["word/footer2.xml","word/footer3.xml"]){const f=zip.file(fn);if(!f)continue;let fx=await f.async("string");fv.forEach((t,i)=>{fx=fx.split("{{F"+(i+1)+"}}").join(escX(t));});zip.file(fn,fx);}
+  return zip.generateAsync({type:"uint8array",mimeType:DOCX,compression:"DEFLATE"});}
+async function loiDocx(k,n){const zip=new JSZip(),parts=LOI.docx(LOI.build(loiGet(k,n)));Object.keys(parts).forEach(p=>zip.file(p,parts[p]));return zip.generateAsync({type:"uint8array",mimeType:DOCX,compression:"DEFLATE"});}
+const safe=s=>String(s||"").replace(/[\\/:*?"<>|]+/g,"-").trim()||"unnamed";
+async function saveBlob(name,blob){
+  if(dl){try{await dl.save({filename:name,data:blob});return true;}catch(e){if(e&&e.code==="declined")return false;throw e;}}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);return true;}
+$("goWord").onclick=async()=>{const order=preflight();if(!order)return;if(typeof JSZip==="undefined"){say("Could not load the document engine. Reload the page.","err");return;}
+  const d=D(),btn=$("goWord");btn.disabled=true;
+  try{const files=[];
+    for(let i=0;i<order.length;i++){const k=order[i],n=nums(k);say("Building Word files… "+(i+1)+" of "+order.length);
+      if(d.appt)files.push(["Appointment Letter - "+safe(get(k,"name"))+" - "+safe(get(k,"code")||n.appt)+".docx",await apptDocx(k,n)]);
+      if(d.loi)files.push(["LOI - "+safe(get(k,"name"))+" - "+safe(n.loi)+".docx",await loiDocx(k,n)]);}
+    let ok;
+    if(files.length===1)ok=await saveBlob(files[0][0],new Blob([files[0][1]],{type:DOCX}));
+    else{const z=new JSZip();files.forEach(([nm,b])=>z.file(nm,b));ok=await saveBlob("Alcove letters - "+fmt($("s_date").value)+" - "+order.length+" people.zip",await z.generateAsync({type:"blob"}));}
+    if(!ok){say("Download cancelled.");}
+    else{say("Done — "+files.length+" Word file"+(files.length>1?"s":"")+" for "+order.length+" "+(order.length>1?"people":"person")+".","ok");const kinds=[];if(d.appt)kinds.push("appt");if(d.loi)kinds.push("loi");offerUsed(order.length,kinds);}
+  }catch(e){say("Something went wrong: "+(e&&e.message||e),"err");}
+  btn.disabled=false;summary();};
+
+/* ---------- import (for use outside the dashboard) ---------- */
+const nice=s=>{s=(s==null?"":String(s)).replace(/\s+/g," ").trim();return(s&&(s===s.toLowerCase()||s===s.toUpperCase()))?s.toLowerCase().replace(/(^|[\s.\-'(])([a-z])/g,(m,a,b)=>a+b.toUpperCase()):s;};
+const clean=s=>(s==null?"":String(s)).replace(/\s+/g," ").trim();
+const iso=s=>{s=clean(s);return/^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(0,10):"";};
+function slim(r){return{name:nice(r.Person_Accountable),code:clean(r.Emp_Code),desig:clean(r.Designation),dept:clean(r.Department),company:clean(r.Company),loc:clean(r.Location),doj:iso(r.DOJ),dob:iso(r.Date_of_Birth),addr:clean(r.Present_Address)||clean(r.Permanent_Address),phone:clean(r.Contact_number),email:clean(r.Email_ID_Official)||clean(r.Email_ID_Personal),mgr:nice(r.Reporting_Manager),status:clean(r.STATUS).toUpperCase()};}
+$("imp").onclick=()=>$("impFile").click();
+$("impFile").onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{const arr=JSON.parse(rd.result);if(!Array.isArray(arr)||!arr.some(r=>r&&r.Emp_Code))throw new Error("this doesn't look like the employee master list");
+    const RANK={"ACTIVE":0,"NOTICE PERIOD":1};const list=arr.filter(r=>r&&r.Emp_Code).map(slim).sort((a,b)=>((RANK[a.status]??2)-(RANK[b.status]??2))||a.name.localeCompare(b.name));
+    save(K_EMPS,{at:Date.now(),src:"file",list});loadEmps();render();say("Imported "+list.length+" employees.","ok");}catch(err){say("Couldn't import "+f.name+": "+err.message,"err");}e.target.value="";};rd.readAsText(f);};
+window.addEventListener("storage",e=>{if(e.key===K_EMPS){loadEmps();render();if(focusKey)editor();}});
+
+/* called by the dashboard's “Fill from employee” bar */
+window.pickEmployee=code=>{if(!BYKEY.has(code))return false;SEL.add(code);saveSel();$("q").value=code;$("f_status").value="";$("f_proj").value="";$("f_show").value="";limit=200;render();focus(code);return true;};
+
+SETF.forEach(id=>$(id).addEventListener(id.startsWith("d_")||id==="s_prob"?"change":"input",()=>{saveSet();docUI();render();if(focusKey)pages();}));
+loadEmps();docUI();render();
+</script></body></html>

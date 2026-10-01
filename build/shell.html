@@ -23,8 +23,30 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",sys
 .nav button[aria-current="page"]{background:rgba(255,255,255,.14);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 var(--gold)}
 .side .foot{margin-top:auto;padding:0 6px;color:#9fb3cb;font-size:.75rem}
 /* content */
-.content{flex:1;min-width:0;position:relative;overflow:auto}
+.content{flex:1;min-width:0;display:flex;flex-direction:column}
+.stage{flex:1;min-height:0;position:relative;overflow:auto}
 .frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
+/* employee picker */
+.empbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;background:var(--card);border-bottom:1px solid var(--line);font-size:.86rem}
+.empbar label{font-weight:600;white-space:nowrap}
+.esearch{position:relative;flex:1 1 280px;max-width:460px}
+.esearch input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:7px 10px}
+.esearch input:focus{outline:2px solid var(--gold);outline-offset:1px}
+.eres{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;margin:0;padding:4px;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.14);max-height:min(60vh,420px);overflow:auto}
+.eres li{padding:7px 9px;border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.eres li[aria-selected="true"],.eres li:hover{background:var(--hover)}
+.eres .n{font-weight:600}
+.eres .m{color:var(--muted);font-size:.8rem}
+.eres .s{flex:none;align-self:center;font-size:.7rem;font-weight:600;letter-spacing:.04em;padding:1px 6px;border-radius:4px;background:var(--hover);color:var(--muted)}
+.eres .s.on{color:#1f7a3a}
+.eres .empty{cursor:default;color:var(--muted)}
+.empbar .chk{display:flex;align-items:center;gap:5px;white-space:nowrap;color:var(--muted)}
+.empbar .btn{font:inherit;font-size:.82rem;padding:6px 11px;border-radius:7px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;white-space:nowrap}
+.empbar .btn:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+#estat{color:var(--muted);flex-basis:100%}
+#estat.ok{color:#1f7a3a}#estat.err{color:#b3261e}
+:root[data-theme="dark"] #estat.ok,:root[data-theme="dark"] .eres .s.on{color:#6fcf8f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #estat.ok,:root:not([data-theme="light"]) .eres .s.on{color:#6fcf8f}}
 .home{max-width:980px;margin:0 auto;padding:calc(36px + env(safe-area-inset-top,0px)) 28px calc(40px + env(safe-area-inset-bottom,0px))}
 .home .kick{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .home h1{font-size:clamp(1.5rem,3vw,2rem);margin:4px 0 6px}
@@ -63,6 +85,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",sys
   </div>
   <nav class="nav" aria-label="Tools">
     <button data-view="home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Dashboard</button>
+    <button data-view="bulk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3h9l3 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M4 7v13a1 1 0 0 0 1 1h11"/></svg> Bulk Letters</button>
     <button data-view="loi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>LOI Generator</button>
     <button data-view="appt"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>Appointment Letter</button>
     <button data-view="joiner"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg>New Joiner Toolkit</button>
@@ -71,11 +94,31 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",sys
 </aside>
 
 <main class="content">
+  <div class="empbar" id="empbar" hidden>
+    <label for="eq">Fill from employee</label>
+    <div class="esearch">
+      <input id="eq" type="search" placeholder="Type a name or Emp Code…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="eres" aria-autocomplete="list">
+      <ul class="eres" id="eres" role="listbox" hidden></ul>
+    </div>
+    <span class="chk"><input type="checkbox" id="einact"><label for="einact" style="font-weight:400">Include inactive</label></span>
+    <button class="btn" id="eref" type="button">Refresh from server</button>
+    <button class="btn" id="eimp" type="button">Import file…</button>
+    <input type="file" id="efile" accept=".json,.txt,application/json,text/plain" hidden>
+    <span id="estat" role="status" aria-live="polite"></span>
+  </div>
+  <div class="stage">
   <section class="home" id="v-home">
     <div class="kick">Alcove HR</div>
     <h1>HR Tool dashboard</h1>
     <p class="lead">Your HR tools in one place. Each tool keeps what you've typed while you switch between them.</p>
     <div class="tiles">
+      <button class="tile" data-view="bulk">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3h9l3 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M4 7v13a1 1 0 0 0 1 1h11"/></svg></span>
+        <h2>Bulk Letters</h2>
+        <p>Experience, Relieving, LOI and Appointment letters for one employee or many at once.</p>
+        <ul><li>Pick from the full employee list</li><li>One merged PDF for printing</li><li>Word files in one ZIP</li></ul>
+        <span class="go">Open →</span>
+      </button>
       <button class="tile" data-view="loi">
         <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg></span>
         <h2>LOI Generator</h2>
@@ -99,17 +142,20 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",sys
       </button>
     </div>
   </section>
+  <iframe class="frame" id="v-bulk" title="Bulk Letters" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-loi" title="LOI Generator" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-appt" title="Appointment Letter Generator" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-joiner" title="New Joiner Toolkit" allow="clipboard-write" hidden></iframe>
+  </div>
 </main>
 
+<script id="src-bulk" type="application/octet-stream">__BULK__</script>
 <script id="src-loi" type="application/octet-stream">__LOI__</script>
 <script id="src-appt" type="application/octet-stream">__APPT__</script>
 <script id="src-joiner" type="application/octet-stream">__JOINER__</script>
 <script>
 (function(){
-  const VIEWS=["home","loi","appt","joiner"];
+  const VIEWS=["home","bulk","loi","appt","joiner"];
   const $=id=>document.getElementById(id);
   function decode(id){const b=atob($(id).textContent.trim()),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder("utf-8").decode(u);}
   function show(v){
@@ -121,7 +167,93 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",sys
     document.title=(v==="home"?"":(f.title+" · "))+"Alcove HR Tool";
     if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);
     try{localStorage.setItem("alcove-hrtool-view",v);}catch(e){}
+    current=v;$("empbar").hidden=v==="home";closeRes();
   }
+
+  /* ---------- employee master: load, search, fill the open tool ---------- */
+  const API="https://togetherwecan.alcoverealty.in/api/employee_master";
+  const STORE="alcove-hrtool-emps";
+  let EMPS=[],current="home";
+  const nice=s=>{s=(s==null?"":String(s)).replace(/\s+/g," ").trim();
+    return (s&&(s===s.toLowerCase()||s===s.toUpperCase()))?s.toLowerCase().replace(/(^|[\s.\-'(])([a-z])/g,(m,a,b)=>a+b.toUpperCase()):s;};
+  const clean=s=>(s==null?"":String(s)).replace(/\s+/g," ").trim();
+  const iso=s=>{s=clean(s);return /^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(0,10):"";};
+  // keep only what the forms use: no Aadhaar, PAN, UAN, ESI or bank data
+  function slim(r){return{name:nice(r.Person_Accountable),code:clean(r.Emp_Code),desig:clean(r.Designation),dept:clean(r.Department),
+    company:clean(r.Company),loc:clean(r.Location),doj:iso(r.DOJ),dob:iso(r.Date_of_Birth),
+    addr:clean(r.Present_Address)||clean(r.Permanent_Address),phone:clean(r.Contact_number),
+    email:clean(r.Email_ID_Official)||clean(r.Email_ID_Personal),mgr:nice(r.Reporting_Manager),status:clean(r.STATUS).toUpperCase()};}
+  const RANK={"ACTIVE":0,"NOTICE PERIOD":1};
+  function ingest(arr,src){
+    if(!Array.isArray(arr)||!arr.length||!arr.some(r=>r&&r.Emp_Code))throw new Error("this doesn't look like the employee master list");
+    EMPS=arr.filter(r=>r&&r.Emp_Code).map(slim).sort((a,b)=>((RANK[a.status]??2)-(RANK[b.status]??2))||a.name.localeCompare(b.name));
+    try{localStorage.setItem(STORE,JSON.stringify({at:Date.now(),src,list:EMPS}));}catch(e){}
+    showCount(Date.now(),src);}
+  function showCount(at,src){const a=EMPS.filter(e=>e.status==="ACTIVE").length;
+    say(EMPS.length.toLocaleString("en-IN")+" employees ("+a+" active) · "+(src==="file"?"imported":"loaded")+" "+new Date(at).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}),"");}
+  function say(t,c){const s=$("estat");s.textContent=t;s.className=c||"";}
+  try{const c=JSON.parse(localStorage.getItem(STORE)||"null");if(c&&Array.isArray(c.list)){EMPS=c.list;showCount(c.at,c.src);}}catch(e){}
+
+  async function refresh(manual){
+    if(manual)say("Loading employees from the server…");
+    try{const r=await fetch(API,{cache:"no-store"});if(!r.ok)throw new Error("server replied "+r.status);ingest(await r.json(),"server");}
+    catch(e){if(!manual&&EMPS.length)return;
+      say("Couldn't load from the server: it doesn't allow browser pages to read it. Open "+API+" in a new tab, save it with Ctrl+S as a .json file, then use Import file.","err");}}
+  $("eref").onclick=()=>refresh(true);
+  $("eimp").onclick=()=>$("efile").click();
+  $("efile").onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;
+    const rd=new FileReader();rd.onload=()=>{try{ingest(JSON.parse(rd.result),"file");}catch(err){say("Couldn't import "+f.name+": "+err.message,"err");}e.target.value="";};rd.readAsText(f);};
+  refresh(false);
+
+  // search
+  let hits=[],sel=-1;
+  const escH=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  function closeRes(){$("eres").hidden=true;$("eq").setAttribute("aria-expanded","false");sel=-1;}
+  function search(){
+    const q=$("eq").value.trim().toLowerCase(),ul=$("eres");
+    if(!q){closeRes();return;}
+    if(!EMPS.length){ul.innerHTML='<li class="empty">No employee list yet — use Refresh or Import file.</li>';ul.hidden=false;return;}
+    const inact=$("einact").checked,starts=[],has=[];
+    for(const e of EMPS){if(!inact&&e.status==="INACTIVE")continue;
+      const n=e.name.toLowerCase(),c=e.code.toLowerCase();
+      if(n.startsWith(q)||c.startsWith(q)||n.includes(" "+q))starts.push(e);else if(n.includes(q)||c.includes(q))has.push(e);
+      if(starts.length>=20)break;}
+    hits=starts.concat(has).slice(0,20);sel=hits.length?0:-1;
+    ul.innerHTML=hits.length?hits.map((e,i)=>'<li role="option" data-i="'+i+'" aria-selected="'+(i===sel)+'"><span><span class="n">'+escH(e.name||"(no name)")+'</span> <span class="m">'+escH(e.code)+'</span><br><span class="m">'+escH([e.desig,e.loc||e.company].filter(Boolean).join(" · "))+'</span></span><span class="s'+(e.status==="ACTIVE"?" on":"")+'">'+escH(e.status||"—")+'</span></li>').join("")
+      :'<li class="empty">No match'+(inact?"":" among active staff — tick Include inactive")+'</li>';
+    ul.hidden=false;$("eq").setAttribute("aria-expanded","true");}
+  function mark(){[...$("eres").children].forEach((li,i)=>li.setAttribute("aria-selected",i===sel));const li=$("eres").children[sel];if(li)li.scrollIntoView({block:"nearest"});}
+  $("eq").addEventListener("input",search);
+  $("einact").addEventListener("change",()=>{if($("eq").value.trim())search();});
+  $("eq").addEventListener("keydown",e=>{if($("eres").hidden)return;
+    if(e.key==="ArrowDown"&&hits.length){sel=(sel+1)%hits.length;mark();e.preventDefault();}
+    else if(e.key==="ArrowUp"&&hits.length){sel=(sel-1+hits.length)%hits.length;mark();e.preventDefault();}
+    else if(e.key==="Enter"&&sel>=0){pick(hits[sel]);e.preventDefault();}
+    else if(e.key==="Escape")closeRes();});
+  $("eres").addEventListener("mousedown",e=>{const li=e.target.closest("li[data-i]");if(li){e.preventDefault();pick(hits[+li.dataset.i]);}});
+  $("eq").addEventListener("blur",()=>setTimeout(closeRes,120));
+
+  // fill: which form field gets which employee value, per tool
+  const MAP={
+    appt:e=>({NAME:e.name,EMPID:e.code,DESIG:e.desig,DOB:e.dob,ADDRESS:e.addr,DOJ:e.doj}),
+    loi:e=>({NAME:e.name,ADDRESS:e.addr,DESIG:e.desig,DOJ:e.doj}),
+    joiner:e=>({name:e.name,desig:e.desig,loc:e.loc,email:e.email,cno:e.phone,empid:e.code,doj:e.doj,mgr:e.mgr})
+  };
+  const FLABEL={NAME:"name",name:"name",EMPID:"Emp Id",empid:"Emp ID",DESIG:"designation",desig:"designation",DOB:"date of birth",ADDRESS:"address",DOJ:"date of joining",doj:"date of joining",loc:"location",email:"email",cno:"contact no.",mgr:"reporting manager"};
+  function setField(w,id,v){const d=w.document,el=d.getElementById(id);if(!el)return;v=v||"";
+    const fire=(t,ev)=>t.dispatchEvent(new w.Event(ev,{bubbles:true}));
+    if(el.tagName==="SELECT"){const lv=v.toLowerCase(),o=[...el.options].find(o=>o.value.toLowerCase()===lv||o.text.trim().toLowerCase()===lv);
+      const other=d.getElementById(id+"_OTHER");
+      if(o&&v)el.value=o.value;else if(v&&other&&el.querySelector('option[value="__other"]')){el.value="__other";other.value=v;}else el.value="";
+      fire(el,"change");if(other&&el.value==="__other")fire(other,"input");return;}
+    el.value=v;fire(el,"input");fire(el,"change");}
+  function pick(e){if(!e)return;closeRes();$("eq").value="";
+    const f=$("v-"+current);if(!f)return;
+    if(current==="bulk"){const w=f.contentWindow;if(w&&w.pickEmployee&&w.pickEmployee(e.code))say("Selected "+e.name+" ("+e.code+") in Bulk Letters.","ok");else say("Bulk Letters is still loading or doesn't have the latest employee list yet — try again in a moment.","err");return;}
+    if(!MAP[current])return;
+    const go=()=>{const vals=MAP[current](e),miss=[];Object.entries(vals).forEach(([id,v])=>{setField(f.contentWindow,id,v);if(!v)miss.push(FLABEL[id]||id);});
+      say("Filled "+f.title+" with "+e.name+" ("+e.code+")."+(miss.length?" Not in the employee list, so left blank: "+miss.join(", ")+".":""),"ok");};
+    if(f.contentDocument&&f.contentDocument.readyState==="complete"&&f.contentDocument.getElementById(Object.keys(MAP[current](e))[0]))go();else f.addEventListener("load",go,{once:true});}
   document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
   window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
   let start=location.hash.slice(1);
