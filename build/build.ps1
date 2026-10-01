@@ -16,6 +16,8 @@ $foots=([regex]::Match($appt,'(?m)^const FOOTS=(\[.*\]);')).Groups[1].Value
 if(-not $foots){throw "Company footer list not found"}
 $model=& $read "$sp\loi-model.js"
 $logo=[Convert]::ToBase64String([IO.File]::ReadAllBytes("$sp\logo.png"))
+# Department dropdown: one per line in departments.txt
+$depts=((& $read "$sp\departments.txt") -split "\r?\n" | Where-Object { $_.Trim() } | ForEach-Object { "<option>"+[Net.WebUtility]::HtmlEncode($_.Trim())+"</option>" }) -join ""
 
 # LOI Generator
 $src=& $read "$sp\loi.src.html"
@@ -25,7 +27,7 @@ $loi=$src.Replace('__DESIG__',(& $sel 'DESIG')).Replace('__LOI_MODEL__',$model).
 # Experience Letter and Relieving Letter (one source, two pages)
 $src=& $read "$sp\exit.src.html"
 foreach($mode in @(@("exp","Experience Letter","experience.html"),@("rel","Relieving Letter","relieving.html"))){
-  $page=$src.Replace("__MODE__",$mode[0]).Replace("__TITLE__",$mode[1]).Replace("__DESIG__",(& $sel "DESIG")).Replace("__FOOTS__",$foots).Replace("__LOGO__",$logo)
+  $page=$src.Replace("__MODE__",$mode[0]).Replace("__TITLE__",$mode[1]).Replace("__DESIG__",(& $sel "DESIG")).Replace("__FOOTS__",$foots).Replace("__LOGO__",$logo).Replace("__DEPTS__",$depts)
   [IO.File]::WriteAllText("$code\$($mode[2])",$page,$u8)
 }
 

@@ -94,7 +94,7 @@ button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink)}
 <div data-need="rel"><label for="EMPID">Emp ID <span class="req">*</span></label><input id="EMPID" placeholder="e.g. AR000455" autocomplete="off"></div>
 <div data-need="exp"><label for="PRON">Pronoun <span class="req">*</span></label><select id="PRON"><option value="">Select…</option><option value="she">She / her</option><option value="he">He / his</option><option value="they">They / their</option></select><div class="hint">Used in “we found her / him / them …”</div></div>
 <div class="span2"><label for="DESIG">Designation <span class="req">*</span></label><input id="DESIG" list="desig_list" placeholder="Type to search or pick from the list" autocomplete="off"><datalist id="desig_list">__DESIG__</datalist></div>
-<div class="span2"><label for="DEPT">Department</label><input id="DEPT" placeholder="e.g. Branding &amp; Communication" autocomplete="off"><div class="hint">Optional — printed on its own line under the designation</div></div>
+<div class="span2"><label for="DEPT">Department</label><select id="DEPT"><option value="">— None —</option>__DEPTS__<option value="__other">+ Add new…</option></select><input id="DEPT_OTHER" placeholder="Type new department" autocomplete="off" hidden style="margin-top:8px"><div class="hint">Optional — printed on its own line under the designation. Tip: click the list and type the first letters to jump</div></div>
 <div class="span2" data-need="rel"><label for="PROJ">Project / office <span class="req">*</span></label><input id="PROJ" list="proj_list" placeholder="e.g. New Kolkata - Sangam (B)" autocomplete="off"><datalist id="proj_list"></datalist><div class="hint">Relieving Letter: “… services of COMPANY, <i>project</i> Project …”</div></div>
 <div data-need="exp"><label for="DOJ">Date of joining <span class="req">*</span></label><input id="DOJ" type="date"></div>
 <div><label for="DOL">Relieving date <span class="req">*</span></label><input id="DOL" type="date"><div class="hint">Last working day</div></div>
@@ -153,10 +153,21 @@ fillProjects();
 [...$("desig_list").options].forEach(o=>{if(!o.value||o.value==="__other")o.remove();});
 
 /* ---------- shared draft: the Experience and Relieving pages fill each other ---------- */
-const PERSON=["ENT","NAME","EMPID","PRON","DESIG","DEPT","PROJ","DOJ","DOL"],REF=["SL","SLNO","DATE"];
+// departments you add with "+ Add new…" are remembered (this browser only)
+const K_DEPTS="alcove-exit-depts";
+function hasDept(d){return[...$("DEPT").options].some(o=>o.value.toLowerCase()===d.toLowerCase());}
+function addDept(d){const o=document.createElement("option");o.value=o.textContent=d;
+  const after=[...$("DEPT").options].find(x=>x.value&&x.value!=="__other"&&x.value.localeCompare(d,undefined,{sensitivity:"base"})>0);
+  $("DEPT").insertBefore(o,after||$("DEPT").querySelector('option[value="__other"]'));}
+load(K_DEPTS,[]).forEach(d=>{if(d&&!hasDept(d))addDept(d);});
+function deptUI(){const o=$("DEPT").value==="__other";$("DEPT_OTHER").hidden=!o;if(o&&document.activeElement===$("DEPT"))$("DEPT_OTHER").focus();}
+
+const PERSON=["ENT","NAME","EMPID","PRON","DESIG","DEPT","DEPT_OTHER","PROJ","DOJ","DOL"],REF=["SL","SLNO","DATE"];
 const K_DRAFT="alcove-exit-draft",K_REF="alcove-exit-ref",K_ALSO="alcove-exit-also-"+MODE;
 function restore(){const d=load(K_DRAFT,{}),r=load(K_REF,{});
+  if(d.DEPT&&d.DEPT!=="__other"&&!hasDept(d.DEPT))addDept(d.DEPT);
   PERSON.forEach(k=>{if(d[k]!==undefined&&document.activeElement!==$(k))$(k).value=d[k];});
+  deptUI();
   REF.forEach(k=>{if(r[k]!==undefined&&document.activeElement!==$(k))$(k).value=r[k];});}
 restore();
 $("ALSO").checked=!!load(K_ALSO,false);
@@ -166,7 +177,7 @@ function persist(){const d={},r={};PERSON.forEach(k=>d[k]=$(k).value);REF.forEac
 window.addEventListener("storage",e=>{if(e.key===K_DRAFT||e.key===K_REF){restore();render();}});
 
 /* ---------- letters ---------- */
-const v=k=>$(k).value.trim();
+const v=k=>{if(k==="DEPT"&&$("DEPT").value==="__other")return $("DEPT_OTHER").value.trim();return $(k).value.trim();};
 const docs=()=>MODE==="exp"?($("ALSO").checked?["exp","rel"]:["exp"]):($("ALSO").checked?["exp","rel"]:["rel"]);
 const NEED={exp:["NAME","DESIG","ENT","DOJ","DOL","PRON","SLNO","SL","DATE"],rel:["NAME","EMPID","DESIG","ENT","PROJ","DOL","SLNO","SL","DATE"]};
 const LABEL={ENT:"Company",SL:"Short-location",SLNO:"Sl. no.",DATE:"Letter date",NAME:"Name",EMPID:"Emp ID",PRON:"Pronoun",DESIG:"Designation",PROJ:"Project / office",DOJ:"Date of joining",DOL:"Relieving date"};
@@ -215,13 +226,15 @@ let entTouched=!!v("ENT");
 $("ENT").addEventListener("change",()=>{entTouched=!!v("ENT");});
 $("PROJ").addEventListener("input",()=>{if(!entTouched){const g=guessEnt(v("PROJ"));if(g)$("ENT").value=g;}});
 document.querySelectorAll("#f input,#f select").forEach(el=>el.addEventListener(el.tagName==="SELECT"||el.type==="checkbox"?"change":"input",()=>{
-  el.classList.remove("bad");if(el.id==="ALSO")save(K_ALSO,el.checked);else persist();render();}));
+  el.classList.remove("bad");if(el.id==="DEPT")deptUI();if(el.id==="ALSO")save(K_ALSO,el.checked);else persist();render();}));
 function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
-$("clr").onclick=()=>{["NAME","EMPID","PRON","DESIG","DEPT","DOJ","DOL"].forEach(k=>{$(k).value="";$(k).classList.remove("bad");});persist();render();say("");$("used").hidden=true;};
+$("clr").onclick=()=>{["NAME","EMPID","PRON","DESIG","DEPT","DEPT_OTHER","DOJ","DOL"].forEach(k=>{$(k).value="";$(k).classList.remove("bad");});deptUI();persist();render();say("");$("used").hidden=true;};
 $("prn").onclick=()=>{
   const need=[...new Set(docs().flatMap(d=>NEED[d]))],missing=need.filter(k=>!v(k));
   PERSON.concat(REF).forEach(k=>$(k).classList.toggle("bad",missing.includes(k)));
   if(missing.length){say("Please fill: "+missing.map(k=>LABEL[k]).join(", "),"err");$(missing[0]).focus();return;}
+  if($("DEPT").value==="__other"){const d=v("DEPT");if(d){if(!hasDept(d)){addDept(d);save(K_DEPTS,load(K_DEPTS,[]).concat([d]));}
+    $("DEPT").value=[...$("DEPT").options].find(o=>o.value.toLowerCase()===d.toLowerCase()).value;$("DEPT_OTHER").value="";}else $("DEPT").value="";deptUI();persist();}
   const p=v("PROJ");if(p&&!PROJECTS.concat(load(K_PROJ,[])).some(x=>x.toLowerCase()===p.toLowerCase())){save(K_PROJ,load(K_PROJ,[]).concat([p]));fillProjects();}
   $("printArea").innerHTML=docs().map(d=>SHEET[d]()).join("");
   say("Opening print… choose “Save as PDF” as the printer to get "+(docs().length>1?"one PDF with both letters.":"a PDF."),"ok");
