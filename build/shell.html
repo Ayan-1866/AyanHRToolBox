@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Alcove HR Tool</title>
 <script>/* lock straight away (before anything paints) unless there's a valid sign-in */
-(function(){if(!/^https?:$/.test(location.protocol))return;var ok=false;try{var s=JSON.parse(localStorage.getItem("alcove-hrtool-session")||"null");ok=!!(s&&s.exp>Date.now());}catch(e){}
+(function(){if(!/^https?:$/.test(location.protocol))return;var ok=false;try{var s=JSON.parse(localStorage.getItem("alcove-hrtool-session")||"null");ok=!!(s&&s.exp>Date.now()&&!s.session);}catch(e){}
   if(!ok)document.documentElement.classList.add("locked");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
@@ -36,6 +36,15 @@ html:not(.locked) #gate{display:none}
 #gate #gmsg{min-height:20px;margin-top:14px;font-size:.88rem;color:#5d6e84}
 #gate #gmsg.err{color:#b3261e}
 #gate small{display:block;margin-top:12px;color:#8a99ad;font-size:.75rem}
+#gate .who{font-size:.82rem;color:#5d6e84;background:#f3f6fa;border-radius:8px;padding:6px 10px;margin:-6px 0 12px}
+#gate #gcode{width:100%;font:700 26px/1.2 "Segoe UI",system-ui,sans-serif;letter-spacing:.4em;text-align:center;padding:10px;border:1px solid #d7dbe3;border-radius:10px;background:#f7f9fc;color:#16304d}
+#gate #gcode:focus{outline:2px solid #204768;outline-offset:1px}
+#gate .gbtn{width:100%;margin-top:12px;font:600 15px/1.2 "Segoe UI",system-ui,sans-serif;padding:12px;border-radius:999px;border:0;background:#1a73e8;color:#fff;cursor:pointer}
+#gate .gbtn:disabled{opacity:.6;cursor:wait}
+#gate .glinks{margin-top:10px;font-size:.82rem;color:#8a99ad}
+#gate .glinks button{all:unset;cursor:pointer;color:#1a73e8;font-weight:600}
+#gate .glinks button:focus-visible{outline:2px solid #204768}
+#gate .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 button{font:inherit}
 
 /* ---------- sidebar ---------- */
@@ -292,41 +301,81 @@ button{font:inherit}
   <div class="gcard">
     <img src="data:image/png;base64,__LOGO__" alt="Alcove Realty">
     <h1 id="gate-h">HR Tool</h1>
-    <p>Sign in with your Alcove Google account to continue.</p>
-    <div id="gbtn"></div>
+    <div id="stGoogle">
+      <p>Sign in with your Google account to request access.</p>
+      <div id="gbtn"></div>
+    </div>
+    <form id="stCode" hidden>
+      <p>We've emailed a 6-digit code to <b>HR</b> (<span id="hrTo"></span>). Ask HR for the code to open the portal.</p>
+      <div class="who" id="gWho"></div>
+      <label for="gcode" class="sr">Code from HR</label>
+      <input id="gcode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" aria-label="6-digit code from HR">
+      <button class="gbtn" id="gGo" type="submit">Open the HR Tool</button>
+      <div class="glinks"><button type="button" id="gAgain">Send HR a new code</button> · <button type="button" id="gSwitch">Use a different account</button></div>
+    </form>
     <div id="gmsg" role="status" aria-live="polite">Loading Google sign-in…</div>
-    <small>Only authorised HR accounts can open this portal.</small>
+    <small>Every sign-in needs a code approved by HR.</small>
   </div>
 </div>
 <script>
-/* ---------- Google sign-in gate ---------- */
+/* ---------- sign-in gate: Google account + a code that's emailed to HR ---------- */
 (function(){
-  const CLIENT_ID="__CLIENT_ID__",ALLOWED=__ALLOWED__,HOURS=12,K="alcove-hrtool-session";
+  const CLIENT_ID="__CLIENT_ID__",ALLOWED=__ALLOWED__,OTP_API="__OTP_API__",HOURS=12,K="alcove-hrtool-session";
   const $=id=>document.getElementById(id),root=document.documentElement,web=/^https?:$/.test(location.protocol);
   const say=(t,c)=>{$("gmsg").textContent=t;$("gmsg").className=c||"";};
-  function session(){try{const s=JSON.parse(localStorage.getItem(K)||"null");return s&&s.exp>Date.now()?s:null;}catch(e){return null;}}
+  const step=s=>{$("stGoogle").hidden=s!=="google";$("stCode").hidden=s!=="code";};
+  let idToken="",me="";
+  function stored(){try{const s=JSON.parse(localStorage.getItem(K)||"null");return s&&s.exp>Date.now()?s:null;}catch(e){return null;}}
+  function keep(s){try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}}
+  function drop(){try{localStorage.removeItem(K);}catch(e){}}
   function unlock(s){root.classList.remove("locked");$("signedAs").textContent="Signed in as "+s.email+". ";
     if(window.__startApp){window.__startApp();window.__startApp=null;}}
-  // read Google's signed sign-in token and check it's for this app, not expired, and an allowed address
+  async function api(body){const r=await fetch(OTP_API,{method:"POST",body:JSON.stringify(body)});// plain text body: no pre-flight needed
+    if(!r.ok)throw new Error("The login service didn't answer ("+r.status+").");return r.json();}
   function claims(jwt){const p=jwt.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
     return JSON.parse(decodeURIComponent(atob(p).split("").map(c=>"%"+c.charCodeAt(0).toString(16).padStart(2,"0")).join("")));}
-  function onCred(resp){let c;try{c=claims(resp.credential);}catch(e){say("Google sign-in returned something unexpected. Try again.","err");return;}
-    const email=String(c.email||"").toLowerCase();
+
+  async function sendCode(){say("Sending a code to HR…");$("gAgain").disabled=true;
+    try{const r=await api({action:"request",idToken});if(r.error){say(r.error,"err");return;}
+      $("hrTo").textContent=r.to||"hr@alcoverealty.in";step("code");$("gcode").value="";$("gcode").focus();
+      say("Code sent to HR. Enter it here when HR gives it to you.","ok");}
+    catch(e){say("Couldn't reach the login service. Check the internet connection and try again.","err");}
+    finally{$("gAgain").disabled=false;}}
+  async function onCred(resp){let c;try{c=claims(resp.credential);}catch(e){say("Google sign-in returned something unexpected. Try again.","err");return;}
     if(c.aud!==CLIENT_ID||!/^(https:\/\/)?accounts\.google\.com$/.test(c.iss)||c.exp*1000<Date.now()||!c.email_verified){say("That sign-in couldn't be verified. Try again.","err");return;}
-    if(!ALLOWED.includes(email)){say(email+" isn't allowed to open the HR Tool. Sign in with your HR account.","err");google.accounts.id.disableAutoSelect();return;}
-    const s={email,name:c.name||"",exp:Date.now()+HOURS*3600e3};try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}
-    say("");unlock(s);}
-  function startGis(){google.accounts.id.initialize({client_id:CLIENT_ID,callback:onCred,auto_select:true,cancel_on_tap_outside:false,ux_mode:"popup",itp_support:true,hd:"alcoverealty.in",login_hint:ALLOWED[0]});
+    me=String(c.email||"").toLowerCase();idToken=resp.credential;
+    if(!OTP_API){// login service not set up yet: only the listed accounts, no code
+      if(!ALLOWED.includes(me)){say(me+" isn't allowed to open the HR Tool.","err");google.accounts.id.disableAutoSelect();return;}
+      const s={email:me,exp:Date.now()+HOURS*3600e3};keep(s);say("");unlock(s);return;}
+    $("gWho").textContent="Signed in with Google as "+me;sendCode();}
+  $("stCode").onsubmit=async e=>{e.preventDefault();const code=$("gcode").value.replace(/\D/g,"");if(code.length!==6){say("Enter the 6-digit code from HR.","err");return;}
+    $("gGo").disabled=true;say("Checking the code…");
+    try{const r=await api({action:"verify",idToken,code});
+      if(r.ok){const s={email:r.email,exp:r.exp,session:r.session};keep(s);say("");unlock(s);}else{say(r.error||"That code didn't work.","err");$("gcode").select();}}
+    catch(x){say("Couldn't reach the login service. Try again.","err");}
+    finally{$("gGo").disabled=false;}};
+  $("gcode").addEventListener("input",()=>{$("gcode").value=$("gcode").value.replace(/\D/g,"").slice(0,6);if($("gcode").value.length===6)$("stCode").requestSubmit();});
+  $("gAgain").onclick=sendCode;
+  $("gSwitch").onclick=()=>{idToken="";me="";if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();step("google");say("Choose the Google account to sign in with.");};
+
+  function startGis(){google.accounts.id.initialize({client_id:CLIENT_ID,callback:onCred,auto_select:!!stored()||false,cancel_on_tap_outside:false,ux_mode:"popup",itp_support:true});
     google.accounts.id.renderButton($("gbtn"),{theme:"filled_blue",size:"large",shape:"pill",text:"signin_with",width:280});
-    google.accounts.id.prompt();say("");}
+    if(/^Loading/.test($("gmsg").textContent))say("");}
+  function loadGis(){step("google");if(window.google&&google.accounts&&google.accounts.id){startGis();return;}
+    const g=document.createElement("script");g.src="https://accounts.google.com/gsi/client";g.async=true;g.onload=startGis;
+    g.onerror=()=>say("Couldn't reach Google sign-in. Check the internet connection and reload.","err");document.head.appendChild(g);}
+
   if(web){$("logout").hidden=false;
-    $("logout").onclick=e=>{e.preventDefault();try{localStorage.removeItem(K);}catch(x){}if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();location.reload();};
-    // lock again when the 12 hours are up
-    setInterval(()=>{if(!root.classList.contains("locked")&&!session())location.reload();},60e3);}
-  const s=session();if(s){unlock(s);return;}
-  if(!root.classList.contains("locked"))return; // opened from a file on this computer: no gate
-  const g=document.createElement("script");g.src="https://accounts.google.com/gsi/client";g.async=true;g.onload=startGis;
-  g.onerror=()=>say("Couldn't reach Google sign-in. Check the internet connection and reload.","err");document.head.appendChild(g);
+    $("logout").onclick=e=>{e.preventDefault();drop();if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();location.reload();};
+    setInterval(()=>{if(!root.classList.contains("locked")&&!stored())location.reload();},60e3);}// lock again after 12 hours
+  if(!root.classList.contains("locked")){const s=stored();if(s)$("signedAs").textContent="Signed in as "+s.email+". ";return;}// opened from a file: no gate
+  const s=stored();
+  if(s&&!OTP_API){unlock(s);return;}
+  if(s&&s.session){step("none");say("Checking your sign-in…");// HR-approved sign-ins are re-checked with the login service
+    api({action:"check",session:s.session}).then(r=>{if(r.ok){say("");unlock(s);}else{drop();say("Your sign-in has ended. Sign in again.");loadGis();}})
+      .catch(()=>{say("Couldn't reach the login service. Check the internet connection and reload.","err");});
+    return;}
+  drop();loadGis();
 })();
 </script>
 </body></html>
