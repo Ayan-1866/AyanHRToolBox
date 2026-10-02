@@ -111,7 +111,8 @@ td input{padding:5px 7px;font-size:12.5px;min-width:170px}
       <div><label for="lbl">Label (optional)</label><input id="lbl" placeholder="e.g. Careers"></div>
       <div><button class="primary" id="scanBtn" type="button" disabled>Scan</button></div>
     </div>
-    <label class="chk"><input type="checkbox" id="readCv" checked> Read the CV files too (PDF &amp; Word) — slower, but finds the designation when the email doesn't say it</label>
+    <label class="chk"><input type="checkbox" id="auto" checked> Stay connected and check for new CVs automatically — when this page opens and every 15 minutes while it's open</label>
+    <label class="chk" style="margin-top:4px"><input type="checkbox" id="readCv" checked> Read the CV files too (PDF &amp; Word) — slower, but finds the designation when the email doesn't say it</label>
     <div class="progress" id="prog" hidden><div class="track"><div class="fill" id="fill"></div></div><div class="txt" id="ptxt"></div></div>
     <div id="msg" role="status"></div>
   </section>
@@ -202,8 +203,12 @@ const GROUPS=[["Planning, QS & Contracts",/planning|quantity|estimat|contract|te
  ["Management",/director|\bgm\b|\bagm\b|\bdgm\b|vice president|\bvp\b|head|president|ceo|coo|cfo/]];
 function groupOf(d){if(!d)return"Not classified";const n=norm(d);for(const[g,re]of GROUPS)if(re.test(n))return g;return"Other";}
 
-/* ---------- Google sign-in (token kept in memory only) ---------- */
-let token=null,tokenExp=0,tokenClient=null,pending=null;
+/* ---------- Google sign-in ----------
+   Google gives browser pages a 1-hour Gmail pass. We keep it (and the Gmail address) in this browser so a
+   reload doesn't ask again, and renew it with the remembered address on your next click once it runs out. */
+const K_AUTH="alcove-cv-auth";
+let token=null,tokenExp=0,tokenClient=null,pending=null,acct="";
+{const a=load(K_AUTH,null);if(a){acct=a.email||"";if(a.token&&a.exp>Date.now()+60000){token=a.token;tokenExp=a.exp;}}}
 const ORIGIN_OK=/^https?:$/.test(location.protocol)&&location.origin!=="null";
 $("originShow").textContent=ORIGIN_OK?location.origin:"https://employees.alcoverealty.in";
 function needSetup(why){$("setup").hidden=false;$("setupWhy").innerHTML=why;}
@@ -214,26 +219,40 @@ function initGis(){if(tokenClient||!gisReady())return!!tokenClient;
     const p=pending;pending=null;
     if(resp.error){if(p)p.reject(new Error(resp.error_description||resp.error));return;}
     if(!google.accounts.oauth2.hasGrantedAllScopes(resp,SCOPE)){if(p)p.reject(new Error("Gmail read access wasn't granted. Click Connect Gmail again and tick the Gmail box."));return;}
-    token=resp.access_token;tokenExp=Date.now()+(Number(resp.expires_in||3600)-60)*1000;if(p)p.resolve(token);},
+    token=resp.access_token;tokenExp=Date.now()+(Number(resp.expires_in||3600)-60)*1000;save(K_AUTH,{token,exp:tokenExp,email:acct});if(p)p.resolve(token);},
     error_callback:err=>{const p=pending;pending=null;if(p)p.reject(new Error(err&&err.type==="popup_closed"?"The Google window was closed before signing in.":(err&&err.message)||"Google sign-in failed."));}});
   return true;}
-function getToken(interactive){if(token&&Date.now()<tokenExp)return Promise.resolve(token);
+const live=()=>!!token&&Date.now()<tokenExp;
+// interactive: may open Google's window (only allowed straight after a click). Otherwise fail fast when expired.
+function getToken(interactive){if(live())return Promise.resolve(token);
+  if(!interactive)return Promise.reject(Object.assign(new Error("The Gmail connection needs renewing — click anywhere on the page."),{expired:true}));
   if(!initGis())return Promise.reject(new Error("Google sign-in is still loading. Try again in a moment."));
-  return new Promise((resolve,reject)=>{pending={resolve,reject};tokenClient.requestAccessToken({prompt:interactive&&!token?"consent":""});});}
+  return new Promise((resolve,reject)=>{pending={resolve,reject};
+    tokenClient.requestAccessToken(acct?{prompt:"",login_hint:acct}:{prompt:"consent"});});}
 async function api(path,params,retry){const qs=params?"?"+new URLSearchParams(params):"";
   const r=await fetch(API+path+qs,{headers:{Authorization:"Bearer "+await getToken(false)}});
-  if(r.status===401&&!retry){token=null;return api(path,params,true);}
+  if(r.status===401&&!retry){token=null;tokenExp=0;save(K_AUTH,{email:acct});showState();throw Object.assign(new Error("The Gmail connection needs renewing — click anywhere on the page."),{expired:true});}
   if((r.status===429||r.status>=500)&&(retry||0)<4){await new Promise(s=>setTimeout(s,800*Math.pow(2,retry||0)));return api(path,params,(retry||0)+1);}
   if(!r.ok){let t="";try{t=(await r.json()).error.message;}catch(e){}
     if(r.status===403&&/not been used|disabled/i.test(t))needSetup("<p>The <b>Gmail API</b> isn't enabled for this Google Cloud project yet.</p>");
     throw new Error("Gmail said: "+(t||r.status));}
   return r.json();}
-$("connect").onclick=async()=>{if(!ORIGIN_OK){say("Open this page from https://employees.alcoverealty.in to connect Gmail.","err");return;}
-  try{say("Opening Google sign-in…");await getToken(true);const p=await api("profile");$("who").textContent="Connected: "+p.emailAddress;
-    $("connect").hidden=true;$("signout").hidden=false;$("scanBtn").disabled=false;say("Connected. Choose the period and click Scan.","ok");}
-  catch(e){say(e.message,"err");if(/origin|redirect_uri|invalid_client|idpiframe/i.test(e.message))needSetup("<p>Google refused the sign-in for this address.</p>");}};
-$("signout").onclick=()=>{if(token&&gisReady())google.accounts.oauth2.revoke(token,()=>{});token=null;tokenExp=0;
-  $("who").textContent="Not connected";$("connect").hidden=false;$("signout").hidden=true;$("scanBtn").disabled=true;say("Disconnected from Gmail.");};
+function showState(){const on=live();
+  $("who").textContent=on?"Connected: "+acct:acct?acct+" · renews on your next click":"Not connected";
+  $("connect").hidden=on;$("connect").textContent=acct?"Reconnect":"Connect Gmail";$("signout").hidden=!acct;$("scanBtn").disabled=!on||busy;
+  if(!on&&acct&&ORIGIN_OK)armRenew();}
+async function connect(){if(!ORIGIN_OK){say("Open this page from https://employees.alcoverealty.in to connect Gmail.","err");return false;}
+  try{if(!acct)say("Opening Google sign-in…");await getToken(true);
+    if(!acct){const p=await api("profile");acct=p.emailAddress;save(K_AUTH,{token,exp:tokenExp,email:acct});}
+    showState();return true;}
+  catch(e){say(e.message,"err");if(/origin|redirect_uri|invalid_client|idpiframe/i.test(e.message))needSetup("<p>Google refused the sign-in for this address.</p>");showState();return false;}}
+$("connect").onclick=async()=>{const first=!acct;if(await connect()){say(first?"Connected. Checking your mail for CVs…":"Reconnected.","ok");scan(true);}};
+// renew silently on the first click after the pass runs out (Google needs a click to open its window)
+let armed=false;
+function armRenew(){if(armed)return;armed=true;document.addEventListener("pointerdown",async e=>{armed=false;
+  if(live()||e.target.closest("#signout"))return;if(await connect()){say("Gmail reconnected.","ok");scan(true);}},{once:true,capture:true});}
+$("signout").onclick=()=>{if(token&&gisReady())google.accounts.oauth2.revoke(token,()=>{});token=null;tokenExp=0;acct="";
+  try{localStorage.removeItem(K_AUTH);}catch(e){}showState();say("Disconnected from Gmail. This browser no longer remembers the account.");};
 
 /* ---------- reading messages ---------- */
 const b64u=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;};
@@ -276,12 +295,12 @@ async function readMessage(id,withCv){const m=await api("messages/"+id,{format:"
   rec.body=rec.body.slice(0,300);return rec;}
 
 /* ---------- scan ---------- */
-let RECS=load(K_CACHE,[]),OVR=load(K_OVR,{}),busy=false;
-(function(){const s=load(K_SET,{});$("q").value=s.q||DEFAULT_Q;if(s.period!==undefined)$("period").value=s.period;if(s.maxn)$("maxn").value=s.maxn;if(s.lbl)$("lbl").value=s.lbl;if(s.readCv===false)$("readCv").checked=false;})();
-function saveSet(){save(K_SET,{q:$("q").value,period:$("period").value,maxn:$("maxn").value,lbl:$("lbl").value,readCv:$("readCv").checked});}
-["q","period","maxn","lbl","readCv"].forEach(id=>$(id).addEventListener("change",saveSet));
+let RECS=load(K_CACHE,[]),OVR=load(K_OVR,{}),busy=false,lastScan=0,fresh=[];
+(function(){const s=load(K_SET,{});$("q").value=s.q||DEFAULT_Q;if(s.period!==undefined)$("period").value=s.period;if(s.maxn)$("maxn").value=s.maxn;if(s.lbl)$("lbl").value=s.lbl;if(s.readCv===false)$("readCv").checked=false;if(s.auto===false)$("auto").checked=false;})();
+function saveSet(){save(K_SET,{q:$("q").value,period:$("period").value,maxn:$("maxn").value,lbl:$("lbl").value,readCv:$("readCv").checked,auto:$("auto").checked});}
+["q","period","maxn","lbl","readCv","auto"].forEach(id=>$(id).addEventListener("change",saveSet));
 function prog(done,total,txt){$("prog").hidden=false;$("fill").style.width=(total?Math.round(done/total*100):0)+"%";$("ptxt").textContent=txt;}
-$("scanBtn").onclick=async()=>{if(busy)return;busy=true;$("scanBtn").disabled=true;
+async function scan(auto){if(busy||!live())return;busy=true;$("scanBtn").disabled=true;lastScan=Date.now();
   try{let q=$("q").value.trim()||DEFAULT_Q;const p=$("period").value,l=$("lbl").value.trim();
     if(p)q+=" newer_than:"+p+"d";if(l)q+=' label:"'+l.replace(/"/g,"")+'"';
     const max=Number($("maxn").value),ids=[];let pageToken="";
@@ -290,15 +309,17 @@ $("scanBtn").onclick=async()=>{if(busy)return;busy=true;$("scanBtn").disabled=tr
       (r.messages||[]).forEach(m=>ids.push(m.id));pageToken=r.nextPageToken||"";prog(0,1,"Searching Gmail… "+ids.length+" emails");}
     while(pageToken&&ids.length<max);
     const have=new Set(RECS.map(r=>r.id)),todo=ids.filter(id=>!have.has(id));
-    if(!todo.length){prog(1,1,"No new emails since the last scan ("+ids.length+" matching emails already sorted).");say("Up to date.","ok");return;}
-    let done=0,found=0;const withCv=$("readCv").checked,fresh=[];
-    async function worker(){while(todo.length){const id=todo.shift();try{const r=await readMessage(id,withCv);if(r){fresh.push(r);found++;}}catch(e){if(/Gmail API|not been used/i.test(e.message))throw e;}
+    if(!todo.length){prog(1,1,"No new emails since the last scan ("+ids.length+" matching emails already sorted).");say(auto?"Checked at "+new Date().toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"})+" — no new CVs.":"Up to date.","ok");return;}
+    let done=0,found=0;const withCv=$("readCv").checked;
+    async function worker(){while(todo.length){const id=todo.shift();try{const r=await readMessage(id,withCv);if(r){fresh.push(r);found++;}}catch(e){if(e.expired||/Gmail API|not been used/i.test(e.message))throw e;}
       done++;prog(done,done+todo.length,"Reading emails… "+done+" of "+(done+todo.length)+" · "+found+" CVs");if(done%25===0){RECS=RECS.concat(fresh.splice(0));persist();render();}}}
     await Promise.all(Array.from({length:5},worker));
-    RECS=RECS.concat(fresh);persist();render();
-    say("Done — "+found+" new CVs from "+done+" emails.","ok");}
-  catch(e){say(e.message,"err");}
-  finally{busy=false;$("scanBtn").disabled=!token;}};
+    say((auto?"New mail checked — ":"Done — ")+found+" new CVs from "+done+" emails.","ok");}
+  catch(e){say(e.message,"err");if(e.expired)showState();}
+  finally{if(fresh.length){RECS=RECS.concat(fresh.splice(0));persist();}render();busy=false;showState();}}
+$("scanBtn").onclick=()=>scan(false);
+// check for new CVs when the page opens and every 15 minutes while it stays open
+setInterval(()=>{if($("auto").checked&&live()&&!busy&&Date.now()-lastScan>=15*60e3)scan(true);},60e3);
 function persist(){RECS.sort((a,b)=>b.date-a.date);if(!save(K_CACHE,RECS)){RECS.forEach(r=>{r.body="";});save(K_CACHE,RECS);}}
 
 /* ---------- dashboard ---------- */
@@ -347,4 +368,7 @@ $("csv").onclick=()=>{const list=shown();if(!list.length){say("Nothing to export
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="CVs - "+(curD===null?"all":(curD||"not classified"))+" - "+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();a.remove();};
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 render();
+showState();
+if(live()){say("Connected as "+acct+".","ok");if($("auto").checked)scan(true);}
+else if(acct)say("Welcome back — your Gmail connection renews on your next click.");
 </script></body></html>
