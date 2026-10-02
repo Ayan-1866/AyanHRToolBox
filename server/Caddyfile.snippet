@@ -1,0 +1,13 @@
+# Add inside the existing  employees.alcoverealty.in { ... }  block, ABOVE the rule that serves /p/...
+# Then:  sudo systemctl reload caddy
+
+	# the login page and its API
+	handle /auth/* {
+		reverse_proxy 127.0.0.1:8090
+	}
+
+	# lock the HR Tool: no valid sign-in -> sent to /auth/login
+	@hrtool path /p/hr-tool-box /p/hr-tool-box/*
+	forward_auth @hrtool 127.0.0.1:8090 {
+		uri /auth/check
+	}

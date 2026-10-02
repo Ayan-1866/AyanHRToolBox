@@ -1,0 +1,19 @@
+# systemd service: copy to /etc/systemd/system/hr-otp-gate.service
+#   sudo systemctl daemon-reload && sudo systemctl enable --now hr-otp-gate
+[Unit]
+Description=Alcove HR Tool email OTP gate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=/etc/hr-otp-gate.env
+ExecStart=/usr/bin/python3 /opt/hr-otp-gate/otp_gate.py
+Restart=on-failure
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+# filled-in server settings contain the Gmail app password
+server/*.env
+*.env
+__pycache__/
