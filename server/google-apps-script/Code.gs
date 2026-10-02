@@ -14,6 +14,11 @@ const CODE_MINUTES = 10;   // a code works for 10 minutes
 const MAX_TRIES = 5;       // wrong guesses allowed per code
 const SESSION_HOURS = 12;  // how long a sign-in lasts
 
+// Employee list for the portal (Birthday Cards etc.): the "HR Master Data [NEW]" sheet, tab gid 833875499.
+// hr@alcoverealty.in needs view access to it. Only signed-in, HR-approved users get the list.
+const EMPLOYEE_SHEET_ID = "1I1vJJy5vXDMysBvXkXREImNZORr6ko1OMvPoNo984RI";
+const EMPLOYEE_TAB_GID = 833875499;
+
 function doGet() {
   return out({ ok: true, service: "alcove-hr-otp" });
 }
@@ -25,6 +30,10 @@ function doPost(e) {
     if (req.action === "request") return out(requestCode(req.idToken));
     if (req.action === "verify") return out(verifyCode(req.idToken, String(req.code || "")));
     if (req.action === "check") return out(checkSession(String(req.session || "")));
+    if (req.action === "employees") {
+      if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to load the employee list." });
+      return out(employees());
+    }
     return out({ error: "Unknown request." });
   } catch (err) {
     return out({ error: String((err && err.message) || err) });
@@ -132,6 +141,90 @@ function checkSession(session) {
 }
 
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+/* ---------- employee list ---------- */
+const COLS = {
+  name: /^((new |employee |emp |staff |full |candidate )?name|name of (the )?employee|employee full name)$/,
+  code: /^((new )?emp(loyee)? ?(no|code|id|number)|emp code|staff (no|id)|e code)$/,
+  desig: /^(designation|desig|job title|position)$/,
+  dept: /^(department|dept)$/,
+  loc: /^(location|work location|site|project|office)$/,
+  dob: /^(dob|d o b|date of birth|birth ?date|birthday)$/,
+  status: /^(status|employee status|emp status|active status)$/,
+  doj: /^(doj|d o j|date of joining|joining date|date of join)$/,
+  dol: /^(dol|d o l|date of leaving|leaving date|last working (day|date)|lwd|relieving date|date of exit|exit date|date of relieving)$/,
+  addr: /^(address|present address|current address|residential address|correspondence address)$/,
+  paddr: /^(permanent address)$/,
+  emailO: /^(official email|official email id|official mail|office email|work email)$/,
+  email: /^(email|e mail|email id|mail id|email address|personal email|personal email id)$/,
+  phone: /^(phone|mobile|mobile no|mobile number|contact|contact no|contact number|phone no|phone number|whatsapp|whatsapp no)$/,
+  mgr: /^(reporting manager|reporting to|manager|reporting head|reporting authority|reports to)$/,
+  company: /^(company|company name|entity|organisation|organization|employer|legal entity)$/,
+  gender: /^(gender|sex)$/
+};
+const INACTIVE = /inactive|left|resign|exit|abscond|terminat|relieved|separated/i;
+const MON = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+function headerKey(h) { return String(h).toLowerCase().replace(/[_.\-]+/g, " ").replace(/\s+/g, " ").trim(); }
+function pad2(n) { return ("0" + n).slice(-2); }
+function monthDay(v, tz) {
+  if (v instanceof Date && !isNaN(v)) return Utilities.formatDate(v, tz, "MM-dd");
+  const s = String(v || "").trim(); let m;
+  const ok = function (mo, d) { mo = +mo; d = +d; return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? pad2(mo) + "-" + pad2(d) : ""; };
+  if ((m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))) return ok(m[2], m[3]);
+  if ((m = s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/))) return ok(m[2], m[1]);              // day first (Indian order)
+  if ((m = s.match(/^(\d{1,2})[\s\-]+([A-Za-z]{3,})[\s\-,]+\d{2,4}/))) return ok(MON.indexOf(m[2].slice(0, 3).toLowerCase()) + 1, m[1]);
+  return "";
+}
+function isoDate(v, tz) {
+  if (v instanceof Date && !isNaN(v)) return Utilities.formatDate(v, tz, "yyyy-MM-dd");
+  const s = String(v || "").trim(); let m;
+  const ok = function (y, mo, d) { y = +y; if (y < 100) y += y > 40 ? 1900 : 2000; mo = +mo; d = +d;
+    return y > 1900 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? y + "-" + pad2(mo) + "-" + pad2(d) : ""; };
+  if ((m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))) return ok(m[1], m[2], m[3]);
+  if ((m = s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/))) return ok(m[3], m[2], m[1]);           // day first (Indian order)
+  if ((m = s.match(/^(\d{1,2})[\s\-]+([A-Za-z]{3,})[\s\-,]+(\d{2,4})/))) return ok(m[3], MON.indexOf(m[2].slice(0, 3).toLowerCase()) + 1, m[1]);
+  return "";
+}
+function employeeTab() {
+  const ss = SpreadsheetApp.openById(EMPLOYEE_SHEET_ID);
+  const tab = ss.getSheets().filter(function (s) { return s.getSheetId() === EMPLOYEE_TAB_GID; })[0];
+  if (!tab) throw new Error("The employee tab wasn't found in HR Master Data.");
+  return { ss: ss, tab: tab };
+}
+// the heading row is the first of the top 15 rows that has a name column
+function findColumns(values) {
+  for (let r = 0; r < Math.min(15, values.length); r++) {
+    const cols = {};
+    values[r].forEach(function (h, i) { const k = headerKey(h); Object.keys(COLS).forEach(function (f) { if (cols[f] === undefined && COLS[f].test(k)) cols[f] = i; }); });
+    if (cols.name !== undefined) return { row: r, cols: cols };
+  }
+  throw new Error("Couldn't find a Name column in the employee tab.");
+}
+function employees() {
+  const t = employeeTab(), tz = t.ss.getSpreadsheetTimeZone(), values = t.tab.getDataRange().getValues();
+  const h = findColumns(values), c = h.cols, get = function (row, f) { return c[f] === undefined ? "" : String(row[c[f]] instanceof Date ? "" : row[c[f]]).trim(); };
+  const date = function (row, f) { return c[f] === undefined ? "" : isoDate(row[c[f]], tz); };
+  const list = []; let skipped = 0;
+  for (let r = h.row + 1; r < values.length; r++) {
+    const row = values[r], n = get(row, "name").replace(/\s+/g, " ");
+    if (!n) continue;
+    const st = get(row, "status"), active = !(c.status !== undefined && INACTIVE.test(st)) && !date(row, "dol");
+    if (!active) skipped++;
+    list.push({ n: n, c: get(row, "code"), g: get(row, "desig"), dept: get(row, "dept"), loc: get(row, "loc"), co: get(row, "company"),
+      d: c.dob === undefined ? "" : monthDay(row[c.dob], tz), dob: date(row, "dob"), doj: date(row, "doj"), dol: date(row, "dol"),
+      addr: (get(row, "addr") || get(row, "paddr")).replace(/\s*\n\s*/g, ", "), email: get(row, "emailO") || get(row, "email"),
+      phone: get(row, "phone").replace(/\.0$/, ""), mgr: get(row, "mgr"), sex: get(row, "gender"), st: st, a: active });
+  }
+  return { ok: true, at: Date.now(), source: t.ss.getName() + " › " + t.tab.getName(), list: list, skipped: skipped,
+    hasDob: c.dob !== undefined };
+}
+/* Run once from the editor to grant Sheets access and see which columns were found (no employee data is shown). */
+function testEmployees() {
+  const t = employeeTab(), values = t.tab.getDataRange().getValues(), h = findColumns(values), r = employees();
+  const found = Object.keys(h.cols).map(function (f) { return f + " = \"" + values[h.row][h.cols[f]] + "\""; }).join(", ");
+  Logger.log("Tab: " + t.tab.getName() + " | heading row " + (h.row + 1) + " | columns: " + found +
+    " | employees: " + r.list.length + " (inactive: " + r.skipped + ") | with birthday: " + r.list.filter(function (p) { return p.d; }).length);
+}
 
 /* Run this once from the editor (select it → Run) to grant the email permission and test sending. */
 function testEmail() {

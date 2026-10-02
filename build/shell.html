@@ -70,6 +70,26 @@ button{font:inherit}
 .content{flex:1;min-width:0;display:flex;flex-direction:column}
 .stage{flex:1;min-height:0;position:relative;overflow:auto}
 .frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
+/* fill-from-employee bar */
+.empbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;background:var(--card);border-bottom:1px solid var(--line);font-size:.86rem}
+.empbar label{font-weight:600;white-space:nowrap}
+.esearch{position:relative;flex:1 1 280px;max-width:480px}
+.esearch input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.esearch input:focus{outline:2px solid var(--gold);outline-offset:1px}
+.eres{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;margin:0;padding:4px;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);max-height:min(60vh,420px);overflow:auto}
+.eres li{padding:7px 9px;border-radius:7px;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.eres li[aria-selected="true"],.eres li:hover{background:var(--hover)}
+.eres .n{font-weight:600}.eres .m{color:var(--muted);font-size:.8rem}
+.eres .s{flex:none;align-self:center;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:1px 6px;border-radius:4px;background:var(--hover);color:var(--muted)}
+.eres .s.on{color:#1f7a3a}
+.eres .empty{cursor:default;color:var(--muted)}
+.empbar .chk{display:flex;align-items:center;gap:5px;white-space:nowrap;color:var(--muted)}
+.empbar .btn{font:inherit;font-size:.82rem;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;white-space:nowrap}
+.empbar .btn:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+#estat{color:var(--muted);flex:1 1 220px;font-size:.8rem}
+#estat.ok{color:#1f7a3a}#estat.err{color:#b3261e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #estat.ok,:root:not([data-theme="light"]) .eres .s.on{color:#6fcf8f}}
+:root[data-theme="dark"] #estat.ok,:root[data-theme="dark"] .eres .s.on{color:#6fcf8f}
 
 /* ---------- home ---------- */
 .home{max-width:1120px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top,0px)) 32px calc(40px + env(safe-area-inset-bottom,0px))}
@@ -161,6 +181,16 @@ button{font:inherit}
 </aside>
 
 <main class="content">
+  <div class="empbar" id="empbar" hidden>
+    <label for="eq">Fill from employee</label>
+    <div class="esearch">
+      <input id="eq" type="search" placeholder="Type a name, Emp No. or designation…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="eres" aria-autocomplete="list">
+      <ul class="eres" id="eres" role="listbox" hidden></ul>
+    </div>
+    <span class="chk"><input type="checkbox" id="einact"><label for="einact" style="font-weight:400">Include inactive</label></span>
+    <button class="btn" id="eref" type="button">Refresh list</button>
+    <span id="estat" role="status" aria-live="polite"></span>
+  </div>
   <div class="stage">
   <section class="home" id="v-home">
     <div class="hero">
@@ -287,6 +317,7 @@ button{font:inherit}
     document.title=(v==="home"?"":(f.title+" · "))+"Alcove HR Tool";
     if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);
     try{localStorage.setItem("alcove-hrtool-view",v);}catch(e){}
+    window.__view=v;document.dispatchEvent(new CustomEvent("hrview",{detail:v}));
   }
 
   document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -327,9 +358,24 @@ button{font:inherit}
   let idToken="",me="";
   function stored(){try{const s=JSON.parse(localStorage.getItem(K)||"null");return s&&s.exp>Date.now()?s:null;}catch(e){return null;}}
   function keep(s){try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}}
-  function drop(){try{localStorage.removeItem(K);}catch(e){}}
+  function drop(){try{localStorage.removeItem(K);sessionStorage.removeItem("alcove-hrtool-emps");}catch(e){}}
   function unlock(s){root.classList.remove("locked");$("signedAs").textContent="Signed in as "+s.email+". ";
-    if(window.__startApp){window.__startApp();window.__startApp=null;}}
+    if(window.__startApp){window.__startApp();window.__startApp=null;}
+    syncEmployees(s);}
+  // employee list from the HR Master Data sheet. The full list (for filling the tools) is kept only for this
+  // browser session; Birthday Cards gets a slim list (name, designation, day+month of birth) of active staff.
+  const KP="alcove-bday-people",KF="alcove-hrtool-emps";
+  function publish(data,state){window.__emps=data;document.dispatchEvent(new CustomEvent("hremps",{detail:state||"ok"}));}
+  async function syncEmployees(s,force){if(!OTP_API||!s||!s.session){publish(null,"off");return;}
+    try{const cur=JSON.parse(sessionStorage.getItem(KF)||"null");if(cur&&!force&&Date.now()-cur.at<3600e3){publish(cur);return;}}catch(e){}
+    publish(window.__emps||null,"loading");
+    try{const r=await api({action:"employees",session:s.session});if(!r.ok||!Array.isArray(r.list))throw new Error(r.error||"no list");
+      const data={at:r.at||Date.now(),source:r.source||"HR Master Data",list:r.list};
+      try{sessionStorage.setItem(KF,JSON.stringify(data));}catch(e){}
+      try{localStorage.setItem(KP,JSON.stringify({at:data.at,file:data.source,sheet:true,list:r.list.filter(p=>p.a!==false).map(p=>({n:p.n,d:p.d||"",g:p.g||"",c:p.c||""}))}));}catch(e){}
+      publish(data);}
+    catch(e){publish(window.__emps||null,"error:"+(e.message||e));}}
+  window.__refreshEmps=()=>syncEmployees(stored(),true);
   async function api(body){const r=await fetch(OTP_API,{method:"POST",body:JSON.stringify(body)});// plain text body: no pre-flight needed
     if(!r.ok)throw new Error("The login service didn't answer ("+r.status+").");return r.json();}
   function claims(jwt){const p=jwt.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
@@ -376,6 +422,77 @@ button{font:inherit}
       .catch(()=>{say("Couldn't reach the login service. Check the internet connection and reload.","err");});
     return;}
   drop();loadGis();
+})();
+</script>
+<script>
+/* ---------- "Fill from employee" bar: fills the open tool from the HR Master Data list ---------- */
+(function(){
+  const $=id=>document.getElementById(id),esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const NO_BAR=["home","cv"],EXIT=["exp","rel"];let view="home",inactTouched=false,hits=[],sel=-1;
+  const say=(t,c)=>{$("estat").textContent=t;$("estat").className=c||"";};
+  const list=()=>(window.__emps&&window.__emps.list)||[];
+  const nice=s=>{s=String(s||"").replace(/\s+/g," ").trim();return(s&&(s===s.toLowerCase()||s===s.toUpperCase()))?s.toLowerCase().replace(/(^|[\s.\-'(])([a-z])/g,(m,a,b)=>a+b.toUpperCase()):s;};
+  function status(state){const d=window.__emps;
+    if(state==="off"){say("The employee list loads after you sign in with an HR-approved code.");return;}
+    if(state==="loading"&&!d){say("Loading employees from HR Master Data…");return;}
+    if(String(state).startsWith("error")&&!d){say("Couldn't load the employee list ("+String(state).slice(6)+"). Try Refresh list.","err");return;}
+    if(d){const act=d.list.filter(p=>p.a!==false).length;say(act+" active, "+(d.list.length-act)+" inactive · "+d.source+" · updated "+new Date(d.at).toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"}),"");}}
+  document.addEventListener("hremps",e=>status(e.detail));
+  document.addEventListener("hrview",e=>{view=e.detail;$("empbar").hidden=NO_BAR.includes(view);closeRes();
+    if(!inactTouched)$("einact").checked=EXIT.includes(view);});
+  $("einact").addEventListener("change",()=>{inactTouched=true;if($("eq").value.trim())search();});
+  $("eref").onclick=()=>{if(window.__refreshEmps){say("Refreshing…");window.__refreshEmps();}};
+
+  // search
+  function closeRes(){$("eres").hidden=true;$("eq").setAttribute("aria-expanded","false");sel=-1;}
+  function search(){const q=$("eq").value.trim().toLowerCase(),ul=$("eres");if(!q){closeRes();return;}
+    if(!list().length){ul.innerHTML='<li class="empty">No employee list yet — sign in, then use Refresh list.</li>';ul.hidden=false;return;}
+    const inact=$("einact").checked,starts=[],has=[];
+    for(const e of list()){if(!inact&&e.a===false)continue;const n=e.n.toLowerCase(),c=String(e.c||"").toLowerCase(),g=String(e.g||"").toLowerCase();
+      if(n.startsWith(q)||c.startsWith(q)||n.includes(" "+q))starts.push(e);else if(n.includes(q)||c.includes(q)||g.includes(q))has.push(e);if(starts.length>=25)break;}
+    hits=starts.concat(has).slice(0,25);sel=hits.length?0:-1;
+    ul.innerHTML=hits.length?hits.map((e,i)=>'<li role="option" data-i="'+i+'" aria-selected="'+(i===sel)+'"><span><span class="n">'+esc(nice(e.n))+'</span> <span class="m">'+esc(e.c)+'</span><br><span class="m">'+esc([e.g,e.dept,e.loc].filter(Boolean).join(" · "))+'</span></span><span class="s'+(e.a!==false?" on":"")+'">'+(e.a!==false?"ACTIVE":"INACTIVE")+"</span></li>").join("")
+      :'<li class="empty">No match'+(inact?"":" among active staff — tick Include inactive")+"</li>";
+    ul.hidden=false;$("eq").setAttribute("aria-expanded","true");}
+  function mark(){[...$("eres").children].forEach((li,i)=>li.setAttribute("aria-selected",i===sel));const li=$("eres").children[sel];if(li)li.scrollIntoView({block:"nearest"});}
+  $("eq").addEventListener("input",search);
+  $("eq").addEventListener("keydown",e=>{if($("eres").hidden)return;
+    if(e.key==="ArrowDown"&&hits.length){sel=(sel+1)%hits.length;mark();e.preventDefault();}
+    else if(e.key==="ArrowUp"&&hits.length){sel=(sel-1+hits.length)%hits.length;mark();e.preventDefault();}
+    else if(e.key==="Enter"&&sel>=0){pick(hits[sel]);e.preventDefault();}else if(e.key==="Escape")closeRes();});
+  $("eres").addEventListener("mousedown",e=>{const li=e.target.closest("li[data-i]");if(li){e.preventDefault();pick(hits[+li.dataset.i]);}});
+  $("eq").addEventListener("blur",()=>setTimeout(closeRes,120));
+
+  // company in the sheet -> the letters' company codes / names
+  const ENT=[[/developers/i,"ADLLP","Alcove Developers LLP"],[/alcove realty|\barpl\b|origyn/i,"ARPL","Alcove Realty Pvt. Ltd."],[/amba|curve/i,"AMBA","AMBA Highrise Pvt. Ltd."],
+    [/construction|\bacpl\b|duets/i,"ACPL","Alcove Construction Pvt. Ltd."],[/sundarvan|\bsrpl\b/i,"SRPL","Sundarvan Realty Pvt. Ltd."]];
+  const ent=e=>{const t=(e.co||"")+" "+(e.loc||"");const m=ENT.find(x=>x[0].test(e.co||""))||ENT.find(x=>x[0].test(t));return m?{code:m[1],name:m[2]}:{code:"",name:""};};
+  const pron=s=>/^\s*f|female|woman/i.test(s||"")?"she":/^\s*m|male|man/i.test(s||"")?"he":"";
+  // which form field gets which employee value, per tool (field order matters: later fields may rely on earlier ones)
+  const MAP={
+    loi:e=>[["NAME",nice(e.n)],["ADDRESS",e.addr],["DESIG",e.g],["DOJ",e.doj],["COMPANY",ent(e).name]],
+    appt:e=>[["NAME",nice(e.n)],["EMPID",e.c],["DESIG",e.g],["DOB",e.dob],["ADDRESS",e.addr],["DOJ",e.doj],["COMPANY",ent(e).name]],
+    joiner:e=>[["name",nice(e.n)],["desig",e.g],["loc",e.loc],["email",e.email],["cno",e.phone],["empid",e.c],["doj",e.doj],["mgr",nice(e.mgr)]],
+    exp:e=>[["PROJ",e.loc],["ENT",ent(e).code],["NAME",nice(e.n)],["EMPID",e.c],["DESIG",e.g],["DEPT",e.dept],["DOJ",e.doj],["DOL",e.dol],["PRON",pron(e.sex)]],
+    rel:e=>MAP.exp(e),
+    bday:e=>[["who",nice(e.n)]]
+  };
+  const LABEL={ADDRESS:"address",DESIG:"designation",DOJ:"joining date",DOB:"date of birth",EMPID:"Emp ID",empid:"Emp ID",COMPANY:"company",ENT:"company",
+    loc:"location",PROJ:"project",email:"email",cno:"phone",mgr:"manager",doj:"joining date",desig:"designation",DEPT:"department",DOL:"relieving date",PRON:"pronoun (no gender in the sheet)"};
+  function setField(w,id,v){const d=w.document,el=d.getElementById(id);if(!el)return false;v=v==null?"":String(v);
+    const fire=(t,ev)=>t.dispatchEvent(new w.Event(ev,{bubbles:true}));
+    if(el.tagName==="SELECT"){const lv=v.toLowerCase(),o=[...el.options].find(o=>o.value.toLowerCase()===lv||o.text.trim().toLowerCase()===lv);const other=d.getElementById(id+"_OTHER");
+      if(!v)return false;// nothing in the sheet: leave the dropdown as it is (keeps any automatic choice)
+      if(o)el.value=o.value;else if(other&&el.querySelector('option[value="__other"]')){el.value="__other";other.value=v;}else return false;
+      fire(el,"change");if(other&&el.value==="__other")fire(other,"input");return true;}
+    el.value=v;fire(el,"input");fire(el,"change");return true;}
+  function pick(e){if(!e)return;closeRes();$("eq").value="";const f=$("v-"+view);if(!f||!MAP[view])return;
+    const go=()=>{const miss=[];MAP[view](e).forEach(([id,v])=>{const ok=setField(f.contentWindow,id,v);if(!v||!ok)miss.push(LABEL[id]||id);});
+      say("Filled "+f.title+" with "+nice(e.n)+(e.c?" ("+e.c+")":"")+"."+(miss.length?" Not in the sheet, so check: "+[...new Set(miss)].join(", ")+".":""),miss.length?"":"ok");};
+    const first=MAP[view](e)[0][0];if(f.contentDocument&&f.contentDocument.readyState==="complete"&&f.contentDocument.getElementById(first))go();else f.addEventListener("load",go,{once:true});}
+  // the page and list may already be set before this script ran
+  if(window.__view)document.dispatchEvent(new CustomEvent("hrview",{detail:window.__view}));
+  status(window.__emps?"ok":"off");
 })();
 </script>
 </body></html>

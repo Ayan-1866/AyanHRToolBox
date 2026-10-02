@@ -220,7 +220,7 @@ function listUI(){const ul=$("bdList");
   const t=upcoming().filter(u=>u.days===0).length;$("all").hidden=t<2;$("all").textContent="Download all "+t+" of today's cards (.zip)";}
 function peopleUI(){const dl=$("people");dl.innerHTML=PEOPLE?PEOPLE.list.map(p=>'<option value="'+esc(p.n)+'">'+esc([p.g,p.c].filter(Boolean).join(" · "))+"</option>").join(""):"";
   $("clearList").hidden=!PEOPLE;
-  $("listInfo").textContent=PEOPLE?PEOPLE.list.length+" employees from "+(PEOPLE.file||"your file")+" · imported "+new Date(PEOPLE.at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})+". Kept only in this browser.":"Excel, CSV or the employee master JSON. Needs a name column and a date-of-birth column. Only names, designations and birthdays (day and month) are kept, in this browser.";
+  $("listInfo").textContent=PEOPLE?PEOPLE.list.length+" employees from "+(PEOPLE.file||"your file")+(PEOPLE.sheet?" · updated automatically, last ":" · imported ")+new Date(PEOPLE.at).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})+". Kept only in this browser.":"Excel, CSV or the employee master JSON. Needs a name column and a date-of-birth column. Only names, designations and birthdays (day and month) are kept, in this browser.";
   listUI();whoHint();}
 function whoHint(){const n=cur();const p=PEOPLE&&PEOPLE.list.find(x=>x.n.toLowerCase()===n.toLowerCase());
   $("whoHint").textContent=p?[p.g,p.c,p.d?"Birthday "+(+p.d.split("-")[1])+" "+MON[+p.d.split("-")[0]-1]:""].filter(Boolean).join(" · "):(n?"Not in the list — that's fine, the name is used as typed.":"");}
@@ -248,6 +248,8 @@ $("all").onclick=async()=>{const today=upcoming().filter(u=>u.days===0);if(!toda
   saveBlob("Birthday cards - "+new Date().toISOString().slice(0,10)+".zip",await z.generateAsync({type:"blob"}));say("Saved "+today.length+" cards in one zip.","ok");};
 
 peopleUI();
+// the dashboard loads the list from the HR Master Data sheet; pick it up as soon as it arrives
+window.addEventListener("storage",e=>{if(e.key===K_PEOPLE){PEOPLE=load(K_PEOPLE,null);peopleUI();if(!$("who").value){const t=upcoming().filter(u=>u.days===0);if(t.length){picked=t[0].p.n;$("who").value=picked;listUI();whoHint();}}draw();}});
 {const t=upcoming().filter(u=>u.days===0);if(!$("who").value&&t.length){picked=t[0].p.n;$("who").value=picked;listUI();whoHint();}}
 draw();
 </script></body></html>
