@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Birthday Cards — Alcove HR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,700&family=Dancing+Script:wght@500;600&family=Montserrat:wght@700&family=Kalam&family=Noto+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,700&family=Dancing+Script:wght@700&family=Montserrat:wght@600&family=Sue+Ellen+Francisco&display=swap" rel="stylesheet">
 __JSZIP__
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -108,13 +108,14 @@ canvas{display:block;max-width:100%;max-height:70vh;height:auto;border-radius:6p
 </main>
 <script>
 const TPL=__TEMPLATES__;
-// where the name goes on each design (pixels of the original artwork)
+// where the name goes on each design, fitted to the original artwork: same left edge, baseline,
+// slope, letter height and font as the printed sample name. sx = horizontal stretch, stroke = extra weight.
 const SPEC={
-  1:{x:485,y:545,font:'600 {s}px "Dancing Script", "Segoe Script", cursive',size:74,color:"#ffffff",maxW:780,rot:0},
-  2:{x:163,y:481,font:'400 {s}px "Noto Sans", "DejaVu Sans", "Segoe UI", sans-serif',size:38,color:"#1f68a3",maxW:560,rot:0},
-  3:{x:622,y:401,font:'700 {s}px Montserrat, "Segoe UI", Arial, sans-serif',size:38,color:"#ffffff",maxW:430,rot:-6.8},
-  4:{x:294,y:416,font:'400 {s}px Kalam, "Segoe Print", cursive',size:50,color:"#ffffff",maxW:470,rot:-1.2},
-  5:{x:190,y:463,font:'500 {s}px "Dancing Script", "Segoe Script", cursive',size:66,color:"#ffffff",maxW:720,rot:0}
+  1:{x:485.9,y:541.9,font:'700 {s}px "Dancing Script", "Segoe Script", cursive',size:63.7,color:"#ffffff",maxW:780,rot:0},
+  2:{x:164.2,y:479.1,font:'400 {s}px Verdana, "DejaVu Sans", "Bitstream Vera Sans", sans-serif',size:38.3,color:"#1f68a3",maxW:560,rot:0},
+  3:{x:622,y:401.3,font:'600 {s}px Montserrat, "Segoe UI", Arial, sans-serif',size:37.2,color:"#ffffff",maxW:430,rot:-7.8},
+  4:{x:294.2,y:416.1,font:'400 {s}px "Sue Ellen Francisco", "Segoe Print", cursive',size:47.4,color:"#ffffff",maxW:470,rot:-3.4,sx:1.12,stroke:0.7},
+  5:{x:189.5,y:456.2,font:'700 {s}px "Dancing Script", "Segoe Script", cursive',size:71.3,color:"#ffffff",maxW:720,rot:0}
 };
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -137,11 +138,12 @@ $("size").addEventListener("input",()=>{save(K_SET,{tpl,size:$("size").value});d
 const fontsReady=(document.fonts?Promise.all(Object.values(SPEC).map(s=>document.fonts.load(s.font.replace("{s}","40")).catch(()=>{}))):Promise.resolve()).then(()=>document.fonts&&document.fonts.ready);
 function render(canvas,k,name){const im=IMG[k],s=SPEC[k];if(!im)return;canvas.width=im.naturalWidth;canvas.height=im.naturalHeight;
   const x=canvas.getContext("2d");x.drawImage(im,0,0);if(!name)return;
-  let size=s.size*($("size").value/100);x.font=s.font.replace("{s}",size);
-  while(x.measureText(name).width>s.maxW&&size>12){size-=1;x.font=s.font.replace("{s}",size);}
-  x.save();x.translate(s.x,s.y);x.rotate(s.rot*Math.PI/180);x.fillStyle=s.color;x.textBaseline="alphabetic";
-  if(s.color==="#ffffff"){x.shadowColor="rgba(0,0,0,.18)";x.shadowBlur=2;x.shadowOffsetY=1;}
-  x.fillText(name,0,0);x.restore();}
+  const sx=s.sx||1;let size=s.size*($("size").value/100);x.font=s.font.replace("{s}",size);
+  while(x.measureText(name).width*sx>s.maxW&&size>12){size-=0.5;x.font=s.font.replace("{s}",size);}
+  x.save();x.translate(s.x,s.y);x.rotate(s.rot*Math.PI/180);x.scale(sx,1);x.fillStyle=s.color;x.textBaseline="alphabetic";
+  x.fillText(name,0,0);
+  if(s.stroke){x.strokeStyle=s.color;x.lineWidth=s.stroke;x.lineJoin="round";x.strokeText(name,0,0);}
+  x.restore();}
 const cur=()=>nice($("who").value)||"";
 async function draw(){await ready;await fontsReady;render($("cv"),tpl,cur()||"Employee Name");}
 
