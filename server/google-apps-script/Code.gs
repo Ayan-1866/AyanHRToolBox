@@ -34,6 +34,10 @@ function doPost(e) {
       if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to load the employee list." });
       return out(employees());
     }
+    if (req.action === "master") {
+      if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to open the Employee Master." });
+      return out(master());
+    }
     return out({ error: "Unknown request." });
   } catch (err) {
     return out({ error: String((err && err.message) || err) });
@@ -218,6 +222,28 @@ function employees() {
   return { ok: true, at: Date.now(), source: t.ss.getName() + " › " + t.tab.getName(), list: list, skipped: skipped,
     hasDob: c.dob !== undefined };
 }
+/* Every column of the employee tab, as shown in the sheet, for the portal's Employee Master page. */
+function master() {
+  const t = employeeTab(), range = t.tab.getDataRange(), values = range.getValues(), shown = range.getDisplayValues();
+  const tz = t.ss.getSpreadsheetTimeZone(), h = findColumns(values), c = h.cols;
+  const width = shown[h.row].length, rows = [], active = [];
+  for (let r = h.row + 1; r < shown.length; r++) {
+    if (!String(shown[r][c.name] || "").trim()) continue;
+    rows.push(shown[r].map(function (v) { return String(v).trim(); }));
+    const st = c.status === undefined ? "" : String(values[r][c.status]);
+    active.push(!(c.status !== undefined && INACTIVE.test(st)) && !(c.dol !== undefined && isoDate(values[r][c.dol], tz)));
+  }
+  // keep columns that have a heading or any data
+  const keep = [];
+  for (let i = 0; i < width; i++) {
+    if (String(shown[h.row][i]).trim() || rows.some(function (row) { return row[i]; })) keep.push(i);
+  }
+  const map = {}; Object.keys(c).forEach(function (f) { const k = keep.indexOf(c[f]); if (k >= 0) map[f] = k; });
+  return { ok: true, at: Date.now(), source: t.ss.getName() + " › " + t.tab.getName(),
+    headers: keep.map(function (i) { return String(shown[h.row][i]).trim() || "Column " + (i + 1); }),
+    rows: rows.map(function (row) { return keep.map(function (i) { return row[i]; }); }), active: active, cols: map };
+}
+
 /* Run once from the editor to grant Sheets access and see which columns were found (no employee data is shown). */
 function testEmployees() {
   const t = employeeTab(), values = t.tab.getDataRange().getValues(), h = findColumns(values), r = employees();

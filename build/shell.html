@@ -70,6 +70,50 @@ button{font:inherit}
 .content{flex:1;min-width:0;display:flex;flex-direction:column}
 .stage{flex:1;min-height:0;position:relative;overflow:auto}
 .frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
+/* ---------- Employee Master page ---------- */
+.emp{max-width:1400px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top,0px)) 28px 40px}
+.emphead{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+.emphead .kick{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.emphead h1{font:700 clamp(1.4rem,2.6vw,1.9rem)/1.2 "Source Serif 4",Georgia,serif;margin:4px 0 2px}
+.emphead p{margin:0;color:var(--muted);font-size:.88rem}
+.empact{display:flex;gap:8px;flex-wrap:wrap}
+.ebtn{font:inherit;font-size:.85rem;font-weight:600;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;white-space:nowrap}
+.ebtn:hover{border-color:var(--join)}.ebtn:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.ebtn.more{display:block;margin:12px auto 0}
+.colpick{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:4px 14px;font-size:.84rem;box-shadow:var(--shadow)}
+.colpick label{display:flex;gap:7px;align-items:center;cursor:pointer;padding:2px 0}
+.colpick .cpbar{grid-column:1/-1;display:flex;gap:8px;margin-bottom:6px}
+.estats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.estat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
+.estat b{display:block;font:700 1.55rem/1.1 "Source Serif 4",Georgia,serif}
+.estat span{font-size:.78rem;color:var(--muted)}
+.efilters{display:grid;grid-template-columns:minmax(0,2fr) repeat(4,minmax(0,1fr));gap:10px;margin-bottom:8px}
+@media (max-width:1000px){.efilters{grid-template-columns:1fr 1fr}.efilters .wide{grid-column:1/-1}}
+.efilters label{display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:3px}
+.efilters input,.efilters select{width:100%;font:inherit;font-size:.88rem;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+.efilters input:focus,.efilters select:focus{outline:2px solid var(--gold);outline-offset:1px}
+.ecount{font-size:.8rem;color:var(--muted);margin:6px 0 8px}
+.etw{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;max-height:68vh;box-shadow:var(--shadow)}
+.etab{border-collapse:collapse;width:100%;font-size:.84rem}
+.etab th{position:sticky;top:0;background:var(--chip);text-align:left;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none;z-index:1}
+.etab th[aria-sort="ascending"]::after{content:" ▲"}.etab th[aria-sort="descending"]::after{content:" ▼"}
+.etab td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.etab tbody tr{cursor:pointer}.etab tbody tr:hover td{background:var(--hover)}
+.etab .nm{font-weight:600}
+.etab .st{font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:5px;background:var(--chip);color:var(--muted)}
+.etab .st.on{background:#e3f4e8;color:#1f7a3a}
+.edrawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--card);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(16,40,70,.18);z-index:20;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.dhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.dhead h2{margin:0;font-size:1.2rem}.dhead p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+.dacts{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 10px}
+.dacts .ebtn{font-size:.78rem;padding:6px 10px}
+.dchk{display:flex;gap:6px;align-items:center;font-size:.8rem;color:var(--muted);margin:4px 0 8px}
+.edrawer dl{margin:0;display:grid;grid-template-columns:minmax(110px,40%) 1fr;border-top:1px solid var(--line)}
+.edrawer dt,.edrawer dd{margin:0;padding:7px 4px;border-bottom:1px solid var(--line);font-size:.84rem}
+.edrawer dt{color:var(--muted);font-weight:600}.edrawer dd{word-break:break-word;white-space:pre-wrap}
+.emsg{padding:30px;text-align:center;color:var(--muted)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .etab .st.on{background:#17331f;color:#6fcf8f}}
+:root[data-theme="dark"] .etab .st.on{background:#17331f;color:#6fcf8f}
 /* fill-from-employee bar */
 .empbar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;background:var(--card);border-bottom:1px solid var(--line);font-size:.86rem}
 .empbar label{font-weight:600;white-space:nowrap}
@@ -165,6 +209,7 @@ button{font:inherit}
   <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="Alcove Realty"><span>HR Tool</span></div>
   <nav class="nav" aria-label="Tools">
     <button data-view="home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
+    <button data-view="emp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 20a6.5 6.5 0 0 0-3-5.5"/></svg>Employee Master</button>
     <div class="grp">Recruitment</div>
     <button data-view="cv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg>CV Inbox</button>
     <div class="grp">Hiring &amp; joining</div>
@@ -211,6 +256,18 @@ button{font:inherit}
         <li><button class="exit" data-view="exp"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M9 13.5 7.5 21l4.5-2.5 4.5 2.5L15 13.5"/></svg></span><span class="st">Exit</span><span class="nm">Experience Letter</span></button></li>
         <li><button class="exit" data-view="rel"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/><path d="M10 16l4-4-4-4M14 12H4"/></svg></span><span class="st">Exit</span><span class="nm">Relieving Letter</span></button></li>
       </ol>
+    </section>
+
+    <section class="sec" aria-labelledby="s-ppl">
+      <div class="hd"><h2 id="s-ppl">People</h2><p>Live from the HR Master Data sheet</p></div>
+      <div class="tiles">
+        <button class="tile" data-view="emp">
+          <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 20a6.5 6.5 0 0 0-3-5.5"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          <h3>Employee Master</h3>
+          <p>Every employee with all their details — search, filter, and open any letter or card already filled in.</p>
+          <div class="tags"><span class="tag">All columns</span><span class="tag">Filters</span><span class="tag">CSV export</span></div>
+        </button>
+      </div>
     </section>
 
     <section class="sec" aria-labelledby="s-rec">
@@ -287,6 +344,30 @@ button{font:inherit}
   document.getElementById("greet").textContent=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
   document.getElementById("today").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});})();
 </script>
+  <section class="emp" id="v-emp" title="Employee Master" hidden aria-labelledby="emp-h">
+    <div class="emphead">
+      <div><div class="kick">People</div><h1 id="emp-h">Employee Master</h1><p id="empSrc">Loading employees…</p></div>
+      <div class="empact"><button class="ebtn" id="empCols" type="button" aria-expanded="false">Columns ▾</button><button class="ebtn" id="empCsv" type="button">Export CSV</button><button class="ebtn" id="empRef" type="button">Refresh</button></div>
+    </div>
+    <div class="colpick" id="colPick" hidden></div>
+    <div class="estats" id="empStats"></div>
+    <div class="efilters">
+      <div class="wide"><label for="empQ">Search</label><input id="empQ" type="search" placeholder="Name, Emp No., phone, any detail…" autocomplete="off"></div>
+      <div><label for="empSt">Status</label><select id="empSt"><option value="a">Active</option><option value="i">Inactive</option><option value="">All</option></select></div>
+      <div><label for="empDept">Department</label><select id="empDept"><option value="">All</option></select></div>
+      <div><label for="empLoc">Location</label><select id="empLoc"><option value="">All</option></select></div>
+      <div><label for="empCo">Company</label><select id="empCo"><option value="">All</option></select></div>
+    </div>
+    <p class="ecount" id="empCount"></p>
+    <div class="etw"><table class="etab"><thead id="empHead"></thead><tbody id="empRows"></tbody></table></div>
+    <button class="ebtn more" id="empMore" type="button" hidden>Show more</button>
+    <aside class="edrawer" id="empDrawer" hidden aria-labelledby="empDName">
+      <div class="dhead"><div><h2 id="empDName"></h2><p id="empDSub"></p></div><button class="ebtn" id="empDClose" type="button" aria-label="Close">✕</button></div>
+      <div class="dacts" id="empDActs"></div>
+      <label class="dchk"><input type="checkbox" id="empDEmpty"> Show empty fields</label>
+      <dl id="empDList"></dl>
+    </aside>
+  </section>
   <iframe class="frame" id="v-cv" title="CV Inbox" data-url="cv.html" hidden></iframe>
   <iframe class="frame" id="v-exp" title="Experience Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-rel" title="Relieving Letter" allow="clipboard-write" hidden></iframe>
@@ -305,7 +386,7 @@ button{font:inherit}
 <script id="src-bday" type="application/octet-stream">__BDAY__</script>
 <script>
 (function(){
-  const VIEWS=["home","cv","exp","rel","loi","appt","joiner","bday"];
+  const VIEWS=["home","emp","cv","exp","rel","loi","appt","joiner","bday"];
   const $=id=>document.getElementById(id);
   function decode(id){const b=atob($(id).textContent.trim()),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder("utf-8").decode(u);}
   function show(v){
@@ -313,13 +394,14 @@ button{font:inherit}
     VIEWS.forEach(k=>{$("v-"+k).hidden=k!==v;});
     document.querySelectorAll(".nav button").forEach(b=>{if(b.dataset.view===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
     const f=$("v-"+v);
-    if(v!=="home"&&!f.dataset.loaded){if(f.dataset.url)f.src=f.dataset.url;else f.srcdoc=decode("src-"+v);f.dataset.loaded="1";}
+    if(f.tagName==="IFRAME"&&!f.dataset.loaded){if(f.dataset.url)f.src=f.dataset.url;else f.srcdoc=decode("src-"+v);f.dataset.loaded="1";}
     document.title=(v==="home"?"":(f.title+" · "))+"Alcove HR Tool";
     if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);
     try{localStorage.setItem("alcove-hrtool-view",v);}catch(e){}
     window.__view=v;document.dispatchEvent(new CustomEvent("hrview",{detail:v}));
   }
 
+  window.__show=show;
   document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
   window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
   let start=location.hash.slice(1);
@@ -376,6 +458,8 @@ button{font:inherit}
       publish(data);}
     catch(e){publish(window.__emps||null,"error:"+(e.message||e));}}
   window.__refreshEmps=()=>syncEmployees(stored(),true);
+  // for the Employee Master page
+  window.__hrApi=b=>api(b);window.__hrSession=()=>stored();window.__hrOtp=!!OTP_API;
   async function api(body){const r=await fetch(OTP_API,{method:"POST",body:JSON.stringify(body)});// plain text body: no pre-flight needed
     if(!r.ok)throw new Error("The login service didn't answer ("+r.status+").");return r.json();}
   function claims(jwt){const p=jwt.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
@@ -428,7 +512,7 @@ button{font:inherit}
 /* ---------- "Fill from employee" bar: fills the open tool from the HR Master Data list ---------- */
 (function(){
   const $=id=>document.getElementById(id),esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  const NO_BAR=["home","cv"],EXIT=["exp","rel"];let view="home",inactTouched=false,hits=[],sel=-1;
+  const NO_BAR=["home","cv","emp"],EXIT=["exp","rel"];let view="home",inactTouched=false,hits=[],sel=-1;
   const say=(t,c)=>{$("estat").textContent=t;$("estat").className=c||"";};
   const list=()=>(window.__emps&&window.__emps.list)||[];
   const nice=s=>{s=String(s||"").replace(/\s+/g," ").trim();return(s&&(s===s.toLowerCase()||s===s.toUpperCase()))?s.toLowerCase().replace(/(^|[\s.\-'(])([a-z])/g,(m,a,b)=>a+b.toUpperCase()):s;};
@@ -486,13 +570,106 @@ button{font:inherit}
       if(o)el.value=o.value;else if(other&&el.querySelector('option[value="__other"]')){el.value="__other";other.value=v;}else return false;
       fire(el,"change");if(other&&el.value==="__other")fire(other,"input");return true;}
     el.value=v;fire(el,"input");fire(el,"change");return true;}
+  // open a tool and fill it with one employee (used by the Employee Master page)
+  window.__fillTool=(v,e)=>{if(!MAP[v])return;if(window.__show)window.__show(v);view=v;pick(e);};
   function pick(e){if(!e)return;closeRes();$("eq").value="";const f=$("v-"+view);if(!f||!MAP[view])return;
     const go=()=>{const miss=[];MAP[view](e).forEach(([id,v])=>{const ok=setField(f.contentWindow,id,v);if(!v||!ok)miss.push(LABEL[id]||id);});
       say("Filled "+f.title+" with "+nice(e.n)+(e.c?" ("+e.c+")":"")+"."+(miss.length?" Not in the sheet, so check: "+[...new Set(miss)].join(", ")+".":""),miss.length?"":"ok");};
     const first=MAP[view](e)[0][0];if(f.contentDocument&&f.contentDocument.readyState==="complete"&&f.contentDocument.getElementById(first))go();else f.addEventListener("load",go,{once:true});}
+  window.__empNice=nice;
   // the page and list may already be set before this script ran
   if(window.__view)document.dispatchEvent(new CustomEvent("hrview",{detail:window.__view}));
   status(window.__emps?"ok":"off");
+})();
+</script>
+<script>
+/* ---------- Employee Master: every column of the HR Master Data tab (kept in memory only) ---------- */
+(function(){
+  const $=id=>document.getElementById(id),esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const KC="alcove-emp-cols";let D=null,loading=false,shownN=100,sort={i:-1,dir:1},visible=null,openRow=-1;
+  const nice=s=>(window.__empNice?window.__empNice(s):s);
+  const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function msg(t){$("empRows").innerHTML='<tr><td class="emsg" colspan="20">'+esc(t)+"</td></tr>";$("empHead").innerHTML="";$("empCount").textContent="";}
+  async function load(force){if(loading)return;if(D&&!force&&Date.now()-D.at<10*60e3){render();return;}
+    if(!window.__hrOtp){$("empSrc").textContent="Needs the HR login service (Apps Script) to read the sheet.";msg("The Employee Master opens once the HR code sign-in is set up.");return;}
+    const s=window.__hrSession&&window.__hrSession();if(!s||!s.session){$("empSrc").textContent="Sign in with an HR-approved code to see employees.";msg("Sign in to load the Employee Master.");return;}
+    loading=true;$("empSrc").textContent="Loading employees from HR Master Data…";if(!D)msg("Loading…");
+    try{const r=await window.__hrApi({action:"master",session:s.session});if(!r.ok)throw new Error(r.error||"no data");
+      D=r;D.at=r.at||Date.now();fillFilters();if(!visible)visible=defaultCols();render();}
+    catch(e){$("empSrc").textContent="Couldn't load the Employee Master: "+(e.message||e);if(!D)msg("Couldn't load the employee list. Try Refresh.");}
+    finally{loading=false;}}
+  function defaultCols(){let saved=null;try{saved=JSON.parse(localStorage.getItem(KC)||"null");}catch(e){}
+    if(Array.isArray(saved)){const idx=saved.map(h=>D.headers.indexOf(h)).filter(i=>i>=0);if(idx.length)return idx;}
+    const c=D.cols,order=["code","name","desig","dept","loc","doj","dob","phone","status"].map(k=>c[k]).filter(i=>i!==undefined);
+    return order.length?order:D.headers.map((h,i)=>i).slice(0,8);}
+  function saveCols(){try{localStorage.setItem(KC,JSON.stringify(visible.map(i=>D.headers[i])));}catch(e){}}
+  function opts(sel,col){const cur=sel.value,vals=col===undefined?[]:[...new Set(D.rows.map(r=>r[col]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+    sel.length=1;vals.forEach(v=>{const o=document.createElement("option");o.value=o.textContent=v;sel.appendChild(o);});sel.value=vals.includes(cur)?cur:"";sel.parentElement.hidden=col===undefined;}
+  function fillFilters(){opts($("empDept"),D.cols.dept);opts($("empLoc"),D.cols.loc);opts($("empCo"),D.cols.company);}
+  // dates like 14/03/1990, 14-Mar-1990 or 1990-03-14 sort as dates; numbers as numbers
+  function key(v){v=String(v||"");let m;
+    if((m=v.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/)))return +m[3]*1e4+ +m[2]*100+ +m[1];
+    if((m=v.match(/^(\d{1,2})[\s\-]([A-Za-z]{3})[a-z]*[\s\-,]+(\d{4})$/))){const i=MON.findIndex(x=>x.toLowerCase()===m[2].toLowerCase());if(i>=0)return +m[3]*1e4+(i+1)*100+ +m[1];}
+    if((m=v.match(/^(\d{4})-(\d{2})-(\d{2})/)))return +m[1]*1e4+ +m[2]*100+ +m[3];
+    if(/^-?\d+(\.\d+)?$/.test(v))return parseFloat(v);return null;}
+  function filtered(){const q=$("empQ").value.trim().toLowerCase(),st=$("empSt").value,c=D.cols,f=[[$("empDept").value,c.dept],[$("empLoc").value,c.loc],[$("empCo").value,c.company]];
+    let idx=D.rows.map((r,i)=>i).filter(i=>{const r=D.rows[i];if(st==="a"&&!D.active[i])return false;if(st==="i"&&D.active[i])return false;
+      for(const[v,col]of f)if(v&&r[col]!==v)return false;return!q||r.some(x=>x&&x.toLowerCase().includes(q));});
+    if(sort.i>=0){const i=sort.i;idx.sort((a,b)=>{const x=D.rows[a][i],y=D.rows[b][i],kx=key(x),ky=key(y);
+      return sort.dir*((kx!==null&&ky!==null)?kx-ky:String(x).localeCompare(String(y),undefined,{numeric:true,sensitivity:"base"}));});}
+    return idx;}
+  function stats(){const e=(window.__emps&&window.__emps.list)||[],now=new Date(),mm=("0"+(now.getMonth()+1)).slice(-2),ym=now.getFullYear()+"-"+mm;
+    const act=D.active.filter(Boolean).length,depts=D.cols.dept===undefined?0:new Set(D.rows.filter((r,i)=>D.active[i]).map(r=>r[D.cols.dept]).filter(Boolean)).size;
+    const bd=e.filter(p=>p.a!==false&&p.d&&p.d.slice(0,2)===mm).length,jn=e.filter(p=>p.doj&&p.doj.slice(0,7)===ym).length;
+    $("empStats").innerHTML=[[act,"Active employees"],[D.rows.length-act,"Inactive"],[depts,"Departments"],[bd,"Birthdays in "+MON[now.getMonth()]],[jn,"Joined in "+MON[now.getMonth()]]]
+      .map(([n,l])=>'<div class="estat"><b>'+n.toLocaleString("en-IN")+"</b><span>"+l+"</span></div>").join("");}
+  function render(){if(!D)return;stats();
+    $("empSrc").textContent=D.source+" · "+D.headers.length+" columns · updated "+new Date(D.at).toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"});
+    const idx=filtered(),c=D.cols;
+    $("empHead").innerHTML="<tr>"+visible.map(i=>'<th data-i="'+i+'" aria-sort="'+(sort.i===i?(sort.dir>0?"ascending":"descending"):"none")+'" title="Sort by '+esc(D.headers[i])+'">'+esc(D.headers[i])+"</th>").join("")+"</tr>";
+    $("empRows").innerHTML=idx.slice(0,shownN).map(r=>"<tr data-r=\""+r+"\">"+visible.map(i=>{const v=D.rows[r][i];
+        if(i===c.status)return'<td><span class="st'+(D.active[r]?" on":"")+'">'+esc(v||(D.active[r]?"Active":"Inactive"))+"</span></td>";
+        return"<td"+(i===c.name?' class="nm"':"")+' title="'+esc(v)+'">'+esc(i===c.name?nice(v):v)+"</td>";}).join("")+"</tr>").join("")
+      ||'<tr><td class="emsg" colspan="'+visible.length+'">No employees match these filters.</td></tr>';
+    $("empCount").textContent="Showing "+Math.min(shownN,idx.length).toLocaleString("en-IN")+" of "+idx.length.toLocaleString("en-IN")+" · click a row for all details · click a heading to sort";
+    $("empMore").hidden=idx.length<=shownN;$("empMore").textContent="Show more ("+(idx.length-shownN).toLocaleString("en-IN")+" more)";}
+  let qT;$("empQ").addEventListener("input",()=>{clearTimeout(qT);qT=setTimeout(()=>{shownN=100;render();},150);});
+  ["empSt","empDept","empLoc","empCo"].forEach(id=>$(id).addEventListener("change",()=>{shownN=100;render();}));
+  $("empMore").onclick=()=>{shownN+=200;render();};
+  $("empRef").onclick=()=>load(true);
+  $("empHead").addEventListener("click",e=>{const th=e.target.closest("th[data-i]");if(!th)return;const i=+th.dataset.i;sort=sort.i===i?{i,dir:-sort.dir}:{i,dir:1};render();});
+  // column picker
+  $("empCols").onclick=()=>{if(!D)return;const p=$("colPick");p.hidden=!p.hidden;$("empCols").setAttribute("aria-expanded",!p.hidden);if(p.hidden)return;
+    p.innerHTML='<div class="cpbar"><button class="ebtn" type="button" data-all="1">Show all</button><button class="ebtn" type="button" data-all="0">Main columns only</button></div>'+
+      D.headers.map((h,i)=>'<label><input type="checkbox" data-c="'+i+'"'+(visible.includes(i)?" checked":"")+"> "+esc(h)+"</label>").join("");};
+  $("colPick").addEventListener("change",e=>{const i=+e.target.dataset.c;if(isNaN(i))return;visible=e.target.checked?D.headers.map((h,j)=>j).filter(j=>visible.includes(j)||j===i):visible.filter(j=>j!==i);
+    if(!visible.length)visible=[D.cols.name||0];saveCols();render();});
+  $("colPick").addEventListener("click",e=>{const b=e.target.closest("button[data-all]");if(!b)return;
+    if(b.dataset.all==="1")visible=D.headers.map((h,i)=>i);else{try{localStorage.removeItem(KC);}catch(x){}visible=null;visible=defaultCols();}saveCols();$("empCols").click();$("empCols").click();render();});
+  // details panel with quick actions
+  const ACTS=[["loi","LOI"],["appt","Appointment Letter"],["joiner","New Joiner kit"],["exp","Experience Letter"],["rel","Relieving Letter"],["bday","Birthday card"]];
+  function mapped(r){const row=D.rows[r],c=D.cols,code=c.code===undefined?"":row[c.code],name=String(row[c.name]||"").toLowerCase().replace(/\s+/g," ");
+    const e=((window.__emps&&window.__emps.list)||[]).find(p=>(code&&p.c===code)||String(p.n).toLowerCase().replace(/\s+/g," ")===name);
+    return e||{n:row[c.name],c:code,g:c.desig===undefined?"":row[c.desig],dept:c.dept===undefined?"":row[c.dept],loc:c.loc===undefined?"":row[c.loc],a:D.active[r]};}
+  function drawer(r){openRow=r;const row=D.rows[r],c=D.cols,showEmpty=$("empDEmpty").checked;
+    $("empDName").textContent=nice(row[c.name]);$("empDSub").textContent=[c.code!==undefined&&row[c.code],c.desig!==undefined&&row[c.desig],D.active[r]?"Active":"Inactive"].filter(Boolean).join(" · ");
+    $("empDActs").innerHTML=ACTS.map(([v,l])=>'<button class="ebtn" type="button" data-v="'+v+'">'+l+" →</button>").join("");
+    $("empDList").innerHTML=D.headers.map((h,i)=>row[i]||showEmpty?"<dt>"+esc(h)+"</dt><dd>"+(esc(row[i])||'<span style="color:var(--muted)">—</span>')+"</dd>":"").join("");
+    $("empDrawer").hidden=false;$("empDClose").focus();}
+  $("empRows").addEventListener("click",e=>{const tr=e.target.closest("tr[data-r]");if(tr)drawer(+tr.dataset.r);});
+  $("empDClose").onclick=()=>{$("empDrawer").hidden=true;openRow=-1;};
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("empDrawer").hidden){$("empDrawer").hidden=true;openRow=-1;}});
+  $("empDEmpty").addEventListener("change",()=>{if(openRow>=0)drawer(openRow);});
+  $("empDActs").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b||openRow<0)return;const emp=mapped(openRow);$("empDrawer").hidden=true;
+    if(window.__fillTool)window.__fillTool(b.dataset.v,emp);});
+  // CSV of the filtered employees, every column
+  $("empCsv").onclick=()=>{if(!D)return;const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"',idx=filtered();
+    const csv="﻿"+[D.headers.map(q).join(",")].concat(idx.map(r=>D.rows[r].map(q).join(","))).join("\r\n");
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="Employee Master - "+new Date().toISOString().slice(0,10)+" - "+idx.length+" employees.csv";
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);};
+  document.addEventListener("hrview",e=>{if(e.detail==="emp")load(false);else{$("empDrawer").hidden=true;$("colPick").hidden=true;}});
+  document.addEventListener("hremps",()=>{if(D&&window.__view==="emp")stats();});
+  if(window.__view==="emp")load(false);
 })();
 </script>
 </body></html>
