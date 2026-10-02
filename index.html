@@ -2,6 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Alcove HR Tool</title>
+<script>/* lock straight away (before anything paints) unless there's a valid sign-in */
+(function(){if(!/^https?:$/.test(location.protocol))return;var ok=false;try{var s=JSON.parse(localStorage.getItem("alcove-hrtool-session")||"null");ok=!!(s&&s.exp>Date.now());}catch(e){}
+  if(!ok)document.documentElement.classList.add("locked");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 <style>
@@ -20,6 +23,19 @@
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif;display:flex;overflow:hidden}
 [hidden]{display:none!important}
+/* Google sign-in gate (only on the website; opening the file locally skips it) */
+html.locked .side,html.locked .content{display:none!important}
+html:not(.locked) #gate{display:none}
+#gate{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(120% 120% at 100% 0%,#2b5a85 0%,transparent 55%),linear-gradient(135deg,#0d2034,#204768 70%);overflow:auto}
+#gate .gcard{width:100%;max-width:400px;background:#fff;color:#16304d;border-radius:18px;padding:28px 28px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center;position:relative;overflow:hidden}
+#gate .gcard::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#204768,#EFCC25)}
+#gate img{width:130px;height:auto;margin:4px auto 10px;display:block}
+#gate h1{font:700 1.45rem/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+#gate p{margin:0 0 18px;color:#5d6e84;font-size:.92rem}
+#gate #gbtn{display:flex;justify-content:center;min-height:44px}
+#gate #gmsg{min-height:20px;margin-top:14px;font-size:.88rem;color:#5d6e84}
+#gate #gmsg.err{color:#b3261e}
+#gate small{display:block;margin-top:12px;color:#8a99ad;font-size:.75rem}
 button{font:inherit}
 
 /* ---------- sidebar ---------- */
@@ -132,8 +148,7 @@ button{font:inherit}
     <div class="grp">Celebrations</div>
     <button data-view="bday"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 5 0M12 12V8M12 5.5c.8-.9.8-1.8 0-2.5-.8.7-.8 1.6 0 2.5z"/></svg>Birthday Cards</button>
   </nav>
-  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Everything you type stays on this computer.<a id="logout" href="/auth/logout" hidden style="display:block;margin-top:6px;color:#EFCC25;font-weight:600;text-decoration:none">Log out →</a></span></div>
-  <script>if(/^https?:$/.test(location.protocol))document.getElementById("logout").hidden=false;</script>
+  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span><span id="signedAs"></span>Everything you type stays on this computer.<a id="logout" href="#" hidden style="display:block;margin-top:6px;color:#EFCC25;font-weight:600;text-decoration:none">Log out →</a></span></div>
 </aside>
 
 <main class="content">
@@ -269,7 +284,49 @@ button{font:inherit}
   window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
   let start=location.hash.slice(1);
   if(!VIEWS.includes(start)){try{start=localStorage.getItem("alcove-hrtool-view")||"home";}catch(e){start="home";}}
-  show(start);
+  if(document.documentElement.classList.contains("locked"))window.__startApp=()=>show(start);else show(start);
+})();
+</script>
+
+<div id="gate" role="dialog" aria-labelledby="gate-h">
+  <div class="gcard">
+    <img src="data:image/png;base64,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" alt="Alcove Realty">
+    <h1 id="gate-h">HR Tool</h1>
+    <p>Sign in with your Alcove Google account to continue.</p>
+    <div id="gbtn"></div>
+    <div id="gmsg" role="status" aria-live="polite">Loading Google sign-in…</div>
+    <small>Only authorised HR accounts can open this portal.</small>
+  </div>
+</div>
+<script>
+/* ---------- Google sign-in gate ---------- */
+(function(){
+  const CLIENT_ID="806459433972-nu3ab2cje78au731potll9bfu8pdv0pb.apps.googleusercontent.com",ALLOWED=["hr@alcoverealty.in"],HOURS=12,K="alcove-hrtool-session";
+  const $=id=>document.getElementById(id),root=document.documentElement,web=/^https?:$/.test(location.protocol);
+  const say=(t,c)=>{$("gmsg").textContent=t;$("gmsg").className=c||"";};
+  function session(){try{const s=JSON.parse(localStorage.getItem(K)||"null");return s&&s.exp>Date.now()?s:null;}catch(e){return null;}}
+  function unlock(s){root.classList.remove("locked");$("signedAs").textContent="Signed in as "+s.email+". ";
+    if(window.__startApp){window.__startApp();window.__startApp=null;}}
+  // read Google's signed sign-in token and check it's for this app, not expired, and an allowed address
+  function claims(jwt){const p=jwt.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
+    return JSON.parse(decodeURIComponent(atob(p).split("").map(c=>"%"+c.charCodeAt(0).toString(16).padStart(2,"0")).join("")));}
+  function onCred(resp){let c;try{c=claims(resp.credential);}catch(e){say("Google sign-in returned something unexpected. Try again.","err");return;}
+    const email=String(c.email||"").toLowerCase();
+    if(c.aud!==CLIENT_ID||!/^(https:\/\/)?accounts\.google\.com$/.test(c.iss)||c.exp*1000<Date.now()||!c.email_verified){say("That sign-in couldn't be verified. Try again.","err");return;}
+    if(!ALLOWED.includes(email)){say(email+" isn't allowed to open the HR Tool. Sign in with your HR account.","err");google.accounts.id.disableAutoSelect();return;}
+    const s={email,name:c.name||"",exp:Date.now()+HOURS*3600e3};try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}
+    say("");unlock(s);}
+  function startGis(){google.accounts.id.initialize({client_id:CLIENT_ID,callback:onCred,auto_select:true,cancel_on_tap_outside:false,ux_mode:"popup",itp_support:true,hd:"alcoverealty.in",login_hint:ALLOWED[0]});
+    google.accounts.id.renderButton($("gbtn"),{theme:"filled_blue",size:"large",shape:"pill",text:"signin_with",width:280});
+    google.accounts.id.prompt();say("");}
+  if(web){$("logout").hidden=false;
+    $("logout").onclick=e=>{e.preventDefault();try{localStorage.removeItem(K);}catch(x){}if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();location.reload();};
+    // lock again when the 12 hours are up
+    setInterval(()=>{if(!root.classList.contains("locked")&&!session())location.reload();},60e3);}
+  const s=session();if(s){unlock(s);return;}
+  if(!root.classList.contains("locked"))return; // opened from a file on this computer: no gate
+  const g=document.createElement("script");g.src="https://accounts.google.com/gsi/client";g.async=true;g.onload=startGis;
+  g.onerror=()=>say("Couldn't reach Google sign-in. Check the internet connection and reload.","err");document.head.appendChild(g);
 })();
 </script>
 </body></html>

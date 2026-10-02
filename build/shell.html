@@ -2,6 +2,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Alcove HR Tool</title>
+<script>/* lock straight away (before anything paints) unless there's a valid sign-in */
+(function(){if(!/^https?:$/.test(location.protocol))return;var ok=false;try{var s=JSON.parse(localStorage.getItem("alcove-hrtool-session")||"null");ok=!!(s&&s.exp>Date.now());}catch(e){}
+  if(!ok)document.documentElement.classList.add("locked");})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 <style>
@@ -20,6 +23,19 @@
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif;display:flex;overflow:hidden}
 [hidden]{display:none!important}
+/* Google sign-in gate (only on the website; opening the file locally skips it) */
+html.locked .side,html.locked .content{display:none!important}
+html:not(.locked) #gate{display:none}
+#gate{position:fixed;inset:0;display:grid;place-items:center;padding:16px;background:radial-gradient(120% 120% at 100% 0%,#2b5a85 0%,transparent 55%),linear-gradient(135deg,#0d2034,#204768 70%);overflow:auto}
+#gate .gcard{width:100%;max-width:400px;background:#fff;color:#16304d;border-radius:18px;padding:28px 28px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center;position:relative;overflow:hidden}
+#gate .gcard::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#204768,#EFCC25)}
+#gate img{width:130px;height:auto;margin:4px auto 10px;display:block}
+#gate h1{font:700 1.45rem/1.2 "Source Serif 4",Georgia,serif;margin:0 0 6px}
+#gate p{margin:0 0 18px;color:#5d6e84;font-size:.92rem}
+#gate #gbtn{display:flex;justify-content:center;min-height:44px}
+#gate #gmsg{min-height:20px;margin-top:14px;font-size:.88rem;color:#5d6e84}
+#gate #gmsg.err{color:#b3261e}
+#gate small{display:block;margin-top:12px;color:#8a99ad;font-size:.75rem}
 button{font:inherit}
 
 /* ---------- sidebar ---------- */
@@ -132,8 +148,7 @@ button{font:inherit}
     <div class="grp">Celebrations</div>
     <button data-view="bday"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 5 0M12 12V8M12 5.5c.8-.9.8-1.8 0-2.5-.8.7-.8 1.6 0 2.5z"/></svg>Birthday Cards</button>
   </nav>
-  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Everything you type stays on this computer.<a id="logout" href="/auth/logout" hidden style="display:block;margin-top:6px;color:#EFCC25;font-weight:600;text-decoration:none">Log out →</a></span></div>
-  <script>if(/^https?:$/.test(location.protocol))document.getElementById("logout").hidden=false;</script>
+  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span><span id="signedAs"></span>Everything you type stays on this computer.<a id="logout" href="#" hidden style="display:block;margin-top:6px;color:#EFCC25;font-weight:600;text-decoration:none">Log out →</a></span></div>
 </aside>
 
 <main class="content">
@@ -269,7 +284,49 @@ button{font:inherit}
   window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
   let start=location.hash.slice(1);
   if(!VIEWS.includes(start)){try{start=localStorage.getItem("alcove-hrtool-view")||"home";}catch(e){start="home";}}
-  show(start);
+  if(document.documentElement.classList.contains("locked"))window.__startApp=()=>show(start);else show(start);
+})();
+</script>
+
+<div id="gate" role="dialog" aria-labelledby="gate-h">
+  <div class="gcard">
+    <img src="data:image/png;base64,__LOGO__" alt="Alcove Realty">
+    <h1 id="gate-h">HR Tool</h1>
+    <p>Sign in with your Alcove Google account to continue.</p>
+    <div id="gbtn"></div>
+    <div id="gmsg" role="status" aria-live="polite">Loading Google sign-in…</div>
+    <small>Only authorised HR accounts can open this portal.</small>
+  </div>
+</div>
+<script>
+/* ---------- Google sign-in gate ---------- */
+(function(){
+  const CLIENT_ID="__CLIENT_ID__",ALLOWED=__ALLOWED__,HOURS=12,K="alcove-hrtool-session";
+  const $=id=>document.getElementById(id),root=document.documentElement,web=/^https?:$/.test(location.protocol);
+  const say=(t,c)=>{$("gmsg").textContent=t;$("gmsg").className=c||"";};
+  function session(){try{const s=JSON.parse(localStorage.getItem(K)||"null");return s&&s.exp>Date.now()?s:null;}catch(e){return null;}}
+  function unlock(s){root.classList.remove("locked");$("signedAs").textContent="Signed in as "+s.email+". ";
+    if(window.__startApp){window.__startApp();window.__startApp=null;}}
+  // read Google's signed sign-in token and check it's for this app, not expired, and an allowed address
+  function claims(jwt){const p=jwt.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
+    return JSON.parse(decodeURIComponent(atob(p).split("").map(c=>"%"+c.charCodeAt(0).toString(16).padStart(2,"0")).join("")));}
+  function onCred(resp){let c;try{c=claims(resp.credential);}catch(e){say("Google sign-in returned something unexpected. Try again.","err");return;}
+    const email=String(c.email||"").toLowerCase();
+    if(c.aud!==CLIENT_ID||!/^(https:\/\/)?accounts\.google\.com$/.test(c.iss)||c.exp*1000<Date.now()||!c.email_verified){say("That sign-in couldn't be verified. Try again.","err");return;}
+    if(!ALLOWED.includes(email)){say(email+" isn't allowed to open the HR Tool. Sign in with your HR account.","err");google.accounts.id.disableAutoSelect();return;}
+    const s={email,name:c.name||"",exp:Date.now()+HOURS*3600e3};try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}
+    say("");unlock(s);}
+  function startGis(){google.accounts.id.initialize({client_id:CLIENT_ID,callback:onCred,auto_select:true,cancel_on_tap_outside:false,ux_mode:"popup",itp_support:true,hd:"alcoverealty.in",login_hint:ALLOWED[0]});
+    google.accounts.id.renderButton($("gbtn"),{theme:"filled_blue",size:"large",shape:"pill",text:"signin_with",width:280});
+    google.accounts.id.prompt();say("");}
+  if(web){$("logout").hidden=false;
+    $("logout").onclick=e=>{e.preventDefault();try{localStorage.removeItem(K);}catch(x){}if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();location.reload();};
+    // lock again when the 12 hours are up
+    setInterval(()=>{if(!root.classList.contains("locked")&&!session())location.reload();},60e3);}
+  const s=session();if(s){unlock(s);return;}
+  if(!root.classList.contains("locked"))return; // opened from a file on this computer: no gate
+  const g=document.createElement("script");g.src="https://accounts.google.com/gsi/client";g.async=true;g.onload=startGis;
+  g.onerror=()=>say("Couldn't reach Google sign-in. Check the internet connection and reload.","err");document.head.appendChild(g);
 })();
 </script>
 </body></html>

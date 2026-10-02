@@ -33,9 +33,12 @@ foreach($mode in @(@("exp","Experience Letter","experience.html"),@("rel","Relie
 
 # CV Inbox (needs to be served from https://employees.alcoverealty.in for Google sign-in)
 $clientId="806459433972-nu3ab2cje78au731potll9bfu8pdv0pb.apps.googleusercontent.com"
+# Google accounts allowed to open the portal (the sign-in screen on the website)
+$portalUsers=@("hr@alcoverealty.in")
+$allowedJson=ConvertTo-Json -Compress -InputObject @($portalUsers | ForEach-Object { $_.ToLower() })
 $desigJson=ConvertTo-Json -Compress -InputObject @([regex]::Matches((& $sel "DESIG"),"<option>(.*?)</option>") | ForEach-Object { [Net.WebUtility]::HtmlDecode($_.Groups[1].Value) })
 $src=& $read "$sp\cv.src.html"
-[IO.File]::WriteAllText("$code\cv.html",$src.Replace("__CLIENT_ID__",$clientId).Replace("__DESIG_JSON__",$desigJson).Replace("__JSZIP__",$jszip),$u8)
+[IO.File]::WriteAllText("$code\cv.html",$src.Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__DESIG_JSON__",$desigJson).Replace("__JSZIP__",$jszip),$u8)
 
 # Birthday Cards: designs in birthday\template1..5.jpg (printed name already removed)
 $tpls=(1..5 | ForEach-Object { '"'+$_+'":"data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$sp\birthday\template$_.jpg"))+'"' }) -join ","
@@ -45,6 +48,6 @@ $src=& $read "$sp\bday.src.html"
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}
-$out=$shell.Replace("__LOGO__",$logo).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html'))
+$out=$shell.Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html'))
 [IO.File]::WriteAllText("$code\index.html",$out,$u8)
 "built loi.html, experience.html, relieving.html, cv.html, birthday.html and index.html"

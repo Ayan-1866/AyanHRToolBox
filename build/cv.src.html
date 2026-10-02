@@ -144,6 +144,7 @@ td input{padding:5px 7px;font-size:12.5px;min-width:170px}
 </main>
 <script>
 const CLIENT_ID="__CLIENT_ID__";
+const ALLOWED=__ALLOWED__; // only these Gmail accounts may be connected
 const SCOPE="https://www.googleapis.com/auth/gmail.readonly";
 const API="https://gmail.googleapis.com/gmail/v1/users/me/";
 const DESIGS=__DESIG_JSON__;
@@ -228,7 +229,7 @@ function getToken(interactive){if(live())return Promise.resolve(token);
   if(!interactive)return Promise.reject(Object.assign(new Error("The Gmail connection needs renewing — click anywhere on the page."),{expired:true}));
   if(!initGis())return Promise.reject(new Error("Google sign-in is still loading. Try again in a moment."));
   return new Promise((resolve,reject)=>{pending={resolve,reject};
-    tokenClient.requestAccessToken(acct?{prompt:"",login_hint:acct}:{prompt:"consent"});});}
+    tokenClient.requestAccessToken(acct?{prompt:"",login_hint:acct}:{prompt:"consent",login_hint:ALLOWED[0]});});}
 async function api(path,params,retry){const qs=params?"?"+new URLSearchParams(params):"";
   const r=await fetch(API+path+qs,{headers:{Authorization:"Bearer "+await getToken(false)}});
   if(r.status===401&&!retry){token=null;tokenExp=0;save(K_AUTH,{email:acct});showState();throw Object.assign(new Error("The Gmail connection needs renewing — click anywhere on the page."),{expired:true});}
@@ -243,7 +244,9 @@ function showState(){const on=live();
   if(!on&&acct&&ORIGIN_OK)armRenew();}
 async function connect(){if(!ORIGIN_OK){say("Open this page from https://employees.alcoverealty.in to connect Gmail.","err");return false;}
   try{if(!acct)say("Opening Google sign-in…");await getToken(true);
-    if(!acct){const p=await api("profile");acct=p.emailAddress;save(K_AUTH,{token,exp:tokenExp,email:acct});}
+    if(!acct){const p=await api("profile"),em=String(p.emailAddress||"").toLowerCase();
+      if(!ALLOWED.includes(em)){forget();throw new Error(em+" can't be used here — CV Inbox only connects to "+ALLOWED.join(", ")+".");}
+      acct=em;save(K_AUTH,{token,exp:tokenExp,email:acct});}
     showState();return true;}
   catch(e){say(e.message,"err");if(/origin|redirect_uri|invalid_client|idpiframe/i.test(e.message))needSetup("<p>Google refused the sign-in for this address.</p>");showState();return false;}}
 $("connect").onclick=async()=>{const first=!acct;if(await connect()){say(first?"Connected. Checking your mail for CVs…":"Reconnected.","ok");scan(true);}};
@@ -251,8 +254,10 @@ $("connect").onclick=async()=>{const first=!acct;if(await connect()){say(first?"
 let armed=false;
 function armRenew(){if(armed)return;armed=true;document.addEventListener("pointerdown",async e=>{armed=false;
   if(live()||e.target.closest("#signout"))return;if(await connect()){say("Gmail reconnected.","ok");scan(true);}},{once:true,capture:true});}
-$("signout").onclick=()=>{if(token&&gisReady())google.accounts.oauth2.revoke(token,()=>{});token=null;tokenExp=0;acct="";
-  try{localStorage.removeItem(K_AUTH);}catch(e){}showState();say("Disconnected from Gmail. This browser no longer remembers the account.");};
+function forget(){if(token&&gisReady())google.accounts.oauth2.revoke(token,()=>{});token=null;tokenExp=0;acct="";try{localStorage.removeItem(K_AUTH);}catch(e){}}
+$("signout").onclick=()=>{forget();showState();say("Disconnected from Gmail. This browser no longer remembers the account.");};
+// a remembered account that's no longer on the list is dropped
+if(acct&&!ALLOWED.includes(acct.toLowerCase())){forget();}
 
 /* ---------- reading messages ---------- */
 const b64u=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;};
