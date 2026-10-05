@@ -42,16 +42,22 @@ $otpApi=""; if(Test-Path "$sp\otp-api.txt"){ $otpApi=(& $read "$sp\otp-api.txt")
 if($otpApi -and $otpApi -notmatch '^https://script\.google\.com/macros/s/[\w-]+/exec$'){ throw "otp-api.txt should hold the Web app URL ending in /exec" }
 $desigJson=ConvertTo-Json -Compress -InputObject @([regex]::Matches((& $sel "DESIG"),"<option>(.*?)</option>") | ForEach-Object { [Net.WebUtility]::HtmlDecode($_.Groups[1].Value) })
 $src=& $read "$sp\cv.src.html"
-[IO.File]::WriteAllText("$code\cv.html",$src.Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__DESIG_JSON__",$desigJson).Replace("__JSZIP__",$jszip),$u8)
+[IO.File]::WriteAllText("$code\cv.html",$src.Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__DESIG_JSON__",$desigJson).Replace("__JSZIP__",$jszip),$u8)
 
 # Birthday Cards: designs in birthday\template1..5.jpg (printed name already removed)
 $tpls=(1..5 | ForEach-Object { '"'+$_+'":"data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$sp\birthday\template$_.jpg"))+'"' }) -join ","
 $src=& $read "$sp\bday.src.html"
 [IO.File]::WriteAllText("$code\birthday.html",$src.Replace("__TEMPLATES__","{"+$tpls+"}").Replace("__JSZIP__",$jszip),$u8)
 
+# JD Maker
+$src=& $read "$sp\jd.src.html"
+$desigOpts=(([regex]::Matches((& $sel "DESIG"),"<option>(.*?)</option>") | ForEach-Object { '<option value="'+$_.Groups[1].Value+'"></option>' }) -join "")
+$deptOpts=$depts -replace '<option>(.*?)</option>','<option value="$1"></option>'
+[IO.File]::WriteAllText("$code\jd.html",$src.Replace("__DESIG__",$desigOpts).Replace("__DEPTS__",$deptOpts).Replace("__LOGO__",$logo).Replace("__JSZIP__",$jszip),$u8)
+
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}
-$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html'))
+$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html'))
 [IO.File]::WriteAllText("$code\index.html",$out,$u8)
 "built loi.html, experience.html, relieving.html, cv.html, birthday.html and index.html"

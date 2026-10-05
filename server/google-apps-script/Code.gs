@@ -34,6 +34,11 @@ function doPost(e) {
       if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to load the employee list." });
       return out(employees());
     }
+    if (req.action === "cvsearch" || req.action === "cvfile") {
+      if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to read the HR mailbox." });
+      if (req.action === "cvsearch") return out(cvSearch(String(req.q || ""), Number(req.start) || 0, Math.min(25, Number(req.max) || 25)));
+      return out(cvFile(String(req.id || ""), Number(req.i), String(req.name || "")));
+    }
     if (req.action === "master") {
       if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to open the Employee Master." });
       return out(master());
@@ -222,6 +227,39 @@ function employees() {
   return { ok: true, at: Date.now(), source: t.ss.getName() + " › " + t.tab.getName(), list: list, skipped: skipped,
     hasDob: c.dob !== undefined };
 }
+/* ---------- CV Inbox: reads the HR mailbox (this script runs as hr@alcoverealty.in), so it's always connected ---------- */
+const CV_FILE = /\.(pdf|docx?|rtf)$/i;
+function cvSearch(q, start, max) {
+  if (!q) throw new Error("No search given.");
+  const threads = GmailApp.search(q, start, max), list = [];
+  threads.forEach(function (t) {
+    t.getMessages().forEach(function (m) {
+      const atts = [];
+      m.getAttachments({ includeInlineImages: false }).forEach(function (a, i) {
+        if (CV_FILE.test(a.getName())) atts.push({ i: i, name: a.getName(), mime: a.getContentType(), size: a.getSize() });
+      });
+      if (!atts.length) return;
+      list.push({ id: m.getId(), threadId: t.getId(), date: m.getDate().getTime(), from: m.getFrom(), subject: m.getSubject(),
+        body: String(m.getPlainBody() || "").slice(0, 4000), atts: atts });
+    });
+  });
+  return { ok: true, list: list, threads: threads.length, more: threads.length === max };
+}
+function cvFile(id, i, name) {
+  const m = id && GmailApp.getMessageById(id);
+  if (!m) throw new Error("That email wasn't found in the HR mailbox.");
+  const all = m.getAttachments({ includeInlineImages: false });
+  const a = (i >= 0 && all[i] && (!name || all[i].getName() === name)) ? all[i] : all.filter(function (x) { return x.getName() === name; })[0];
+  if (!a) throw new Error("That attachment wasn't found.");
+  if (a.getSize() > 15e6) throw new Error("This file is too large to open here — open it in Gmail.");
+  return { ok: true, name: a.getName(), mime: a.getContentType(), data: Utilities.base64Encode(a.getBytes()) };
+}
+/* Run once from the editor to give the script read access to the HR mailbox (shows only a count). */
+function testGmail() {
+  const n = GmailApp.search("has:attachment newer_than:30d", 0, 50).length;
+  Logger.log("HR mailbox readable: " + n + " email threads with attachments in the last 30 days (first 50 counted).");
+}
+
 /* Every column of the employee tab, as shown in the sheet, for the portal's Employee Master page. */
 function master() {
   const t = employeeTab(), range = t.tab.getDataRange(), values = range.getValues(), shown = range.getDisplayValues();

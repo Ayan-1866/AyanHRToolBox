@@ -308,6 +308,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     <button data-view="emp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 20a6.5 6.5 0 0 0-3-5.5"/></svg>Employee Master</button>
     <div class="grp">Recruitment</div>
     <button data-view="cv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg>CV Inbox</button>
+    <button data-view="jd"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg> JD Maker</button>
     <div class="grp">Hiring &amp; joining</div>
     <button data-view="loi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>LOI Generator</button>
     <button data-view="appt"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>Appointment Letter</button>
@@ -381,6 +382,12 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
           <h3>CV Inbox</h3>
           <p>Connect Gmail to find every CV you've received and see them grouped by department and designation, with phone, experience and a one-click Open CV.</p>
           <div class="tags"><span class="tag">Gmail</span><span class="tag">PDF &amp; Word CVs</span><span class="tag">CSV export</span></div>
+        </button>
+        <button class="tile" data-view="jd">
+          <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          <h3>JD Maker</h3>
+          <p>Job descriptions for new openings — designation, experience, salary and skills in, a ready JD out.</p>
+          <div class="tags"><span class="tag">PDF</span><span class="tag">Word</span><span class="tag">Job portals</span><span class="tag">WhatsApp</span></div>
         </button>
       </div>
     </section>
@@ -485,6 +492,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     </aside>
   </section>
   <iframe class="frame" id="v-cv" title="CV Inbox" data-url="cv.html" hidden></iframe>
+  <iframe class="frame" id="v-jd" title="JD Maker" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-exp" title="Experience Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-rel" title="Relieving Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-loi" title="LOI Generator" allow="clipboard-write" hidden></iframe>
@@ -500,9 +508,10 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
 <script id="src-appt" type="application/octet-stream">__APPT__</script>
 <script id="src-joiner" type="application/octet-stream">__JOINER__</script>
 <script id="src-bday" type="application/octet-stream">__BDAY__</script>
+<script id="src-jd" type="application/octet-stream">__JD__</script>
 <script>
 (function(){
-  const VIEWS=["home","emp","cv","exp","rel","loi","appt","joiner","bday"];
+  const VIEWS=["home","emp","cv","jd","exp","rel","loi","appt","joiner","bday"];
   const $=id=>document.getElementById(id);
   function decode(id){const b=atob($(id).textContent.trim()),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder("utf-8").decode(u);}
   function show(v){
@@ -629,7 +638,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
 /* ---------- "Fill from employee" bar: fills the open tool from the HR Master Data list ---------- */
 (function(){
   const $=id=>document.getElementById(id),esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  const NO_BAR=["home","cv","emp"],EXIT=["exp","rel"];let view="home",inactTouched=false,hits=[],sel=-1;
+  const NO_BAR=["home","cv","emp","jd"],EXIT=["exp","rel"];let view="home",inactTouched=false,hits=[],sel=-1;
   const say=(t,c)=>{$("estat").textContent=t;$("estat").className=c||"";};
   const list=()=>(window.__emps&&window.__emps.list)||[];
   const nice=s=>{s=String(s||"").replace(/\s+/g," ").trim();return(s&&(s===s.toLowerCase()||s===s.toUpperCase()))?s.toLowerCase().replace(/(^|[\s.\-'(])([a-z])/g,(m,a,b)=>a+b.toUpperCase()):s;};

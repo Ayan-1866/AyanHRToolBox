@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JD Maker — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+__JSZIP__
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f2f4f7;--panel:#fff;--ink:#1a2433;--muted:#5f6b7a;--line:#dfe3e9;--navy:#14294a;--gold:#c9a227;--teal:#1d4f91;--field:#f8f9fb;--err:#b3261e;--ok:#1f7a3a;--chip:#eef1f5}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--panel:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--teal:#8fb3e6;--field:#101a27;--err:#f2867e;--ok:#6fcf8f;--chip:#1d2a3c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1621;--panel:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--teal:#8fb3e6;--field:#101a27;--err:#f2867e;--ok:#6fcf8f;--chip:#1d2a3c;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,sans-serif}
+header{padding:22px 24px 4px;max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;align-items:flex-end}
+.kicker{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font:600 1.5rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif;margin:4px 0 2px}
+header p{margin:0;color:var(--muted);max-width:70ch}
+main{max-width:1320px;margin:0 auto;padding:12px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px;align-items:start}
+@media (max-width:980px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:14px}
+.card h2{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;display:flex;justify-content:space-between;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.span2{grid-column:1/-1}
+label{display:block;font-size:12.5px;font-weight:600;margin-bottom:4px}
+label .req{color:var(--gold)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:5px;padding:8px 10px}
+textarea{min-height:120px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.bad{border-color:var(--err)!important}
+.pair{display:flex;gap:6px;align-items:center}.pair span{color:var(--muted);font-size:.8rem}
+.hint{font-size:11.5px;color:var(--muted);margin-top:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:6px;border:1px solid var(--line);border-radius:5px;background:var(--field);min-height:42px;align-items:center}
+.chips input{border:0;background:transparent;flex:1 1 140px;padding:4px;min-width:120px}
+.chips input:focus{outline:none}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--chip);border:1px solid var(--line);border-radius:4px;padding:2px 4px 2px 8px;font-size:.82rem}
+.chip button{all:unset;cursor:pointer;color:var(--muted);padding:0 4px;font-size:.9rem}
+.sugg{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.sugg button{all:unset;cursor:pointer;font-size:.76rem;border:1px dashed var(--line);border-radius:4px;padding:2px 8px;color:var(--teal)}
+.sugg button:hover{border-color:var(--teal)}
+button.b{font:600 13.5px "IBM Plex Sans","Segoe UI",sans-serif;border-radius:5px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);white-space:nowrap}
+button.b:hover{border-color:var(--teal)}
+button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+button.sm{font-size:12px;padding:4px 9px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#msg{font-size:13px;flex-basis:100%}#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+.saved{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.saved li{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:var(--field)}
+.saved li b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.saved li small{color:var(--muted)}
+.none{color:var(--muted);font-size:13px}
+.pv{position:sticky;top:12px;min-width:0}@media (max-width:980px){.pv{position:static}}
+.pvhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sw{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:#fff}
+.sw .sheet{transform-origin:top left}
+/* ---------- A4 JD ---------- */
+.sheet{width:210mm;min-height:297mm;background:#fff;color:#1d2735;font:10pt/1.4 "IBM Plex Sans",Calibri,"Segoe UI",Arial,sans-serif;padding:11mm 15mm 17mm;position:relative}
+.sheet .top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #14294a;padding-bottom:3.5mm}
+.sheet .top img{height:12.5mm;width:auto}
+.sheet .top .tag{text-align:right;font-size:8.5pt;letter-spacing:.18em;text-transform:uppercase;color:#14294a;font-weight:700}
+.sheet .top .tag span{display:block;font-weight:400;letter-spacing:.04em;text-transform:none;color:#5f6b7a;font-size:8.5pt;margin-top:1mm}
+.sheet .gold{height:1mm;background:#c9a227;width:22mm;margin:0}
+.sheet h1{font:700 18pt/1.2 "IBM Plex Sans",Calibri,sans-serif;color:#14294a;margin:5mm 0 .5mm}
+.sheet .sub{color:#5f6b7a;font-size:10pt;margin:0 0 2.5mm}
+.sheet table.facts{width:100%;border-collapse:collapse;margin:3.5mm 0 1mm;font-size:9.4pt}
+.sheet table.facts td{border:1px solid #dfe3e9;padding:1.4mm 2.6mm;vertical-align:top;width:25%}
+.sheet table.facts td.k{background:#f3f5f8;color:#5f6b7a;font-weight:600;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+.sheet h3{font:700 10.5pt/1.3 "IBM Plex Sans",Calibri,sans-serif;color:#14294a;text-transform:uppercase;letter-spacing:.08em;margin:3.6mm 0 1.4mm;padding-bottom:1mm;border-bottom:1px solid #dfe3e9}
+.sheet p{margin:0 0 1.2mm}
+.sheet ul{margin:0 0 1mm;padding-left:5.5mm}.sheet li{margin:0 0 .5mm}
+.sheet .skills{display:flex;flex-wrap:wrap;gap:1.8mm}
+.sheet .skills span{border:1px solid #c9d3e2;background:#f3f6fb;border-radius:1mm;padding:.7mm 2.4mm;font-size:9.4pt;color:#14294a}
+.sheet .apply{margin-top:3.5mm;background:#14294a;color:#fff;border-radius:1.5mm;padding:3mm 4.5mm;font-size:9.6pt}
+.sheet .apply b{color:#f0d36a}
+.sheet .ft{position:absolute;left:16mm;right:16mm;bottom:8mm;display:flex;justify-content:space-between;font-size:7.8pt;color:#8a94a3;border-top:1px solid #dfe3e9;padding-top:2mm}
+.f.empty{background:#fbf0d6;color:#8a6d2f;font-style:italic;border-radius:1mm;padding:0 1mm}
+#printArea{display:none}
+@media print{@page{size:A4;margin:0}body{background:#fff}body>*:not(#printArea){display:none!important}#printArea{display:block!important}.f.empty{background:none}}
+</style></head><body>
+<header>
+  <div><div class="kicker">Alcove HR · Recruitment</div><h1>JD Maker</h1>
+  <p>Fill in the opening and get a ready job description — on the Alcove letterhead, for job portals and for WhatsApp.</p></div>
+</header>
+<main>
+<div>
+  <section class="card" aria-labelledby="h-op">
+    <h2 id="h-op">Opening <button class="b sm" id="newJd" type="button">+ New JD</button></h2>
+    <div class="grid">
+      <div class="span2"><label for="desig">Designation <span class="req">*</span></label><input id="desig" list="desigList" placeholder="e.g. Site Engineer" autocomplete="off"><datalist id="desigList">__DESIG__</datalist></div>
+      <div><label for="dept">Department <span class="req">*</span></label><input id="dept" list="deptList" placeholder="e.g. Civil Dept." autocomplete="off"><datalist id="deptList">__DEPTS__</datalist></div>
+      <div><label for="loc">Location <span class="req">*</span></label><input id="loc" list="locList" placeholder="e.g. New Kolkata - Sangam (B)" autocomplete="off"><datalist id="locList">
+        <option value="Head Office, Kolkata"></option><option value="New Kolkata - Sangam (B)"></option><option value="New Kolkata - Triveni"></option><option value="Triveni Mall"></option><option value="ARPL - Origyn"></option><option value="The Curve"></option><option value="Sundarvan"></option><option value="Diamond Chamber"></option><option value="Delhi"></option></datalist></div>
+      <div><label>Experience (years) <span class="req">*</span></label><div class="pair"><input id="expMin" type="number" min="0" max="40" placeholder="min" aria-label="Minimum experience"><span>to</span><input id="expMax" type="number" min="0" max="45" placeholder="max" aria-label="Maximum experience"></div><div class="hint">0 to 0 = Fresher · leave max empty for “3+ years”</div></div>
+      <div><label>Age (years)</label><div class="pair"><input id="ageMin" type="number" min="16" max="70" placeholder="min" aria-label="Minimum age"><span>to</span><input id="ageMax" type="number" min="16" max="70" placeholder="max" aria-label="Maximum age"></div><div class="hint">Optional</div></div>
+      <div class="span2"><label for="qual">Qualification <span class="req">*</span></label><input id="qual" list="qualList" placeholder="e.g. B.Tech / Diploma in Civil Engineering" autocomplete="off"><datalist id="qualList">
+        <option value="B.Tech / B.E. in Civil Engineering"></option><option value="Diploma in Civil Engineering"></option><option value="B.Tech / B.E. in Electrical Engineering"></option><option value="B.Tech / B.E. in Mechanical Engineering"></option><option value="Diploma in Electrical / Mechanical Engineering"></option><option value="B.Arch"></option><option value="Diploma in Architecture / Interior Design"></option><option value="B.Com / M.Com"></option><option value="CA / CA Inter"></option><option value="MBA (HR)"></option><option value="MBA (Marketing)"></option><option value="MBA (Finance)"></option><option value="Any Graduate"></option><option value="Graduate / BBA"></option><option value="Higher Secondary (10+2)"></option><option value="ITI"></option><option value="LLB"></option><option value="BCA / MCA / B.Tech (IT)"></option></datalist></div>
+      <div><label for="salMode">Salary</label><select id="salMode"><option value="month">₹ per month</option><option value="lpa">₹ lakh per annum (LPA)</option><option value="neg">Negotiable / best in industry</option><option value="hide">Don't show</option></select></div>
+      <div id="salBox"><label>Range</label><div class="pair"><input id="salMin" type="number" min="0" step="any" placeholder="min" aria-label="Minimum salary"><span>to</span><input id="salMax" type="number" min="0" step="any" placeholder="max" aria-label="Maximum salary"></div><div class="hint" id="salHint">e.g. 25000 to 35000</div></div>
+      <div><label for="pos">Number of positions <span class="req">*</span></label><input id="pos" type="number" min="1" value="1"></div>
+      <div><label for="etype">Employment type</label><select id="etype"><option>Full-time</option><option>Contract</option><option>Internship</option><option>Part-time</option></select></div>
+      <div class="span2"><label for="skIn">Key skills <span class="req">*</span></label>
+        <div class="chips" id="chips"><input id="skIn" placeholder="Type a skill and press Enter" autocomplete="off"></div>
+        <div class="sugg" id="sugg" aria-label="Suggested skills"></div></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-txt">
+    <h2 id="h-txt">Job content <button class="b sm" id="regen" type="button">↻ Suggest again</button></h2>
+    <div class="grid">
+      <div class="span2"><label for="summary">Role summary</label><textarea id="summary" style="min-height:76px"></textarea></div>
+      <div class="span2"><label for="resp">Key responsibilities <span class="hint" style="display:inline">— one per line</span></label><textarea id="resp" style="min-height:170px"></textarea></div>
+      <div class="span2"><label for="profile">Desired profile <span class="hint" style="display:inline">— one per line</span></label><textarea id="profile" style="min-height:100px"></textarea></div>
+      <div class="span2"><label for="about">About Alcove Realty</label><textarea id="about" style="min-height:70px"></textarea><div class="hint">Remembered for every JD</div></div>
+      <div><label for="applyTo">Apply to (email)</label><input id="applyTo" type="email" value="hr@alcoverealty.in"></div>
+      <div><label for="applyPh">Contact number</label><input id="applyPh" placeholder="optional"></div>
+    </div>
+    <div class="hint" style="margin-top:8px">The summary, responsibilities and profile are written from the designation, department and experience. Edit freely — your text is kept unless you click “Suggest again”.</div>
+  </section>
+
+  <section class="card">
+    <div class="actions">
+      <button class="b primary" id="prn" type="button">Print / Save as PDF</button>
+      <button class="b" id="docx" type="button">Download Word</button>
+      <button class="b" id="cpPortal" type="button">Copy for job portals</button>
+      <button class="b" id="cpWa" type="button">Copy WhatsApp post</button>
+      <button class="b" id="saveJd" type="button">Save JD</button>
+      <span id="msg" role="status"></span>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-saved"><h2 id="h-saved">Saved openings</h2><ul class="saved" id="saved"></ul></section>
+</div>
+<section class="pv" aria-label="Preview">
+  <div class="pvhead"><span>Live preview — A4</span><span id="pvPages"></span></div>
+  <div class="sw" id="wrap"><div class="sheet" id="sheet"></div></div>
+</section>
+</main>
+<div id="printArea"></div>
+<script>
+const LOGO="data:image/png;base64,__LOGO__";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+const K_DRAFT="alcove-jd-draft",K_SAVED="alcove-jd-saved",K_ABOUT="alcove-jd-about";
+const DEFAULT_ABOUT="Alcove Realty is a Kolkata-based real estate developer building residential, commercial and retail projects. We value quality, integrity and on-time delivery, and offer our people a professional environment with room to learn and grow.";
+// remove placeholder options that come from the shared designation list
+[...$("desigList").options].forEach(o=>{if(!o.value||o.value==="__other")o.remove();});
+
+/* ---------- content library (by department / designation) ---------- */
+const LIB=[
+ {k:/civil|site|execution|structure|finishing|construction|foreman|supervisor|aluform|scaffold|shuttering|project engineer|project manager/i,
+  r:["Supervise day-to-day site execution as per drawings, specifications and the project schedule","Coordinate with contractors, consultants and the planning team to keep work on track","Check the quality of materials and workmanship using inspection checklists","Prepare daily progress reports, measurement records and site documentation","Plan manpower, material and machinery requirements in advance","Verify contractor quantities and support the billing team","Make sure safety norms and housekeeping standards are followed on site"],
+  s:["Site execution","Reading drawings","Quality checks","BOQ & measurements","AutoCAD","MS Excel","Contractor coordination","Safety compliance"]},
+ {k:/mep|electric|plumb|hvac|mechanical|fire|phe|lift|elevator/i,
+  r:["Plan and supervise MEP installation works at site","Review shop drawings and coordinate services with civil and finishing works","Test and commission electrical, plumbing, fire-fighting and HVAC systems","Coordinate with vendors and contractors for timely delivery and execution","Ensure installations comply with codes, approvals and safety standards","Maintain testing records, snag lists and handover documents"],
+  s:["MEP coordination","Electrical systems","Plumbing & fire-fighting","HVAC","Testing & commissioning","AutoCAD","Vendor management","Safety standards"]},
+ {k:/sales|crm|leasing|relationship|business development|telecall|channel|customer|pre sales|post sales/i,
+  r:["Handle walk-in, digital and referral leads and conduct site visits","Explain projects, pricing, payment plans and offers to customers","Follow up regularly to convert leads into bookings","Maintain accurate customer and lead records in the CRM","Achieve monthly and quarterly sales targets","Coordinate booking documentation and agreements with the CRM and legal teams","Build and maintain relationships with channel partners"],
+  s:["Real estate sales","Lead conversion","Customer handling","Negotiation","CRM software","Communication","Site visits","Target orientation"]},
+ {k:/account|financ|audit|tax|budget|mis|bank|cashier|chartered|billing executive/i,
+  r:["Maintain books of accounts and ledgers accurately and on time","Process vendor payments, bank entries and reconciliations","Handle GST, TDS and other statutory compliance and returns","Prepare MIS reports, cash-flow statements and budgets","Support internal and statutory audits with schedules and documents","Track receivables and payables and follow up on dues"],
+  s:["Tally / ERP","GST & TDS","Bank reconciliation","MIS reporting","MS Excel","Accounts payable","Audit support","Attention to detail"]},
+ {k:/\bhr\b|human|admin|recruit|talent|payroll|office|reception|front desk/i,
+  r:["Manage end-to-end recruitment: sourcing, screening, interviews and offers","Handle onboarding, induction and joining documentation","Maintain attendance, leave and payroll inputs in the HRMS","Keep employee records and personnel files up to date","Support statutory compliance (PF, ESI) and HR policies","Plan employee engagement activities and communication","Handle exit formalities, full-and-final inputs and documentation"],
+  s:["Recruitment","Onboarding","HRMS","Payroll inputs","PF & ESI","Employee relations","MS Office","Communication"]},
+ {k:/architect|interior|design|draught|draft|cad|landscap|bim|visuali/i,
+  r:["Develop design concepts, layouts and working drawings","Coordinate with structural, MEP and landscape consultants","Ensure designs comply with building bye-laws and approval requirements","Revise drawings based on site, client and management feedback","Visit sites to resolve design queries and review execution","Maintain the drawing register and issue drawings to site"],
+  s:["AutoCAD","Revit / SketchUp","Working drawings","Building bye-laws","3D visualisation","Design coordination","Space planning","Presentation skills"]},
+ {k:/marketing|brand|digital|creative|graphic|content|social media|video|communication|\bpr\b/i,
+  r:["Plan and execute marketing campaigns for projects and launches","Manage social media pages, digital ads and the website","Create and review brochures, hoardings, ads and other collateral","Coordinate with agencies, vendors and the sales team","Organise events, exhibitions and site activations","Track lead generation, campaign performance and return on spend"],
+  s:["Campaign planning","Social media","Google & Meta ads","Content creation","Brand guidelines","Adobe Creative Suite","Event management","Analytics"]},
+ {k:/purchase|procure|store|inventory|logistic|warehouse/i,
+  r:["Identify and evaluate vendors and collect quotations","Prepare comparative statements and negotiate prices and terms","Raise purchase orders and track deliveries to site","Maintain stock, goods receipts and issue records","Reconcile material consumption and inventory","Ensure purchases follow company policy and approvals"],
+  s:["Vendor management","Negotiation","Purchase orders","ERP / Tally","Inventory control","Comparative statements","MS Excel","Construction materials"]},
+ {k:/planning|quantity|qs\b|estimat|contract|tender|billing/i,
+  r:["Prepare project schedules and track progress against the plan","Prepare BOQs, estimates and rate analysis","Prepare, check and certify contractor and client bills","Handle contract documentation, variations and claims","Prepare cost reports and flag delays or overruns early","Coordinate with site, purchase and accounts teams"],
+  s:["MS Project / Primavera","BOQ & estimation","Rate analysis","Billing","Contract administration","MS Excel","Cost control","AutoCAD"]},
+ {k:/quality|qa|qc|safety|hse/i,
+  r:["Prepare and implement inspection and test plans","Carry out site inspections, audits and material tests","Raise and close non-conformance reports","Conduct safety inductions and toolbox talks","Investigate and report incidents and near misses","Ensure compliance with quality and safety standards"],
+  s:["QA/QC","Inspection & testing","Safety audits","Toolbox talks","Documentation","ISO standards","Incident reporting","Communication"]},
+ {k:/\bit\b|software|developer|network|system|web|data/i,
+  r:["Provide day-to-day IT support to users and sites","Maintain computers, printers, network and CCTV systems","Manage ERP, HRMS and email accounts and access","Take regular backups and keep systems secure","Coordinate with IT vendors and service providers","Maintain the IT asset register"],
+  s:["Hardware & networking","Windows & MS Office","ERP support","Email administration","Backups","CCTV","Troubleshooting","Vendor coordination"]},
+ {k:/legal|law|advocate|compliance|roc|secretar/i,
+  r:["Draft, review and vet agreements and legal documents","Handle property documentation and registration","Liaise with government authorities and advocates","Track and support ongoing litigation","Ensure statutory and regulatory compliance","Maintain the legal and compliance records"],
+  s:["Drafting","Property law","Documentation","Registration","Litigation support","Compliance","Liaisoning","Communication"]},
+ {k:/housekeep|security|driver|maintenance|facility|operation|mall|school|teacher|horticult|garden|canteen/i,
+  r:["Carry out daily operations and maintenance activities","Follow schedules, checklists and standard procedures","Report issues and coordinate repairs with the concerned team","Maintain cleanliness, safety and security standards","Keep logs and records up to date","Support residents, customers and visitors professionally"],
+  s:["Facility operations","Preventive maintenance","Checklists","Vendor coordination","Safety","Customer service","Record keeping","Teamwork"]}
+];
+const GENERIC={r:["Carry out the day-to-day responsibilities of the role effectively","Coordinate with internal teams and stakeholders","Maintain accurate records, reports and documentation","Follow company policies, processes and timelines","Support the department head in achieving team goals"],s:["Communication","MS Office","Teamwork","Planning","Problem solving","Reporting"]};
+const lib=()=>{const t=v("desig")+" "+v("dept");return LIB.find(x=>x.k.test(t))||GENERIC;};
+const senior=()=>/manager|head|\bgm\b|\bagm\b|\bdgm\b|lead|senior|sr\b|vice president|\bvp\b|director/i.test(v("desig"))||Number(v("expMin"))>=8;
+
+/* ---------- form helpers ---------- */
+const v=id=>($(id).value||"").trim();
+const n=x=>x===""||x==null?null:Number(x);
+const inr=x=>Number(x).toLocaleString("en-IN",{maximumFractionDigits:2});
+function expText(){const a=n(v("expMin")),b=n(v("expMax"));if(a===null&&b===null)return"";if(a===0&&(b===0||b===null))return"Fresher";
+  if(b===null)return a+"+ years";if(a===null||a===b)return b+" year"+(b===1?"":"s");return a+"–"+b+" years";}
+function ageText(){const a=n(v("ageMin")),b=n(v("ageMax"));if(a===null&&b===null)return"";if(a===null)return"Up to "+b+" years";if(b===null)return a+" years and above";return a+"–"+b+" years";}
+function salText(){const m=v("salMode"),a=n(v("salMin")),b=n(v("salMax"));if(m==="hide")return"";if(m==="neg")return"Negotiable — best in the industry for the right candidate";
+  if(a===null&&b===null)return"";const u=m==="lpa"?" LPA":" per month",f=x=>"₹"+inr(x);
+  if(a!==null&&b!==null&&a!==b)return f(a)+" – "+f(b)+u;return(b===null?"From ":"Up to ")+f(b===null?a:b)+u;}
+const lines=id=>v(id).split(/\r?\n/).map(s=>s.replace(/^[\s•\-*·]+/,"").trim()).filter(Boolean);
+let skills=[];
+function chipsUI(){const box=$("chips"),inp=$("skIn");[...box.querySelectorAll(".chip")].forEach(c=>c.remove());
+  skills.forEach((s,i)=>{const c=document.createElement("span");c.className="chip";c.innerHTML=esc(s)+'<button type="button" aria-label="Remove '+esc(s)+'" data-i="'+i+'">×</button>';box.insertBefore(c,inp);});
+  const L=lib().s.filter(s=>!skills.some(x=>x.toLowerCase()===s.toLowerCase()));
+  $("sugg").innerHTML=L.length?'<span class="hint" style="margin:0 4px 0 0">Suggested:</span>'+L.map(s=>'<button type="button" data-s="'+esc(s)+'">+ '+esc(s)+"</button>").join(""):"";}
+function addSkill(s){s=s.replace(/\s+/g," ").trim().replace(/,$/,"");if(s&&!skills.some(x=>x.toLowerCase()===s.toLowerCase()))skills.push(s);}
+$("skIn").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===","){e.preventDefault();addSkill($("skIn").value);$("skIn").value="";chipsUI();changed();}
+  else if(e.key==="Backspace"&&!$("skIn").value&&skills.length){skills.pop();chipsUI();changed();}});
+$("skIn").addEventListener("blur",()=>{if($("skIn").value.trim()){addSkill($("skIn").value);$("skIn").value="";chipsUI();changed();}});
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(b){skills.splice(+b.dataset.i,1);chipsUI();changed();}else $("skIn").focus();});
+$("sugg").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(b){addSkill(b.dataset.s);chipsUI();changed();}});
+
+/* ---------- suggested text (only fills fields you haven't edited) ---------- */
+const edited={summary:false,resp:false,profile:false};
+["summary","resp","profile"].forEach(id=>$(id).addEventListener("input",()=>{edited[id]=true;}));
+function suggest(force){const d=v("desig")||"[Designation]",dept=v("dept")||"the department",loc=v("loc"),ex=expText(),L=lib();
+  if(force||!edited.summary)$("summary").value="We are looking for "+(/^[aeiou]/i.test(d)?"an ":"a ")+d+" to join our "+dept+" team"+(loc?" at "+loc:"")+". The role suits a "+(ex==="Fresher"?"motivated fresher":"professional with "+(ex?ex+" of":"relevant")+" experience")+" who takes ownership, works well with cross-functional teams and delivers quality work on time.";
+  if(force||!edited.resp)$("resp").value=L.r.concat(senior()?["Lead, guide and review the work of the team","Plan resources and budgets and report progress to management"]:[]).join("\n");
+  if(force||!edited.profile)$("profile").value=[v("qual")||"[Qualification]",ex==="Fresher"?"Freshers with good fundamentals are welcome to apply":(ex||"[Experience]")+" of relevant experience"+(/civil|mep|site|architect|sales|planning|purchase|construction/i.test(d+" "+dept)?", preferably in real estate or construction":""),
+    "Good communication and coordination skills","Working knowledge of MS Office"+(skills.length?" and "+skills.slice(0,3).join(", "):""),"Willingness to work at "+(loc||"the assigned location")].join("\n");
+  if(force){edited.summary=edited.resp=edited.profile=false;}}
+$("regen").onclick=()=>{suggest(true);changed();say("Suggestions refreshed from the designation, department and experience.","ok");};
+
+/* ---------- document ---------- */
+function V(x,label){return x?esc(x):'<span class="f empty">['+esc(label)+"]</span>";}
+function sheetHtml(){const d=v("desig"),dept=v("dept"),loc=v("loc"),pos=Math.max(1,Number(v("pos"))||1),ex=expText(),age=ageText(),sal=salText(),q=v("qual"),et=v("etype");
+  const facts=[["Department",V(dept,"Department")],["Location",V(loc,"Location")],["Positions",String(pos)],["Employment",esc(et)],["Experience",V(ex,"Experience")],["Qualification",V(q,"Qualification")]];
+  if(age)facts.push(["Age",esc(age)]);if(sal)facts.push(["Salary (CTC)",esc(sal)]);if(facts.length%2)facts.push(["",""]);
+  let rows="";for(let i=0;i<facts.length;i+=2)rows+="<tr>"+[facts[i],facts[i+1]].map(([k,x])=>'<td class="k">'+esc(k)+"</td><td>"+x+"</td>").join("")+"</tr>";
+  const ul=a=>a.length?"<ul>"+a.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>":"";
+  const em=v("applyTo"),ph=v("applyPh");
+  return'<div class="top"><img src="'+LOGO+'" alt="Alcove Realty"><div class="tag">Job Description<span>'+esc(new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}))+"</span></div></div>"+
+    "<h1>"+V(d,"Designation")+'</h1><p class="sub">'+V(dept,"Department")+" · "+V(loc,"Location")+" · "+pos+" opening"+(pos>1?"s":"")+'</p><div class="gold"></div>'+
+    '<table class="facts">'+rows+"</table>"+
+    "<h3>Role summary</h3><p>"+esc(v("summary"))+"</p>"+
+    "<h3>Key responsibilities</h3>"+ul(lines("resp"))+
+    "<h3>Key skills</h3>"+(skills.length?'<div class="skills">'+skills.map(s=>"<span>"+esc(s)+"</span>").join("")+"</div>":'<p><span class="f empty">[Key skills]</span></p>')+
+    "<h3>Desired profile</h3>"+ul(lines("profile"))+
+    "<h3>About Alcove Realty</h3><p>"+esc(v("about"))+"</p>"+
+    '<div class="apply">Interested candidates can send their CV to <b>'+V(em,"email")+"</b>"+(ph?" or call <b>"+esc(ph)+"</b>":"")+' with the subject line “'+esc(d||"Designation")+(loc?" – "+esc(loc):"")+'”.</div>'+
+    '<div class="ft"><span>Alcove Realty · Human Resources</span><span>alcoverealty.in</span></div>';}
+function fit(){const w=$("wrap"),s=$("sheet");const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";
+  $("pvPages").textContent=s.offsetHeight>1123+40?"Runs to 2 pages":"1 page";}
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("wrap"));else window.addEventListener("resize",fit);
+function render(){$("sheet").innerHTML=sheetHtml();fit();}
+
+/* ---------- text versions ---------- */
+function portalText(){const d=v("desig"),loc=v("loc"),pos=Math.max(1,Number(v("pos"))||1),L=[];
+  L.push(d+" — "+v("dept")+" — "+loc,"");L.push("Company: Alcove Realty","Location: "+loc,"Openings: "+pos,"Employment type: "+v("etype"),"Experience: "+expText(),"Qualification: "+v("qual"));
+  if(ageText())L.push("Age: "+ageText());if(salText())L.push("Salary: "+salText());
+  L.push("","Role summary",v("summary"),"","Key responsibilities");lines("resp").forEach(x=>L.push("• "+x));
+  L.push("","Key skills",skills.join(", "),"","Desired profile");lines("profile").forEach(x=>L.push("• "+x));
+  L.push("","About Alcove Realty",v("about"),"","How to apply","Send your CV to "+v("applyTo")+(v("applyPh")?" or call "+v("applyPh"):"")+" with the subject “"+d+(loc?" – "+loc:"")+"”.");return L.join("\n");}
+function waText(){const d=v("desig"),loc=v("loc"),pos=Math.max(1,Number(v("pos"))||1),L=["*We're hiring at Alcove Realty!* 🏗️","","*"+d+"*"+(pos>1?" — "+pos+" positions":""),"📍 "+loc,"🎓 "+v("qual"),"💼 Experience: "+expText()];
+  if(salText())L.push("💰 "+salText());if(ageText())L.push("👤 Age: "+ageText());
+  if(skills.length)L.push("","*Key skills:* "+skills.slice(0,8).join(", "));
+  L.push("","📩 Send your CV to "+v("applyTo")+(v("applyPh")?" | 📞 "+v("applyPh"):""),"Subject: "+d+(loc?" – "+loc:""));return L.join("\n");}
+async function copy(t,what){try{await navigator.clipboard.writeText(t);}catch(e){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(x){}ta.remove();}
+  say(what+" copied — paste it where you need it.","ok");}
+
+/* ---------- Word (.docx) ---------- */
+const escX=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const R=(t,o)=>{o=o||{};let pr='<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>';if(o.b)pr+="<w:b/>";if(o.color)pr+='<w:color w:val="'+o.color+'"/>';if(o.sz)pr+='<w:sz w:val="'+o.sz+'"/><w:szCs w:val="'+o.sz+'"/>';
+  return"<w:r><w:rPr>"+pr+'</w:rPr><w:t xml:space="preserve">'+escX(t)+"</w:t></w:r>";};
+const P=(runs,o)=>{o=o||{};let pr='<w:spacing w:before="'+(o.before||0)+'" w:after="'+(o.after===undefined?80:o.after)+'"/>';if(o.bullet)pr='<w:tabs><w:tab w:val="left" w:pos="360"/></w:tabs>'+pr+'<w:ind w:left="360" w:hanging="260"/>';
+  if(o.border)pr+='<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="2" w:color="DFE3E9"/></w:pBdr>';return"<w:p><w:pPr>"+pr+"</w:pPr>"+(o.bullet?R("•")+"<w:r><w:tab/></w:r>":"")+runs+"</w:p>";};
+function docxXml(){const d=v("desig"),loc=v("loc"),pos=Math.max(1,Number(v("pos"))||1),N="14294A";const B=[];
+  B.push(P(R("JOB DESCRIPTION · ALCOVE REALTY",{b:1,color:N,sz:18}),{after:60}));
+  B.push(P(R(d,{b:1,color:N,sz:40}),{after:40}));B.push(P(R(v("dept")+" · "+loc+" · "+pos+" opening"+(pos>1?"s":""),{color:"5F6B7A",sz:21}),{after:200}));
+  const facts=[["Department",v("dept")],["Location",loc],["Positions",String(pos)],["Employment",v("etype")],["Experience",expText()],["Qualification",v("qual")]];if(ageText())facts.push(["Age",ageText()]);if(salText())facts.push(["Salary (CTC)",salText()]);
+  const cell=(t,k)=>'<w:tc><w:tcPr><w:tcW w:w="'+(k?1900:2900)+'" w:type="dxa"/>'+(k?'<w:shd w:val="clear" w:color="auto" w:fill="F3F5F8"/>':"")+"</w:tcPr>"+P(R(t,k?{b:1,color:"5F6B7A",sz:18}:{sz:20}),{after:40})+"</w:tc>";
+  let rows="";for(let i=0;i<facts.length;i+=2){const a=facts[i],b=facts[i+1]||["",""];rows+="<w:tr>"+cell(a[0],1)+cell(a[1])+cell(b[0],1)+cell(b[1])+"</w:tr>";}
+  const bd='<w:tblBorders>'+["top","left","bottom","right","insideH","insideV"].map(x=>"<w:"+x+' w:val="single" w:sz="4" w:color="DFE3E9"/>').join("")+"</w:tblBorders>";
+  B.push('<w:tbl><w:tblPr><w:tblW w:w="9600" w:type="dxa"/>'+bd+'<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="1900"/><w:gridCol w:w="2900"/><w:gridCol w:w="1900"/><w:gridCol w:w="2900"/></w:tblGrid>'+rows+"</w:tbl>");
+  const H=t=>B.push(P(R(t.toUpperCase(),{b:1,color:N,sz:21}),{before:240,after:80,border:1}));
+  H("Role summary");B.push(P(R(v("summary"),{sz:21})));
+  H("Key responsibilities");lines("resp").forEach(x=>B.push(P(R(x,{sz:21}),{bullet:1,after:40})));
+  H("Key skills");B.push(P(R(skills.join("  ·  "),{sz:21})));
+  H("Desired profile");lines("profile").forEach(x=>B.push(P(R(x,{sz:21}),{bullet:1,after:40})));
+  H("About Alcove Realty");B.push(P(R(v("about"),{sz:21})));
+  H("How to apply");B.push(P(R("Send your CV to ",{sz:21})+R(v("applyTo"),{b:1,sz:21})+(v("applyPh")?R(" or call ",{sz:21})+R(v("applyPh"),{b:1,sz:21}):"")+R(" with the subject “"+d+(loc?" – "+loc:"")+"”.",{sz:21})));
+  const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document '+W+"><w:body>"+B.join("")+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>';}
+async function docx(){const z=new JSZip();
+  z.file("[Content_Types].xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+  z.file("_rels/.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+  z.file("word/document.xml",docxXml());return z.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});}
+
+/* ---------- required fields ---------- */
+const REQ=[["desig","Designation"],["dept","Department"],["loc","Location"],["qual","Qualification"],["pos","Number of positions"]];
+function check(){const miss=REQ.filter(([id])=>!v(id)).map(([,l])=>l);if(!expText())miss.push("Experience");if(!skills.length)miss.push("Key skills");
+  REQ.forEach(([id])=>$(id).classList.toggle("bad",!v(id)));$("expMin").classList.toggle("bad",!expText());$("chips").classList.toggle("bad",!skills.length);
+  if(miss.length){say("Please fill: "+miss.join(", "),"err");return false;}return true;}
+const fileBase=()=>"JD - "+(v("desig")||"Opening").replace(/[\\/:*?"<>|]+/g,"-")+(v("loc")?" - "+v("loc").replace(/[\\/:*?"<>|]+/g,"-"):"");
+$("prn").onclick=()=>{if(!check())return;$("printArea").innerHTML='<div class="sheet">'+sheetHtml()+"</div>";say("Opening print… choose “Save as PDF” to get a PDF.","ok");setTimeout(()=>window.print(),60);};
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+$("docx").onclick=async()=>{if(!check())return;if(typeof JSZip==="undefined"){say("Couldn't load the Word engine — reload the page.","err");return;}
+  const b=await docx(),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=fileBase()+".docx";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);say("Saved "+fileBase()+".docx","ok");};
+$("cpPortal").onclick=()=>{if(check())copy(portalText(),"Job portal text");};
+$("cpWa").onclick=()=>{if(check())copy(waText(),"WhatsApp post");};
+
+/* ---------- draft, saved openings ---------- */
+const FIELDS=["desig","dept","loc","expMin","expMax","ageMin","ageMax","qual","salMode","salMin","salMax","pos","etype","summary","resp","profile","applyTo","applyPh"];
+function snapshot(){const o={skills:skills.slice(),edited:Object.assign({},edited)};FIELDS.forEach(id=>o[id]=$(id).value);return o;}
+function restore(o){FIELDS.forEach(id=>{if(o[id]!==undefined)$(id).value=o[id];});skills=(o.skills||[]).slice();Object.assign(edited,o.edited||{summary:true,resp:true,profile:true});salUI();chipsUI();suggest(false);render();}
+function salUI(){const m=v("salMode");$("salBox").hidden=m==="neg"||m==="hide";$("salHint").textContent=m==="lpa"?"e.g. 3.5 to 5 (lakh per annum)":"e.g. 25000 to 35000 (per month)";}
+let dT;function changed(){suggest(false);render();clearTimeout(dT);dT=setTimeout(()=>save(K_DRAFT,snapshot()),300);}
+document.querySelectorAll("main input,main select,main textarea").forEach(el=>{if(el.id==="skIn")return;el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{el.classList.remove("bad");if(el.id==="salMode")salUI();
+  if(el.id==="about")save(K_ABOUT,el.value);if(["desig","dept"].includes(el.id))chipsUI();changed();});});
+function savedUI(){const L=load(K_SAVED,[]);$("saved").innerHTML=L.length?L.map((s,i)=>'<li><b title="'+esc(s.title)+'">'+esc(s.title)+"</b><small>"+esc(new Date(s.at).toLocaleDateString("en-IN",{day:"numeric",month:"short"}))+'</small><button class="b sm" type="button" data-open="'+i+'">Open</button><button class="b sm" type="button" data-del="'+i+'" aria-label="Delete '+esc(s.title)+'">✕</button></li>').join("")
+  :'<li class="none" style="border:0;background:none;padding:0">No saved JDs yet. Use “Save JD” to keep an opening for later.</li>';}
+$("saveJd").onclick=()=>{if(!check())return;const L=load(K_SAVED,[]),title=v("desig")+" · "+v("loc"),i=L.findIndex(s=>s.title===title),rec={title,at:Date.now(),data:snapshot()};
+  if(i>=0)L[i]=rec;else L.unshift(rec);save(K_SAVED,L.slice(0,50));savedUI();say(i>=0?"Updated the saved JD “"+title+"”.":"Saved “"+title+"”.","ok");};
+$("saved").addEventListener("click",e=>{const o=e.target.closest("button[data-open]"),d=e.target.closest("button[data-del]"),L=load(K_SAVED,[]);
+  if(o){restore(L[+o.dataset.open].data);save(K_DRAFT,snapshot());say("Opened “"+L[+o.dataset.open].title+"”.","ok");window.scrollTo({top:0,behavior:"smooth"});}
+  if(d){L.splice(+d.dataset.del,1);save(K_SAVED,L);savedUI();}});
+$("newJd").onclick=()=>{FIELDS.forEach(id=>{if(!["applyTo","applyPh","salMode","etype"].includes(id))$(id).value="";});$("pos").value="1";skills=[];edited.summary=edited.resp=edited.profile=false;salUI();chipsUI();suggest(true);render();save(K_DRAFT,snapshot());say("Started a new JD.");};
+
+$("about").value=load(K_ABOUT,DEFAULT_ABOUT);
+const draft=load(K_DRAFT,null);if(draft)restore(draft);else{salUI();chipsUI();suggest(true);render();}
+savedUI();
+window.addEventListener("load",fit);
+</script></body></html>

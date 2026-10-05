@@ -223,7 +223,17 @@ function initGis(){if(tokenClient||!gisReady())return!!tokenClient;
     token=resp.access_token;tokenExp=Date.now()+(Number(resp.expires_in||3600)-60)*1000;save(K_AUTH,{token,exp:tokenExp,email:acct});if(p)p.resolve(token);},
     error_callback:err=>{const p=pending;pending=null;if(p)p.reject(new Error(err&&err.type==="popup_closed"?"The Google window was closed before signing in.":(err&&err.message)||"Google sign-in failed."));}});
   return true;}
-const live=()=>!!token&&Date.now()<tokenExp;
+/* Always-on mode: when you're signed in to the HR Tool portal, the HR login service (Apps Script, running as
+   hr@alcoverealty.in) reads the HR mailbox for us — no Google pop-up, no hourly renewal. */
+const OTP_API="__OTP_API__";
+function hrSess(){try{const s=JSON.parse(localStorage.getItem("alcove-hrtool-session")||"null");return s&&s.session&&s.exp>Date.now()?s.session:"";}catch(e){return"";}}
+const viaHR=()=>!!(OTP_API&&hrSess());
+async function srv(body){let r;try{r=await fetch(OTP_API,{method:"POST",body:JSON.stringify(Object.assign({session:hrSess()},body))});}
+  catch(e){throw new Error("Couldn't reach the HR mailbox service. Check the internet connection.");}
+  const j=await r.json().catch(()=>({error:"The HR mailbox service gave an unreadable answer."}));
+  if(j.error)throw Object.assign(new Error(/Unknown request/.test(j.error)?"The HR login service needs its latest update (deploy a new version of the Apps Script).":j.error),{expired:/Sign in again/.test(j.error)});
+  return j;}
+const live=()=>viaHR()||(!!token&&Date.now()<tokenExp);
 // interactive: may open Google's window (only allowed straight after a click). Otherwise fail fast when expired.
 function getToken(interactive){if(live())return Promise.resolve(token);
   if(!interactive)return Promise.reject(Object.assign(new Error("The Gmail connection needs renewing — click anywhere on the page."),{expired:true}));
@@ -239,6 +249,7 @@ async function api(path,params,retry){const qs=params?"?"+new URLSearchParams(pa
     throw new Error("Gmail said: "+(t||r.status));}
   return r.json();}
 function showState(){const on=live();
+  if(viaHR()){$("who").textContent="Connected: HR mailbox (hr@alcoverealty.in) · always on";$("connect").hidden=true;$("signout").hidden=true;$("scanBtn").disabled=busy;$("setup").hidden=true;return;}
   $("who").textContent=on?"Connected: "+acct:acct?acct+" · renews on your next click":"Not connected";
   $("connect").hidden=on;$("connect").textContent=acct?"Reconnect":"Connect Gmail";$("signout").hidden=!acct;$("scanBtn").disabled=!on||busy;
   if(!on&&acct&&ORIGIN_OK)armRenew();}
@@ -273,8 +284,11 @@ const PORTAL=/no-?reply|naukri|indeed|linkedin|monster|shine|foundit|apna|workin
 // any sign that the email is a job application / CV
 const CVISH=/\b(cv|c\.v|resume|résumé|curriculum|bio-?data|application|applying|apply|applied|candidate|candidature|job|vacancy|position|post of|opening|fresher|experience)\b/i;
 const EXP=/(\d{1,2}(?:\.\d{1,2})?)\s*\+?\s*(?:years?|yrs?)(?:\s+of)?\s+(?:of\s+)?(?:work\s+|total\s+|professional\s+|relevant\s+)?(?:experience|exp)/i;
+// the raw bytes of an attachment, from the HR mailbox service or straight from Gmail
+async function fileBytes(msgId,a){if(viaHR()){const r=await srv({action:"cvfile",id:msgId,i:a.i===undefined?-1:a.i,name:a.name});const b=atob(r.data),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+  const r=await api("messages/"+msgId+"/attachments/"+a.id);return b64u(r.data);}
 async function cvText(msgId,a){if(a.size>8e6)return"";
-  const r=await api("messages/"+msgId+"/attachments/"+a.id);const u=b64u(r.data);
+  const u=await fileBytes(msgId,a);
   if(/\.pdf$/i.test(a.name)&&window.pdfjsLib){const pdf=await pdfjsLib.getDocument({data:u}).promise;let t="";
     for(let i=1;i<=Math.min(2,pdf.numPages);i++){const c=await (await pdf.getPage(i)).getTextContent();t+=c.items.map(x=>x.str+(x.hasEOL?"\n":" ")).join("")+"\n";}return t;}
   if(/\.docx$/i.test(a.name)&&window.JSZip){const z=await JSZip.loadAsync(u);const f=z.file("word/document.xml");if(!f)return"";
@@ -283,9 +297,12 @@ async function cvText(msgId,a){if(a.size>8e6)return"";
 async function readMessage(id,withCv){const m=await api("messages/"+id,{format:"full"});
   const H={};(m.payload.headers||[]).forEach(h=>{H[h.name.toLowerCase()]=h.value;});
   const out={atts:[],plain:"",html:""};walk(m.payload,out);if(!out.atts.length)return null;
-  const from=parseFrom(H.from),body=(out.plain||htmlText(out.html)).replace(/\r/g,"").replace(/\n{3,}/g,"\n\n");
-  const rec={id,threadId:m.threadId,date:Number(m.internalDate)||Date.parse(H.date)||0,name:from.name||from.email.split("@")[0],email:from.email,
-    subject:H.subject||"",body:body.slice(0,4000),atts:out.atts,phone:"",exp:"",desig:"",how:""};
+  return buildRec({id,threadId:m.threadId,date:Number(m.internalDate)||Date.parse(H.date)||0,from:H.from,subject:H.subject||"",body:out.plain||htmlText(out.html),atts:out.atts},withCv);}
+// one email (from Gmail or the HR mailbox service) -> a sorted CV record
+async function buildRec(e,withCv){const out={atts:e.atts};
+  const from=parseFrom(e.from),body=String(e.body||"").replace(/\r/g,"").replace(/\n{3,}/g,"\n\n"),id=e.id;
+  const rec={id,threadId:e.threadId,date:e.date||0,name:from.name||from.email.split("@")[0],email:from.email,
+    subject:e.subject||"",body:body.slice(0,4000),atts:out.atts,phone:"",exp:"",desig:"",how:""};
   const best=out.atts.find(a=>/cv|resume|bio/i.test(a.name)&&/\.(pdf|docx)$/i.test(a.name))||out.atts.find(a=>/\.(pdf|docx)$/i.test(a.name));
   let text="";if(withCv&&best){try{text=await cvText(id,best);}catch(e){text="";}}
   const c=classify(rec,text);rec.desig=c.desig;rec.how=c.how;
@@ -308,15 +325,21 @@ function prog(done,total,txt){$("prog").hidden=false;$("fill").style.width=(tota
 async function scan(auto){if(busy||!live())return;busy=true;$("scanBtn").disabled=true;lastScan=Date.now();
   try{let q=$("q").value.trim()||DEFAULT_Q;const p=$("period").value,l=$("lbl").value.trim();
     if(p)q+=" newer_than:"+p+"d";if(l)q+=' label:"'+l.replace(/"/g,"")+'"';
-    const max=Number($("maxn").value),ids=[];let pageToken="";
+    const max=Number($("maxn").value),ids=[],metas=new Map();let pageToken="";
     prog(0,1,"Searching Gmail…");
+    if(viaHR()){// HR mailbox service: conversations come back already unpacked, 25 at a time
+      let start=0,more=true;
+      while(more&&start<max){const r=await srv({action:"cvsearch",q,start,max:Math.min(25,max-start)});
+        (r.list||[]).forEach(m=>{if(!metas.has(m.id)){metas.set(m.id,m);ids.push(m.id);}});start+=r.threads||0;more=!!r.more&&(r.threads||0)>0;
+        prog(0,1,"Searching the HR mailbox… "+start+" conversations · "+ids.length+" emails with CV files");}}
+    else{
     do{const r=await api("messages",{q,maxResults:Math.min(100,max-ids.length),...(pageToken?{pageToken}:{})});
       (r.messages||[]).forEach(m=>ids.push(m.id));pageToken=r.nextPageToken||"";prog(0,1,"Searching Gmail… "+ids.length+" emails");}
-    while(pageToken&&ids.length<max);
+    while(pageToken&&ids.length<max);}
     const have=new Set(RECS.map(r=>r.id)),todo=ids.filter(id=>!have.has(id));
     if(!todo.length){prog(1,1,"No new emails since the last scan ("+ids.length+" matching emails already sorted).");say(auto?"Checked at "+new Date().toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"})+" — no new CVs.":"Up to date.","ok");return;}
     let done=0,found=0;const withCv=$("readCv").checked;
-    async function worker(){while(todo.length){const id=todo.shift();try{const r=await readMessage(id,withCv);if(r){fresh.push(r);found++;}}catch(e){if(e.expired||/Gmail API|not been used/i.test(e.message))throw e;}
+    async function worker(){while(todo.length){const id=todo.shift();try{const r=metas.has(id)?await buildRec(metas.get(id),withCv):await readMessage(id,withCv);if(r){fresh.push(r);found++;}}catch(e){if(e.expired||/Gmail API|not been used|latest update/i.test(e.message))throw e;}
       done++;prog(done,done+todo.length,"Reading emails… "+done+" of "+(done+todo.length)+" · "+found+" CVs");if(done%25===0){RECS=RECS.concat(fresh.splice(0));persist();render();}}}
     await Promise.all(Array.from({length:5},worker));
     say((auto?"New mail checked — ":"Done — ")+found+" new CVs from "+done+" emails.","ok");}
@@ -361,10 +384,10 @@ $("rows").addEventListener("change",e=>{if(!e.target.classList.contains("dsel"))
   if(k===r.desig)delete OVR[id];else OVR[id]=k;save(K_OVR,OVR);render();});
 $("rows").addEventListener("click",async e=>{const b=e.target.closest("button.open");if(!b)return;const r=RECS.find(x=>x.id===b.closest("tr").dataset.id),a=r&&r.atts[+b.dataset.i];if(!a)return;
   const w=window.open("","_blank");b.disabled=true;
-  try{const d=await api("messages/"+r.id+"/attachments/"+a.id);const url=URL.createObjectURL(new Blob([b64u(d.data)],{type:a.mime||"application/octet-stream"}));
+  try{const url=URL.createObjectURL(new Blob([await fileBytes(r.id,a)],{type:a.mime||"application/octet-stream"}));
     if(w&&/pdf/i.test(a.mime||a.name))w.location=url;else{if(w)w.close();const l=document.createElement("a");l.href=url;l.download=a.name;document.body.appendChild(l);l.click();l.remove();}
     setTimeout(()=>URL.revokeObjectURL(url),60000);}
-  catch(err){if(w)w.close();say(token?err.message:"Connect Gmail first to open CVs.","err");}
+  catch(err){if(w)w.close();say(live()?err.message:"Connect Gmail first to open CVs.","err");}
   b.disabled=false;});
 $("csv").onclick=()=>{const list=shown();if(!list.length){say("Nothing to export.","err");return;}
   const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
@@ -374,6 +397,7 @@ $("csv").onclick=()=>{const list=shown();if(!list.length){say("Nothing to export
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 render();
 showState();
-if(live()){say("Connected as "+acct+".","ok");if($("auto").checked)scan(true);}
+if(viaHR()){say("Connected to the HR mailbox through your HR Tool sign-in — no Google pop-up needed.","ok");if($("auto").checked)scan(true);}
+else if(live()){say("Connected as "+acct+".","ok");if($("auto").checked)scan(true);}
 else if(acct)say("Welcome back — your Gmail connection renews on your next click.");
 </script></body></html>
