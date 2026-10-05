@@ -203,6 +203,102 @@ button{font:inherit}
   .steps{grid-template-columns:repeat(6,minmax(78px,1fr));overflow-x:auto;padding-bottom:4px}
   .steps::before{left:40px;right:40px}
 }
+
+/* =================== Corporate theme (layered over the styles above) =================== */
+:root{--navy:#14294a;--navy-d:#0f203b;--bg:#f2f4f7;--card:#fff;--ink:#1a2433;--muted:#5f6b7a;--line:#dfe3e9;--hover:#f3f5f8;--chip:#eef1f5;
+  --join:#1d4f91;--join-bg:#e8eef7;--exit:#9b2c2c;--exit-bg:#f8eaea;--cel:#a6560f;--cel-bg:#fbf0e3;--accent:#c9a227;
+  --shadow:0 1px 2px rgba(16,24,40,.05);--shadow-h:0 2px 8px rgba(16,24,40,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--card:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--hover:#1b283a;--chip:#1d2a3c;
+  --join:#8fb3e6;--join-bg:#1a2b44;--exit:#e59a9a;--exit-bg:#3a2024;--cel:#f0b072;--cel-bg:#3a2a18;--shadow:none;--shadow-h:0 2px 10px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{--bg:#0e1621;--card:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--hover:#1b283a;--chip:#1d2a3c;
+  --join:#8fb3e6;--join-bg:#1a2b44;--exit:#e59a9a;--exit-bg:#3a2024;--cel:#f0b072;--cel-bg:#3a2a18;--shadow:none;--shadow-h:0 2px 10px rgba(0,0,0,.4)}
+body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif;letter-spacing:.005em}
+/* sidebar: solid navy, compact */
+.side{width:240px;background:var(--navy);padding:calc(14px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px))}
+.side::after{width:1px;background:rgba(255,255,255,.08)}
+.brand{border-radius:6px;padding:10px 12px 8px;margin:0 0 14px;box-shadow:none}
+.brand img{width:104px}.brand span{color:var(--navy);font-size:.66rem;letter-spacing:.18em}
+.nav .grp{font-size:.64rem;letter-spacing:.14em;color:#8193ad;padding:16px 10px 5px}
+.nav button{padding:8px 10px;border-radius:5px;color:#c9d3e0;font-size:.88rem}
+.nav button:hover{background:rgba(255,255,255,.06)}
+.nav button[aria-current="page"]{background:rgba(255,255,255,.1);color:#fff;font-weight:600}
+.nav button[aria-current="page"]::before{left:-12px;width:3px;border-radius:0;background:var(--accent)}
+.nav button[aria-current="page"] svg{color:var(--accent)}
+.side .foot{color:#8193ad;font-size:.7rem;border-top:1px solid rgba(255,255,255,.08);padding-top:12px}
+/* top bar */
+.topbar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px;padding:0 24px;background:var(--card);border-bottom:1px solid var(--line)}
+.tb-l{display:flex;align-items:center;gap:8px;min-width:0}
+.crumb{color:var(--muted);font-size:.82rem}.crumb-sep{color:var(--line)}
+.topbar h2{margin:0;font-size:1rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-r{display:flex;align-items:center;gap:16px;font-size:.82rem;color:var(--muted);white-space:nowrap}
+.who{display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:500}
+.who .av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:.7rem;font-weight:600;letter-spacing:.03em}
+.tb-out{color:var(--join);font-weight:600;text-decoration:none;border:1px solid var(--line);padding:5px 12px;border-radius:5px}
+.tb-out:hover{background:var(--hover)}
+.empbar{padding:8px 24px;background:var(--bg)}
+.empbar .btn,.esearch input{border-radius:5px}
+/* overview */
+.home{max-width:1180px;padding:24px 28px 40px}
+.ovhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px 20px;margin-bottom:18px}
+.ovhead h1{margin:0;font:600 1.5rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif}
+.ovhead p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.ovdate{text-align:right;font-size:.8rem;color:var(--muted)}.ovdate b{display:block;color:var(--ink);font-weight:600;font-size:.9rem}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.kpi{all:unset;cursor:pointer;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow)}
+.kpi:nth-child(2){border-top-color:var(--accent)}.kpi:nth-child(3){border-top-color:var(--join)}.kpi:nth-child(4){border-top-color:#8a94a3}
+.kpi:hover{box-shadow:var(--shadow-h)}.kpi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kpi .kl{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi b{font:600 1.75rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif;color:var(--ink)}
+.kpi .ks{font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.journey{border-radius:6px;padding:16px 18px;margin:0 0 6px}
+.journey h2,.sec h2{font-size:.72rem;letter-spacing:.1em;color:var(--muted)}
+.steps{counter-reset:st}
+.steps::before{height:1px;background:var(--line);opacity:1}
+.steps .dot{width:34px;height:34px;border-width:1.5px;border-color:var(--navy);color:var(--navy)}
+.steps .exit .dot{border-color:var(--exit);color:var(--exit)}
+.steps button:hover .dot{transform:none;background:var(--navy)}.steps button.exit:hover .dot{background:var(--exit)}
+.steps .st{font-size:.66rem;letter-spacing:.1em}.steps .nm{font-size:.82rem;font-weight:500}
+.sec{margin-top:24px}.sec .hd{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:12px}
+.sec .hd p{font-size:.8rem}
+.tiles{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tile{border-radius:6px;padding:16px 16px 14px;gap:6px;transition:border-color .15s,box-shadow .15s}
+.tile::before{display:none}
+.tile:hover{transform:none;border-color:var(--join);box-shadow:var(--shadow-h)}
+.tile .ic{width:38px;height:38px;border-radius:5px}
+.tile .arrow{width:28px;height:28px;border-radius:5px;background:transparent;border:1px solid var(--line)}
+.tile:hover .arrow{background:var(--navy);border-color:var(--navy);transform:none}
+.tile h3{font-size:.98rem;margin-top:4px}.tile p{font-size:.84rem}
+.tag{border-radius:4px;font-size:.68rem;padding:2px 7px;font-weight:500}
+.note{border-radius:6px;border-style:solid;font-size:.82rem;background:var(--card)}
+/* sections two per row; the 3-tool section spans the full width */
+.home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:22px;align-content:start}
+.home>.ovhead,.home>.kpis,.home>.journey,.home>.note,.home>.sec[aria-labelledby="s-join"]{grid-column:1/-1}
+.home .tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+@media (max-width:1000px){.home{grid-template-columns:minmax(0,1fr)}}
+/* dark mode: navy accents would vanish on the dark background */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .steps .dot{border-color:var(--join);color:var(--join)}
+  :root:not([data-theme="light"]) .steps button:hover .dot{background:var(--join);color:#0e1621}
+  :root:not([data-theme="light"]) .kpi:first-child{border-top-color:var(--join)}
+  :root:not([data-theme="light"]) .who .av{background:var(--join-bg);color:var(--join)}
+  :root:not([data-theme="light"]) .tile:hover .arrow{background:var(--join);border-color:var(--join);color:#0e1621}}
+:root[data-theme="dark"] .steps .dot{border-color:var(--join);color:var(--join)}
+:root[data-theme="dark"] .steps button:hover .dot{background:var(--join);color:#0e1621}
+:root[data-theme="dark"] .kpi:first-child{border-top-color:var(--join)}
+:root[data-theme="dark"] .who .av{background:var(--join-bg);color:var(--join)}
+:root[data-theme="dark"] .tile:hover .arrow{background:var(--join);border-color:var(--join);color:#0e1621}
+/* employee master + misc */
+.emp{padding:24px 28px 40px}
+.emphead h1{font:600 1.5rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif}
+.estat,.etw,.colpick{border-radius:6px}.ebtn,.efilters input,.efilters select{border-radius:5px}
+.estat b{font:600 1.5rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif}
+/* sign-in screen */
+#gate{background:linear-gradient(var(--navy) 0 38%,#f2f4f7 38% 100%)}
+#gate .gcard{border-radius:8px;box-shadow:0 10px 30px rgba(16,24,40,.18)}
+#gate .gcard::before{height:3px;background:var(--accent)}
+#gate h1{font:600 1.3rem/1.3 "IBM Plex Sans","Segoe UI",sans-serif}
+#gate .gbtn{border-radius:5px;background:var(--navy)}
+@media (max-width:860px){.topbar{height:auto;padding:8px 16px;flex-wrap:wrap}.tb-date{display:none}.home,.emp{padding:18px 16px 32px}}
 </style></head>
 <body>
 <aside class="side">
@@ -222,10 +318,14 @@ button{font:inherit}
     <div class="grp">Celebrations</div>
     <button data-view="bday"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 5 0M12 12V8M12 5.5c.8-.9.8-1.8 0-2.5-.8.7-.8 1.6 0 2.5z"/></svg>Birthday Cards</button>
   </nav>
-  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span><span id="signedAs"></span>Everything you type stays on this computer.<span style="display:block;margin-top:6px;opacity:.75">Version 5 Oct 2026, 10:50 AM</span><a id="logout" href="#" hidden style="display:block;margin-top:6px;color:#EFCC25;font-weight:600;text-decoration:none">Log out →</a></span></div>
+  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Confidential · for HR use only<span style="display:block;margin-top:4px;opacity:.75">Version 5 Oct 2026, 11:09 AM</span></span></div>
 </aside>
 
 <main class="content">
+  <header class="topbar">
+    <div class="tb-l"><span class="crumb">HR Tool</span><span class="crumb-sep" aria-hidden="true">/</span><h2 id="tbTitle">Overview</h2></div>
+    <div class="tb-r"><span class="tb-date" id="tbDate"></span><span class="who" id="tbWho" hidden><span class="av" id="tbAv" aria-hidden="true"></span><span id="signedAs"></span></span><a id="logout" href="#" class="tb-out" hidden>Log out</a></div>
+  </header>
   <div class="empbar" id="empbar" hidden>
     <label for="eq">Fill from employee</label>
     <div class="esearch">
@@ -238,16 +338,19 @@ button{font:inherit}
   </div>
   <div class="stage">
   <section class="home" id="v-home">
-    <div class="hero">
-      <svg class="arc" viewBox="0 0 420 220" aria-hidden="true"><path d="M20 210 A190 150 0 0 1 400 210" fill="none" stroke="#EFCC25" stroke-width="16" stroke-linecap="round" opacity=".85"/><path d="M60 210 A150 115 0 0 1 360 210" fill="none" stroke="#ffffff" stroke-width="2" opacity=".14"/><path d="M210 18 l22 40 h-44 z" fill="#D82A30"/></svg>
-      <div class="hi" id="greet">Welcome</div>
-      <h1>What would you like to prepare today?</h1>
-      <p>CVs, offer, joining and exit letters in the Alcove format — fill in the details, check the live preview, then print or download.</p>
-      <div class="meta"><span class="pill" id="today"></span><span class="pill"><b>7</b> tools</span><span class="pill">Your data stays in this browser</span></div>
+    <div class="ovhead">
+      <div><h1>Overview</h1><p>HR documents, employee records and communications for Alcove Realty.</p></div>
+      <div class="ovdate"><span id="greet">Welcome</span><b id="today"></b></div>
+    </div>
+    <div class="kpis" id="kpis" aria-live="polite">
+      <button class="kpi" data-view="emp"><span class="kl">Active employees</span><b id="kAct">—</b><span class="ks" id="kActS">Employee Master</span></button>
+      <button class="kpi" data-view="bday"><span class="kl">Birthdays today</span><b id="kBd">—</b><span class="ks" id="kBdS">Birthday Cards</span></button>
+      <button class="kpi" data-view="joiner"><span class="kl">Joined this month</span><b id="kJn">—</b><span class="ks">New Joiner Toolkit</span></button>
+      <button class="kpi" data-view="emp"><span class="kl">Inactive / exited</span><b id="kIn">—</b><span class="ks">Exit letters</span></button>
     </div>
 
     <section class="journey" aria-labelledby="j-h">
-      <h2 id="j-h">Employee journey</h2>
+      <h2 id="j-h">Employee lifecycle</h2>
       <ol class="steps">
         <li><button data-view="cv"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="st">Sourcing</span><span class="nm">CV Inbox</span></button></li>
         <li><button data-view="loi"><span class="dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span class="st">Offer</span><span class="nm">Letter of Intent</span></button></li>
@@ -342,7 +445,20 @@ button{font:inherit}
 <script>
 (function(){const h=new Date().getHours();
   document.getElementById("greet").textContent=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
-  document.getElementById("today").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});})();
+  document.getElementById("today").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("tbDate").textContent=new Date().toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+  // page title in the top bar
+  document.addEventListener("hrview",e=>{const v=e.detail,f=document.getElementById("v-"+v);
+    document.getElementById("tbTitle").textContent=v==="home"?"Overview":(f&&f.title)||"";});
+  // Overview figures from the HR Master Data list
+  function kpis(){const d=window.__emps,L=(d&&d.list)||[],$=id=>document.getElementById(id);
+    if(!L.length){["kAct","kBd","kJn","kIn"].forEach(id=>$(id).textContent="—");$("kActS").textContent="Loads after sign-in";return;}
+    const t=new Date(),md=("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2),ym=t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2);
+    const act=L.filter(p=>p.a!==false),bd=act.filter(p=>p.d===md);
+    $("kAct").textContent=act.length.toLocaleString("en-IN");$("kActS").textContent="Employee Master";
+    $("kBd").textContent=bd.length;$("kBdS").textContent=bd.length?bd.slice(0,2).map(p=>String(p.n).split(" ")[0]).join(", ")+(bd.length>2?" +"+(bd.length-2):""):"Birthday Cards";
+    $("kJn").textContent=L.filter(p=>p.doj&&p.doj.slice(0,7)===ym).length;$("kIn").textContent=(L.length-act.length).toLocaleString("en-IN");}
+  document.addEventListener("hremps",kpis);kpis();})();
 </script>
   <section class="emp" id="v-emp" title="Employee Master" hidden aria-labelledby="emp-h">
     <div class="emphead">
@@ -441,7 +557,8 @@ button{font:inherit}
   function stored(){try{const s=JSON.parse(localStorage.getItem(K)||"null");return s&&s.exp>Date.now()?s:null;}catch(e){return null;}}
   function keep(s){try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}}
   function drop(){try{localStorage.removeItem(K);sessionStorage.removeItem("alcove-hrtool-emps");}catch(e){}}
-  function unlock(s){root.classList.remove("locked");$("signedAs").textContent="Signed in as "+s.email+". ";
+  function showWho(email){$("signedAs").textContent=email;$("tbAv").textContent=String(email||"?").split("@")[0].split(/[._-]/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"?";$("tbWho").hidden=!email;}
+  function unlock(s){root.classList.remove("locked");showWho(s.email);
     if(window.__startApp){window.__startApp();window.__startApp=null;}
     syncEmployees(s);}
   // employee list from the HR Master Data sheet. The full list (for filling the tools) is kept only for this
@@ -498,7 +615,7 @@ button{font:inherit}
   if(web){$("logout").hidden=false;
     $("logout").onclick=e=>{e.preventDefault();drop();if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();location.reload();};
     setInterval(()=>{if(!root.classList.contains("locked")&&!stored())location.reload();},60e3);}// lock again after 12 hours
-  if(!root.classList.contains("locked")){const s=stored();if(s)$("signedAs").textContent="Signed in as "+s.email+". ";return;}// opened from a file: no gate
+  if(!root.classList.contains("locked")){const s=stored();if(s)showWho(s.email);return;}// opened from a file: no gate
   const s=stored();
   if(s&&!OTP_API){unlock(s);return;}
   if(s&&s.session){step("none");say("Checking your sign-in…");// HR-approved sign-ins are re-checked with the login service
