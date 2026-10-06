@@ -53,12 +53,37 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
 .kp>img.bg{position:absolute;inset:0;width:100%;height:100%}
 .kp .v{position:absolute;white-space:nowrap;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;color:#0b2a7a;line-height:1;transform-origin:left bottom}
 .kp img.photo{position:absolute;object-fit:cover}
+/* ---------- documents to attach ---------- */
+.docs{list-style:none;margin:0;padding:0}
+.docs li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 0;border-top:1px solid var(--line)}
+.docs li:first-child{border-top:0}
+.docs .dn{font-weight:600;font-size:13px}.docs .dd{font-size:11.5px;color:var(--muted)}
+.docs .tag{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--err);margin-left:6px}
+.docs .st{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;align-self:start}.docs .st.ok{color:var(--ok)}
+.docs .ctl{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.docs .ctl input[type=file]{width:auto;max-width:100%;padding:4px 6px;font-size:12px}
+.docs .ctl label{display:flex;gap:5px;align-items:center;font-weight:500;font-size:12px;margin:0}.docs .ctl label input{width:auto}
+.docs .files{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.docs .chip{display:inline-flex;gap:6px;align-items:center;background:var(--chip);border-radius:4px;padding:2px 4px 2px 8px;font-size:12px;max-width:100%}
+.docs .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:26ch}
+.docs .chip button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1;padding:0 4px}.docs .chip button:hover{color:var(--err)}
+/* checklist + annexure pages */
+.kp.cl{padding:18mm 16mm;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;color:#111;font-size:10.5pt}
+.kp.cl h2{font-size:15pt;margin:0 0 1mm;text-align:center}.kp.cl .sub{text-align:center;font-size:9.5pt;color:#444;margin-bottom:7mm}
+.kp.cl .who{display:grid;grid-template-columns:1fr 1fr;gap:3mm 8mm;margin-bottom:6mm}.kp.cl .who div{border-bottom:1px solid #999;padding-bottom:1mm;min-height:6mm}
+.kp.cl .who b{font-weight:normal;color:#555;font-size:9pt;margin-right:2mm}.kp.cl .who span{color:#0b2a7a}
+.kp.cl table{width:100%;border-collapse:collapse;font-size:10pt}.kp.cl th,.kp.cl td{border:1px solid #777;padding:2.4mm 2mm;text-align:left;vertical-align:top}
+.kp.cl th{background:#eceff3;font-size:9pt}.kp.cl td small{display:block;color:#555;font-size:8.5pt;margin-top:.6mm}.kp.cl td.s{color:#0b2a7a;white-space:nowrap}
+.kp.cl .sig{position:absolute;left:16mm;right:16mm;bottom:22mm;display:flex;justify-content:space-between;gap:10mm;font-size:9.5pt}
+.kp.cl .sig div{flex:1;border-top:1px solid #333;padding-top:1.5mm;text-align:center}
+.kp .ah{position:absolute;left:10mm;right:10mm;top:6mm;font:9pt Arial,Helvetica,sans-serif;color:#333;display:flex;justify-content:space-between;gap:6mm;border-bottom:1px solid #bbb;padding-bottom:1.5mm}
+.kp img.doc{position:absolute;left:10mm;top:15mm;width:190mm;height:274mm;object-fit:contain}
 #printArea{display:none}
 @media print{@page{size:A4;margin:0}body{background:#fff}body>*:not(#printArea){display:none!important}#printArea{display:block!important}
   #printArea .kp{break-after:page;page-break-after:always}#printArea .kp:last-child{break-after:auto;page-break-after:auto}}
 </style></head><body>
 <header><div class="kicker">Alcove HR · Onboarding</div><h1>Joining Kit</h1>
-<p>Fill the new joiner's details once — the Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 are filled in for you and print as one PDF. Use <b>Fill from employee</b> above to start from the HR Master Data.</p></header>
+<p>Fill the new joiner's details once — the Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 are filled in for you and print as one PDF, followed by a documents checklist and the joiner's attached documents. Use <b>Fill from employee</b> above to start from the HR Master Data.</p></header>
 <main>
 <div id="form">
   <div class="card2">
@@ -127,6 +152,10 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
   <details class="card"><summary>Education (up to 4)</summary><div><table class="rows" id="eduT"></table></div></details>
   <details class="card"><summary>Last three employers</summary><div><table class="rows" id="jobT"></table></div></details>
   <details class="card"><summary>Professional references</summary><div><table class="rows" id="refT"></table></div></details>
+  <details class="card" open><summary><span>Documents to attach <span id="docCount" style="text-transform:none;letter-spacing:0"></span></span></summary><div>
+    <ul class="docs" id="docList"></ul>
+    <div class="hint">Photos or PDFs — each page is added to the kit after the forms, with a checklist page in front. Files stay only in this tab and are gone after a refresh.</div>
+  </div></details>
 </div>
 <section class="prev" aria-label="Preview">
   <div class="prevhead"><span>Preview</span><select id="pvSel" aria-label="Page to preview"></select></div>
@@ -205,16 +234,83 @@ function pageHtml(i,blank){let h='<div class="kp"><img class="bg" src="'+PAGES[i
     if(i===PHOTO.p&&photo)h+='<img class="photo" src="'+photo+'" alt="" style="left:'+(PHOTO.x*MM)+"mm;top:"+(PHOTO.y*MM)+"mm;width:"+(PHOTO.w*MM)+"mm;height:"+(PHOTO.h*MM)+'mm">';}
   return h+"</div>";}
 const chosen=()=>DOCS.filter((d,i)=>$("pg"+i).checked).flatMap(d=>d[1]);
-function preview(){const i=Number($("pvSel").value||0);$("wrap").innerHTML=pageHtml(i,false);fit();}
+function preview(){const s=$("pvSel").value||"0",ax=s[0]==="a"?annexPages()[Number(s.slice(1))]:null;
+  $("wrap").innerHTML=s==="c"?checklistHtml(false):ax?annexHtml(ax):pageHtml(s[0]==="a"?0:Number(s),false);fit();}
 function fit(){const w=$("wrap"),s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";}
 if(window.ResizeObserver)new ResizeObserver(fit).observe($("wrap"));else window.addEventListener("resize",fit);
 
 /* ---------- page choice, preview list ---------- */
 const sel=(()=>{try{return JSON.parse(localStorage.getItem(KSEL)||"null");}catch(e){return null;}})()||[true,true,true,true];
-$("pageSel").innerHTML=DOCS.map((d,i)=>'<label><input type="checkbox" id="pg'+i+'"'+(sel[i]!==false?" checked":"")+"> "+d[0]+' <span class="hint" style="margin:0">('+d[1].length+" page"+(d[1].length>1?"s":"")+")</span></label>").join("");
-$("pageSel").addEventListener("change",()=>{try{localStorage.setItem(KSEL,JSON.stringify(DOCS.map((d,i)=>$("pg"+i).checked)));}catch(e){}});
-$("pvSel").innerHTML=DOCS.flatMap(d=>d[1].map((p,k)=>'<option value="'+p+'">'+d[0]+(d[1].length>1?" — page "+(k+1):"")+"</option>")).join("");
+$("pageSel").innerHTML=DOCS.map((d,i)=>'<label><input type="checkbox" id="pg'+i+'"'+(sel[i]!==false?" checked":"")+"> "+d[0]+' <span class="hint" style="margin:0">('+d[1].length+" page"+(d[1].length>1?"s":"")+")</span></label>").join("")+
+  '<label><input type="checkbox" id="pgAtt"'+(sel[4]!==false?" checked":"")+"> Documents checklist &amp; attachments</label>";
+$("pageSel").addEventListener("change",()=>{try{localStorage.setItem(KSEL,JSON.stringify(DOCS.map((d,i)=>$("pg"+i).checked).concat($("pgAtt").checked)));}catch(e){}});
+const FORM_OPTS=DOCS.flatMap(d=>d[1].map((p,k)=>'<option value="'+p+'">'+d[0]+(d[1].length>1?" — page "+(k+1):"")+"</option>")).join("");
+function pvOptions(){const cur=$("pvSel").value;
+  $("pvSel").innerHTML=FORM_OPTS+'<option value="c">Documents checklist</option>'+annexPages().map((x,i)=>'<option value="a'+i+'">'+esc(x.label)+"</option>").join("");
+  if([...$("pvSel").options].some(o=>o.value===cur))$("pvSel").value=cur;}
 $("pvSel").addEventListener("change",preview);
+
+/* ---------- documents to attach (kept in memory for this tab only) ---------- */
+const REQ=[["cv","Updated resume",""],["aadhaar","Aadhaar card",""],["pan","PAN card",""],
+  ["edu","Educational certificates","10th and 12th admit cards and mark sheets; graduation mark sheet"],
+  ["prof","Professional documents","Appointment letter, resignation email and relieving letter from the previous organisation",1],
+  ["bank","Bank details","First page of passbook / cancelled cheque"],["pay","Payslips","Last three months"]];
+const ATT={};const resetAtt=()=>REQ.forEach(r=>{ATT[r[0]]={files:[],na:false};});resetAtt();
+const pagesOf=k=>ATT[k].files.reduce((s,f)=>s+f.pages.length,0);
+const plural=(n,w)=>n+" "+w+(n===1?"":"s");
+$("docList").innerHTML=REQ.map(([k,n,d,m])=>'<li><div><div class="dn">'+esc(n)+(m?'<span class="tag">Mandatory</span>':"")+"</div>"+(d?'<div class="dd">'+esc(d)+"</div>":"")+
+  '</div><div class="st" id="st-'+k+'"></div><div class="ctl"><input type="file" id="f-'+k+'" data-k="'+k+'" multiple accept="image/*,application/pdf,.pdf" aria-label="Attach '+esc(n)+'">'+
+  '<label><input type="checkbox" id="na-'+k+'" data-k="'+k+'"> Not applicable</label></div><div class="files" id="fl-'+k+'"></div></li>').join("");
+function docUI(k){const a=ATT[k],busy=a.files.some(f=>f.busy),st=$("st-"+k);
+  st.textContent=busy?"Reading…":a.files.length?plural(a.files.length,"file")+" · "+plural(pagesOf(k),"page"):a.na?"Not applicable":"Pending";
+  st.className="st"+(a.files.length&&!busy?" ok":"");
+  $("fl-"+k).innerHTML=a.files.map((f,i)=>'<span class="chip"><span title="'+esc(f.name)+'">'+esc(f.name)+'</span><button type="button" data-k="'+k+'" data-i="'+i+'" aria-label="Remove '+esc(f.name)+'">×</button></span>').join("");
+  $("docCount").textContent="· "+REQ.filter(r=>ATT[r[0]].files.length).length+" of "+REQ.length+" attached";}
+function refreshPv(){pvOptions();preview();}
+REQ.forEach(r=>docUI(r[0]));
+$("docList").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;const k=b.dataset.k;ATT[k].files.splice(Number(b.dataset.i),1);docUI(k);refreshPv();});
+$("docList").addEventListener("change",e=>{const t=e.target,k=t.dataset.k;if(!k)return;
+  if(t.type==="checkbox"){ATT[k].na=t.checked;docUI(k);refreshPv();return;}
+  const list=[...(t.files||[])];t.value="";addFiles(k,list);});
+async function addFiles(k,list){for(const file of list){const f={name:file.name,pages:[],busy:true},box=ATT[k];box.files.push(f);docUI(k);
+    try{if(file.type==="application/pdf"||/\.pdf$/i.test(file.name))f.pages=await pdfPages(file);
+      else if(/^image\//.test(file.type))f.pages=[await imgPage(file)];
+      else throw new Error("only photos or PDF files can be attached.");}
+    catch(e){const i=box.files.indexOf(f);if(i>=0)box.files.splice(i,1);say(file.name+": "+(e.message||"couldn't read this file."),"err");}
+    f.busy=false;if(ATT[k]!==box)continue;docUI(k);pvOptions();
+    const first=annexPages().findIndex(x=>x.k===k);if(first>=0&&f.pages.length)$("pvSel").value="a"+first;preview();}}
+function imgPage(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{const s=Math.min(1,1800/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*s);c.height=Math.round(im.naturalHeight*s);
+    const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.85));};
+  im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("this photo couldn't be opened (iPhone HEIC photos: send them as JPG)."));};im.src=u;});}
+// PDF reader, loaded the first time a PDF is attached
+const PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";let pdfReady=null;
+const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error("couldn't load the PDF reader — check the internet connection."));document.head.appendChild(s);});
+const pdfLib=()=>pdfReady||(pdfReady=loadScript(PDFJS+"pdf.min.js").then(()=>loadScript(PDFJS+"pdf.worker.min.js"))
+  .then(()=>{pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.js";return pdfjsLib;}).catch(e=>{pdfReady=null;throw e;}));
+async function pdfPages(file){const lib=await pdfLib(),task=lib.getDocument({data:new Uint8Array(await file.arrayBuffer())});let cancelled=false;
+  // payslips are often password-protected
+  task.onPassword=(give,why)=>{const p=prompt((why===2?"Wrong password. ":"")+file.name+" is password-protected. Enter its password:");if(p==null){cancelled=true;task.destroy();}else give(p);};
+  let doc;try{doc=await task.promise;}catch(e){throw new Error(cancelled?"password needed to attach this PDF.":"this PDF couldn't be opened.");}
+  if(doc.numPages>40){doc.destroy();throw new Error("more than 40 pages — attach only the pages needed.");}
+  const out=[];for(let n=1;n<=doc.numPages;n++){const pg=await doc.getPage(n),v1=pg.getViewport({scale:1}),vp=pg.getViewport({scale:Math.min(2.5,1700/Math.max(v1.width,v1.height))});
+    const c=document.createElement("canvas");c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);
+    await pg.render({canvasContext:g,viewport:vp}).promise;out.push(c.toDataURL("image/jpeg",.85));}
+  doc.destroy();return out;}
+// Annexure pages, numbered per document in checklist order
+function annexPages(){const out=[];let a=0;REQ.forEach(([k,n])=>{const all=ATT[k].files.filter(f=>!f.busy).flatMap(f=>f.pages);if(!all.length)return;a++;
+  all.forEach((src,i)=>out.push({k,a,src,label:"Annexure "+a+" · "+n+(all.length>1?" ("+(i+1)+" of "+all.length+")":"")}));});return out;}
+const whoLine=()=>[v("NAME"),v("EMPID")].filter(Boolean).join(" · ");
+const annexHtml=x=>'<div class="kp"><div class="ah"><span>'+esc(x.label)+"</span><span>"+esc(whoLine())+'</span></div><img class="doc" src="'+x.src+'" alt=""></div>';
+function checklistHtml(blank){const ax=annexPages(),f=(l,t)=>"<div><b>"+l+"</b><span>"+(blank?"":esc(t))+"</span></div>";
+  return'<div class="kp cl"><h2>Joining Documents Checklist</h2><div class="sub">Self-attested copies to be submitted on or before the date of joining</div>'+
+    '<div class="who">'+f("Name",v("NAME"))+f("Employee ID",v("EMPID"))+f("Date of joining",dmy(v("DOJ")))+f("Mobile no.",v("MOBILE"))+"</div>"+
+    '<table><tr><th style="width:8mm">#</th><th>Document</th><th style="width:30mm">Status</th><th style="width:30mm">Attached as</th></tr>'+
+    REQ.map(([k,n,d,m],i)=>{const p=pagesOf(k),x=ax.find(y=>y.k===k);
+      return"<tr><td>"+(i+1)+"</td><td>"+esc(n)+(m?" *":"")+(d?"<small>"+esc(d)+"</small>":"")+'</td><td class="s">'+(blank?"":p?"Received":ATT[k].na?"Not applicable":"Pending")+
+        '</td><td class="s">'+(blank||!x?"":"Annexure "+x.a+"<small>"+plural(p,"page")+"</small>")+"</td></tr>";}).join("")+
+    '</table><div style="font-size:8.5pt;color:#555;margin-top:2mm">* Mandatory</div>'+
+    '<div class="sig"><div>Employee signature</div><div>Verified by (HR)</div><div>Date</div></div></div>';}
 
 /* ---------- draft for this tab only (sensitive details) ---------- */
 const ids=()=>[...document.querySelectorAll("#form input:not([type=file]):not([type=checkbox]),#form select,#form textarea")].map(e=>e.id);
@@ -231,13 +327,20 @@ document.getElementById("form").addEventListener("focusin",e=>{const id=e.target
   if(p!==undefined&&String(p)!==$("pvSel").value){$("pvSel").value=String(p);preview();}});
 
 /* ---------- print ---------- */
-function printPages(blank){const ps=chosen();if(!ps.length){say("Tick at least one form to print.","err");return;}
+function printPages(blank){const ps=chosen(),att=$("pgAtt").checked;if(!ps.length&&!att){say("Tick at least one form to print.","err");return;}
   if(!blank&&!v("NAME")){say("Enter the joiner's name first (or use Print blank kit).","err");$("NAME").focus();return;}
-  $("printArea").innerHTML=ps.map(i=>pageHtml(i,blank)).join("");say("Opening print… choose “Save as PDF” to get one PDF of "+ps.length+" page"+(ps.length>1?"s":"")+".","ok");setTimeout(()=>window.print(),80);}
+  if(!blank&&att&&REQ.some(r=>ATT[r[0]].files.some(f=>f.busy))){say("Still reading the attached files — try again in a moment.","err");return;}
+  const ax=att&&!blank?annexPages():[],n=ps.length+(att?1:0)+ax.length;
+  $("printArea").innerHTML=ps.map(i=>pageHtml(i,blank)).join("")+(att?checklistHtml(blank)+ax.map(annexHtml).join(""):"");
+  const pend=att&&!blank?REQ.filter(r=>!ATT[r[0]].files.length&&!ATT[r[0]].na).map(r=>r[1]):[];
+  say("Opening print… choose “Save as PDF” to get one PDF of "+plural(n,"page")+"."+(pend.length?" Pending documents: "+pend.join(", ")+".":""),"ok");
+  const imgs=[...$("printArea").querySelectorAll("img")];
+  Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r;}))).then(()=>setTimeout(()=>window.print(),80));}
 $("prn").onclick=()=>printPages(false);
 $("blank").onclick=()=>printPages(true);
 window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
 $("clr").onclick=()=>{ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";
-  try{sessionStorage.removeItem(K);}catch(e){}preview();say("Joiner cleared.");};
-preview();
+  resetAtt();REQ.forEach(r=>{$("na-"+r[0]).checked=false;docUI(r[0]);});
+  try{sessionStorage.removeItem(K);}catch(e){}refreshPv();say("Joiner cleared.");};
+refreshPv();
 </script></body></html>
