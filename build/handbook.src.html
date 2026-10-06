@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New Joiner Handbook — Alcove Realty</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f2f4f7;--panel:#fff;--ink:#1a2433;--muted:#5f6b7a;--line:#dfe3e9;--navy:#14294a;--blue:#0b6fc0;--teal:#1d4f91;--chip:#eef1f5;--past:#9aa4b1;--sun:#c0392b;--next:#fff6d6;--nextline:#e8b100}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--panel:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--navy:#0b1830;--blue:#5aa7ea;--teal:#8fb3e6;--chip:#1d2a3c;--past:#66727f;--sun:#f08a7e;--next:#3a3110;--nextline:#c99a00;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1621;--panel:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--navy:#0b1830;--blue:#5aa7ea;--teal:#8fb3e6;--chip:#1d2a3c;--past:#66727f;--sun:#f08a7e;--next:#3a3110;--nextline:#c99a00;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans","Segoe UI",system-ui,sans-serif}
+.top{background:var(--navy);color:#fff}
+.top .in{max-width:1080px;margin:0 auto;padding:18px 24px 0}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{height:40px;background:#fff;border-radius:6px;padding:4px 8px}
+.brand .k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600}
+h1{font-size:clamp(1.3rem,3.4vw,1.75rem);line-height:1.2;margin:2px 0 0;font-weight:700}
+.tabs{display:flex;gap:4px;margin-top:16px;overflow-x:auto}
+.tabs a{color:#c9d6ea;text-decoration:none;font-weight:600;font-size:14px;padding:10px 14px;border-radius:6px 6px 0 0;white-space:nowrap}
+.tabs a:hover{color:#fff}
+.tabs a[aria-current="page"]{background:var(--bg);color:var(--ink)}
+main{max-width:1080px;margin:0 auto;padding:22px 24px 48px}
+@media (max-width:600px){.top .in{padding:14px 16px 0}main{padding:16px 16px 40px}}
+h2{font-size:1.2rem;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px}
+/* ---------- holidays ---------- */
+.next{display:flex;gap:16px;align-items:center;padding:14px 18px;margin-bottom:16px;border-left:5px solid var(--nextline)}
+.next .d{min-width:62px;text-align:center;border-radius:8px;background:var(--chip);padding:6px 8px;line-height:1.1}
+.next .d b{display:block;font-size:1.5rem}.next .d span{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.next .t{font-size:13px;color:var(--muted)}.next .n{font-size:1.1rem;font-weight:700}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;margin-bottom:12px;background:var(--panel)}
+.seg button{font:600 13.5px "IBM Plex Sans","Segoe UI",sans-serif;border:0;background:none;color:var(--muted);padding:8px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+table.hol{width:100%;border-collapse:collapse;font-size:14px}
+table.hol th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--line)}
+table.hol td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+table.hol tr:last-child td{border-bottom:0}
+table.hol td.dt{white-space:nowrap;font-variant-numeric:tabular-nums}
+table.hol tr.past td{color:var(--past)}
+table.hol tr.nx td{background:var(--next)}
+table.hol .grp{font-size:12px;color:var(--muted);display:block}
+.tag{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+.tag.sun{color:var(--sun);border:1px solid currentColor}.tag.nx{background:var(--nextline);color:#1a1a1a}.tag.na{color:var(--muted);border:1px solid var(--line)}
+.sub{margin:22px 0 8px;font-size:1rem}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+details.orig{margin-top:16px}details.orig summary{cursor:pointer;color:var(--teal);font-weight:600;font-size:14px}
+details.orig img{display:block;max-width:100%;width:620px;margin-top:10px;border-radius:6px;border:1px solid var(--line)}
+/* ---------- org chart ---------- */
+.org{padding:24px 16px 28px;overflow-x:auto}
+.node{background:#0b6fc0;color:#fff;border-radius:6px;padding:10px 12px;text-align:center;font-size:13.5px;line-height:1.35;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.node b{display:block;font-size:14.5px}
+.node.ea{background:var(--panel);color:var(--ink);border:1.5px solid #0b6fc0;box-shadow:none;font-size:12.5px}
+.node.ea b{font-size:13.5px}
+.lvl{display:flex;justify-content:center}
+.lvl .node{width:260px}
+.vline{width:2px;height:22px;background:#6b9ed8;margin:0 auto}
+.dirs{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:14px;position:relative;padding-top:22px;min-width:820px}
+.dirs::before{content:"";position:absolute;top:0;left:10%;right:10%;height:2px;background:#6b9ed8}
+.dir{position:relative;display:flex;flex-direction:column;align-items:stretch}
+.dir::before{content:"";position:absolute;top:-22px;left:50%;width:2px;height:22px;background:#6b9ed8}
+.dir .vline{height:16px}
+@media (max-width:760px){
+  .org{overflow:visible}.dirs{grid-template-columns:1fr;min-width:0;padding-top:0;padding-left:22px;gap:12px}
+  .dirs::before{left:8px;right:auto;top:0;bottom:24px;width:2px;height:auto}
+  .dir::before{top:22px;left:-14px;width:14px;height:2px}
+  .dir .ea{margin-left:24px}.dir .vline{margin-left:12px}
+  .lvl .node{width:100%}}
+/* ---------- HR manual ---------- */
+.mbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;position:sticky;top:0;z-index:2;background:var(--bg);padding:8px 0}
+.mbar select{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;max-width:100%}
+.mbar .hint{font-size:13px;color:var(--muted)}
+.pages{display:grid;gap:16px;justify-items:center}
+.pages img{display:block;width:100%;max-width:820px;height:auto;aspect-ratio:900/1273;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.18);background:#fff;scroll-margin-top:64px}
+footer{text-align:center;font-size:12.5px;color:var(--muted);padding:0 16px 28px}
+@media print{.top,.mbar,footer,.seg,details.orig{display:none}body{background:#fff}.pages img{box-shadow:none;break-inside:avoid}}
+</style></head><body>
+<div class="top"><div class="in">
+  <div class="brand"><img src="data:image/png;base64,__LOGO__" alt="Alcove Realty"><div><div class="k">New joiner handbook</div><h1>Welcome to Alcove Realty</h1></div></div>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#holidays" data-t="holidays">Holidays 2026</a>
+    <a href="#management" data-t="management">Management</a>
+    <a href="#manual" data-t="manual">HR Manual</a>
+  </nav>
+</div></div>
+<main>
+<section id="t-holidays" aria-labelledby="h-hol">
+  <h2 id="h-hol">Holiday list 2026</h2>
+  <p class="lead">Regular and special holidays for the calendar year 2026, from the HR general circular.</p>
+  <div class="card next" id="next" hidden></div>
+  <div class="seg" role="group" aria-label="Show holidays for"><button type="button" data-w="o" aria-pressed="true">Offices</button><button type="button" data-w="s" aria-pressed="false">Project sites</button></div>
+  <div class="card"><table class="hol"><thead><tr><th>Festival / occasion</th><th>Day</th><th>Date</th></tr></thead><tbody id="reg"></tbody></table></div>
+  <h3 class="sub">Special holidays 2026</h3>
+  <div class="card"><table class="hol"><thead><tr><th>Festival / occasion</th><th>Day</th><th>Date</th></tr></thead><tbody id="spl"></tbody></table></div>
+  <p class="note">Festivals / holidays under “Special holidays” have been considered for this year (2026) only. Holidays falling on a Sunday are marked.</p>
+  <details class="orig"><summary>View the original circular</summary><img src="__HOLIMG__" alt="General circular: list of regular and special holidays for the calendar year 2026" loading="lazy"></details>
+</section>
+
+<section id="t-management" aria-labelledby="h-org" hidden>
+  <h2 id="h-org">Management organisation chart</h2>
+  <p class="lead">Who leads Alcove Realty, and their executive assistants.</p>
+  <div class="card org">
+    <div class="lvl"><div class="node"><b>Amar Nath Shroff</b>Chairman</div></div>
+    <div class="vline"></div>
+    <div class="lvl"><div class="node"><b>Ajay Kumar Shroff</b>Managing Director</div></div>
+    <div class="vline"></div>
+    <div class="dirs">
+      <div class="dir"><div class="node"><b>Archana Shroff</b>Director – Finance &amp; Accounts</div><div class="vline"></div><div class="node ea"><b>Amrita Mohanty</b>EA to Director</div></div>
+      <div class="dir"><div class="node"><b>Yashaswi Shroff</b>Director – Marketing</div><div class="vline"></div><div class="node ea"><b>Pamela Nath Dutta</b>EA to ED</div></div>
+      <div class="dir"><div class="node"><b>Aakriti Shroff</b>Director – Branding &amp; Communication</div><div class="vline"></div><div class="node ea"><b>Divya Iyer</b>EA to Director</div></div>
+      <div class="dir"><div class="node"><b>Shraddha Baid</b>Director – Sales</div></div>
+      <div class="dir"><div class="node"><b>Saurabh Baid</b>Partner</div><div class="vline"></div><div class="node ea"><b>Heena Khan</b>EA to Partner</div></div>
+    </div>
+  </div>
+  <p class="note">More about each of them is in the HR Manual, pages 4–7 (“Our Management”).</p>
+</section>
+
+<section id="t-manual" aria-labelledby="h-man" hidden>
+  <h2 id="h-man">HR Manual</h2>
+  <p class="lead">The employee handbook: leave and attendance, timings, benefits, dress code, travel and expenses.</p>
+  <div class="mbar"><label for="jump" class="hint">Jump to</label><select id="jump"></select><span class="hint" id="pgInfo"></span></div>
+  <div class="pages" id="pages"></div>
+</section>
+</main>
+<footer>Alcove Realty · Human Resources · For any question, write to <a href="mailto:__HRMAIL__">__HRMAIL__</a></footer>
+<script>
+const MANUAL=__MANUAL__;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------- tabs (#holidays, #management, #manual) ---------- */
+const TABS=["holidays","management","manual"];
+function show(t){if(!TABS.includes(t))t="holidays";TABS.forEach(k=>{$("t-"+k).hidden=k!==t;});
+  document.querySelectorAll(".tabs a").forEach(a=>{if(a.dataset.t===t)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+  if(t==="manual"&&!$("pages").childElementCount)buildManual();}
+window.addEventListener("hashchange",()=>{const t=location.hash.slice(1);if(TABS.includes(t)){show(t);window.scrollTo(0,0);}});
+
+/* ---------- holidays (from the General Circular 2026) — date for offices, date for project sites ("" = not applicable) ---------- */
+const REG=[["Netaji's Birthday","","2026-01-23",""],["Republic Day","","2026-01-26","2026-01-26"],["Doljatra","","2026-03-04","2026-03-04"],
+  ["Bengali New Year's Day","","2026-04-15","2026-04-15"],["May Day","","2026-05-01","2026-05-01"],["Independence Day","","2026-08-15","2026-08-15"],
+  ["Vishwakarma Puja","","","2026-09-17"],["Gandhi Jayanti","","2026-10-02","2026-10-02"],["Mahalaya","","2026-10-10","2026-10-10"],
+  ["Saptami","Durga Puja","2026-10-18","2026-10-18"],["Ashtami","Durga Puja","2026-10-19","2026-10-19"],["Navami","Durga Puja","2026-10-20","2026-10-20"],["Dashami","Durga Puja","2026-10-21","2026-10-21"],
+  ["Lakshmi Puja","","2026-10-25","2026-10-25"],["Diwali","","2026-11-08","2026-11-08"],["Christmas Day","","2026-12-25","2026-12-25"]];
+const SPL=[["Shashthi","Durga Puja","2026-10-17","2026-10-17"],["Bhai Dooj","","2026-11-11","2026-11-11"]];
+const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const dOf=iso=>{const[y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d);};
+const today=(()=>{const t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate());})();
+let where=(()=>{try{return localStorage.getItem("alcove-hb-where")||"o";}catch(e){return"o";}})();
+function holidays(){const col=where==="o"?2:3,all=REG.map(r=>r.concat("r")).concat(SPL.map(r=>r.concat("s"))).filter(r=>r[col]),
+  nx=all.map(r=>[r,dOf(r[col])]).filter(x=>x[1]>=today).sort((a,b)=>a[1]-b[1])[0];
+  const row=r=>{const iso=r[col],other=r[col===2?3:2];
+    if(!iso)return'<tr class="past"><td>'+esc(r[0])+(r[1]?'<span class="grp">'+esc(r[1])+"</span>":"")+'</td><td>—</td><td><span class="tag na">Not applicable</span>'+(other?'<span class="grp">Only for '+(col===2?"project sites":"offices")+"</span>":"")+"</td></tr>";
+    const d=dOf(iso),isNx=nx&&nx[0]===r,past=d<today,sun=d.getDay()===0;
+    return'<tr class="'+(isNx?"nx":past?"past":"")+'"><td>'+esc(r[0])+(r[1]?'<span class="grp">'+esc(r[1])+"</span>":"")+(isNx?'<span class="tag nx">Next</span>':"")+"</td><td>"+DAYS[d.getDay()]+(sun?'<span class="tag sun">Sunday</span>':"")+'</td><td class="dt">'+String(d.getDate()).padStart(2,"0")+" "+MON[d.getMonth()]+" "+d.getFullYear()+"</td></tr>";};
+  $("reg").innerHTML=REG.map(row).join("");$("spl").innerHTML=SPL.map(row).join("");
+  if(nx){const d=nx[1],n=Math.round((d-today)/864e5);$("next").hidden=false;
+    $("next").innerHTML='<div class="d"><b>'+d.getDate()+"</b><span>"+MON[d.getMonth()]+'</span></div><div><div class="t">Next holiday'+(where==="s"?" at project sites":"")+'</div><div class="n">'+esc((nx[0][1]?nx[0][1]+" – ":"")+nx[0][0])+'</div><div class="t">'+DAYS[d.getDay()]+" · "+(n===0?"today":n===1?"tomorrow":"in "+n+" days")+"</div></div>";}
+  else $("next").hidden=true;
+  document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.w===where)));}
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{where=b.dataset.w;try{localStorage.setItem("alcove-hb-where",where);}catch(e){}holidays();}));
+holidays();
+
+/* ---------- HR manual: page images, with the contents as a jump list (printed page n = image n+1) ---------- */
+const TOC=[["Cover",1],["Welcome",2],["Contents",3],["Vision & mission",4],["Our management",5],["Introduction",9],["Leave & attendance",10],["Leave policy key points",11],
+  ["Special leaves, comp off, resignation",12],["Leave benefits",13],["Attendance & bonus",14],["Health insurance, ESI, salary cycle, appraisal",15],["Dress code · Head Office timings",16],
+  ["HO time slots · Site timings",17],["Site marketing timings · week off",18],["Travel policy · air travel",19],["Ground transportation",20],["Travel security",21],
+  ["Accommodation, meals, business expenses",22],["Reimbursements & settlements",23],["General rules on travel & expenses",24]];
+function buildManual(){$("pages").innerHTML=MANUAL.map((src,i)=>'<img id="p'+(i+1)+'" src="'+src+'" alt="HR Manual page '+(i+1)+" of "+MANUAL.length+'" loading="lazy" decoding="async">').join("");
+  $("jump").innerHTML=TOC.map(([t,p])=>'<option value="'+p+'">'+esc(t)+"</option>").join("");$("pgInfo").textContent=MANUAL.length+" pages";}
+$("jump").addEventListener("change",()=>{const el=$("p"+$("jump").value);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});});
+show(location.hash.slice(1));
+</script></body></html>

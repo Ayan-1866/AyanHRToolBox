@@ -67,6 +67,12 @@ $src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace
 [IO.File]::WriteAllText("$code\onboarding.html",$src.Replace("__MODE__","hr").Replace("__TITLE__",("Joining Kit "+[char]0x2014+" Alcove HR")),$u8)
 [IO.File]::WriteAllText("$code\join.html",$src.Replace("__MODE__","joiner").Replace("__TITLE__",("Joining Kit "+[char]0x2014+" Alcove Realty")),$u8)
 
+# New Joiner Handbook (public page, like join.html): holiday list, management chart and the HR Manual pages
+$jpg={param($f)'data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes($f))}
+$manual=(Get-ChildItem "$sp\handbook\manual-*.jpg" | Sort-Object Name | ForEach-Object { '"'+(& $jpg $_.FullName)+'"' }) -join ","
+$src=& $read "$sp\handbook.src.html"
+[IO.File]::WriteAllText("$code\handbook.html",$src.Replace("__LOGO__",$logo).Replace("__HOLIMG__",(& $jpg "$sp\handbook\holidays-2026.jpg")).Replace("__MANUAL__","["+$manual+"]").Replace("__HRMAIL__",$portalUsers[0]),$u8)
+
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}

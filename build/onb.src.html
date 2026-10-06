@@ -83,6 +83,8 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
 /* HR portal vs. the public page sent to new joiners */
 body.joiner .hronly,body:not(.joiner) .jonly{display:none!important}
 .jbrand img{height:44px;display:block;margin-bottom:10px}
+header p.jread{margin-top:10px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:6px;color:var(--ink);font-size:13.5px}
+.jread a{color:var(--teal);font-weight:600}
 .tw{overflow-x:auto}.tw table.rows{min-width:620px}
 .sharep{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .sharep input[readonly]{font-size:12px;color:var(--muted)}
@@ -93,7 +95,8 @@ body.joiner .hronly,body:not(.joiner) .jonly{display:none!important}
 </style></head><body>
 <script>const MODE="__MODE__";if(MODE==="joiner")document.body.classList.add("joiner");</script>
 <header class="jonly"><div class="jbrand"><img src="data:image/png;base64,__LOGO__" alt="Alcove Realty"></div><h1>Welcome to Alcove Realty<span id="jName"></span></h1>
-<p>Please fill in your joining forms and attach your documents below. What you type stays on this phone or computer — nothing is uploaded. When you're done, tap <b>Send to HR</b> at the bottom: it makes one PDF of your joining kit to send to HR on WhatsApp or email.</p></header>
+<p>Please fill in your joining forms and attach your documents below. What you type stays on this phone or computer — nothing is uploaded. When you're done, tap <b>Send to HR</b> at the bottom: it makes one PDF of your joining kit to send to HR on WhatsApp or email.</p>
+<p class="jread">Before you join, please read: <a href="handbook.html#manual" target="_blank" rel="noopener">HR Manual</a> · <a href="handbook.html#holidays" target="_blank" rel="noopener">Holiday list 2026</a> · <a href="handbook.html#management" target="_blank" rel="noopener">Management</a></p></header>
 <header class="hronly"><div class="kicker">Alcove HR · Onboarding</div><h1>Joining Kit</h1>
 <p>Fill the new joiner's details once — the Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 are filled in for you and print as one PDF, followed by a documents checklist and the joiner's attached documents. Use <b>Fill from employee</b> above to start from the HR Master Data.</p></header>
 <main>
@@ -462,7 +465,8 @@ function joinLink(anyone){const o=anyone?{w:$("shWa").value.trim()}:{n:v("NAME")
 function inviteText(link,anyone){const fn=anyone?"":(v("NAME").split(/\s+/)[0]||"");
   return"Dear "+(fn?fn[0].toUpperCase()+fn.slice(1).toLowerCase():"Candidate")+",\n\nWelcome to Alcove Realty! Please fill in your joining kit and attach your documents using this link:\n"+link+
     "\n\nPlease keep these ready:\n"+REQ.map(r=>"• "+r[1]+(r[2]?" – "+r[2]:"")+(r[3]?" (mandatory)":"")).join("\n")+"\n• A passport-size photograph"+
-    "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the page and send us the PDF.\n\nRegards,\nHR Team, Alcove Realty";}
+    "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the page and send us the PDF."+
+    "\n\nPlease also read our new joiner handbook – HR Manual, holiday list 2026 and management:\n"+SITE+"handbook.html\n\nRegards,\nHR Team, Alcove Realty";}
 function shareUI(){if(!$("sharePanel").hidden){$("shLink").value=joinLink();$("shAny").value=joinLink(true);}}
 $("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();};
 $("form").addEventListener("input",shareUI);
