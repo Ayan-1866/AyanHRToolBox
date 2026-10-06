@@ -31,6 +31,10 @@ foreach($mode in @(@("exp","Experience Letter","experience.html"),@("rel","Relie
   [IO.File]::WriteAllText("$code\$($mode[2])",$page,$u8)
 }
 
+# Confirmation Letter
+$src=& $read "$sp\conf.src.html"
+[IO.File]::WriteAllText("$code\confirmation.html",$src.Replace("__DESIG__",(& $sel "DESIG")).Replace("__FOOTS__",$foots).Replace("__LOGO__",$logo),$u8)
+
 # CV Inbox (needs to be served from https://employees.alcoverealty.in for Google sign-in)
 $clientId="806459433972-nu3ab2cje78au731potll9bfu8pdv0pb.apps.googleusercontent.com"
 # Google accounts allowed to open the portal (the sign-in screen on the website)
@@ -66,6 +70,6 @@ $src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}
-$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html')).Replace('__ONB__',(& $b 'onboarding.html'))
+$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html')).Replace('__ONB__',(& $b 'onboarding.html')).Replace('__CONF__',(& $b 'confirmation.html'))
 [IO.File]::WriteAllText("$code\index.html",$out,$u8)
 "built loi.html, experience.html, relieving.html, cv.html, birthday.html and index.html"

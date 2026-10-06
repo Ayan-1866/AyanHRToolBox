@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Confirmation Letter — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef0f3;--panel:#ffffff;--ink:#14213d;--muted:#5b6478;--line:#d7dbe3;--gold:#b8862b;--teal:#1f7a7a;--field:#f7f8fa;--err:#b3261e;--ok:#1f7a3a;--tok:#fbefd5;--hl:#fff27a}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:28px 24px 8px;max-width:1240px;margin:0 auto}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font:700 clamp(26px,4vw,36px)/1.15 "Source Serif 4",Georgia,serif;margin:6px 0 4px}
+header p{margin:0;color:var(--muted);max-width:66ch}
+main{max-width:1240px;margin:0 auto;padding:16px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){header{padding:20px 16px 6px}main{padding:12px 16px 32px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;padding:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:500;margin-bottom:4px}
+label .req{color:var(--gold)}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+/* the fields that were highlighted yellow in the template */
+.y input,.y select{border-left:4px solid #f2d300}
+input:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.bad{border-color:var(--err)!important}
+.hint{font-size:12px;color:var(--muted);margin-top:3px}
+.span2{grid-column:1/-1}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+button{font:600 15px "IBM Plex Sans",system-ui,sans-serif;border-radius:9px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink)}
+button.sm{font-size:13px;padding:6px 11px}
+button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+:root[data-theme="dark"] button.primary{background:var(--gold);color:#111;border-color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.primary{background:var(--gold);color:#111;border-color:var(--gold)}}
+#msg{font-size:14px;flex-basis:100%}
+#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+#used{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.pv{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));min-width:0}
+@media (max-width:900px){.pv{position:static}}
+.pvhead{margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pvhead label{display:flex;gap:6px;align-items:center;margin:0;font-size:12px;letter-spacing:0;text-transform:none;font-weight:500}.pvhead input{width:auto}
+.sw{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:#fff}
+.sw .sheet{transform-origin:top left}
+
+/* ---------- A4 letter, laid out like the Word template ---------- */
+.sheet{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff;color:#000}
+.sheet p{margin:0}
+.sheet .logo{position:absolute;left:17.5mm;top:7.5mm;width:39mm;height:auto}
+.sheet .bd{position:absolute;left:17.5mm;right:14mm;top:0;font-family:Cambria,"Source Serif 4",Georgia,serif;font-size:11pt}
+.sheet .ttl{text-align:center;font-weight:700;text-decoration:underline}
+.sheet .j{text-align:justify;line-height:2.3}
+.cal{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif}
+.sheet .ft{position:absolute;left:12mm;right:12mm;bottom:8mm;text-align:center;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;font-size:6.6pt;line-height:1.3;color:#000}
+.sheet .ft .n{color:#1f78d1;font-weight:700;font-size:9pt}
+.sheet .ft .em{color:#1f5fbf;text-decoration:underline}
+.f.empty{background:var(--tok);border-radius:2px;color:#8a6d2f;font-style:italic;font-weight:400}
+.hlon .sheet .f.v{background:var(--hl)}
+#printArea{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+}
+</style></head><body>
+<header>
+<div class="kicker">Alcove HR</div>
+<h1>Confirmation Letter</h1>
+<p>Confirms an employee's services after the probation period. Pick the employee and the rest fills in. The fields with a yellow edge are the ones that change in the letter.</p>
+</header>
+<main>
+<form class="card" id="f" onsubmit="return false" novalidate>
+<fieldset><legend>Reference</legend><div class="grid">
+<div class="span2 y"><label for="ENT">Short-company <span class="req">*</span></label><select id="ENT"><option value="">Select…</option></select><div class="hint" id="entShow">Sets the company name, “For …” line and the footer address</div></div>
+<div class="y"><label for="SL">Short-location <span class="req">*</span></label><select id="SL"><option>HO</option><option>Site</option></select></div>
+<div class="y"><label for="SLNO">Sl. no. <span class="req">*</span></label><input id="SLNO" placeholder="e.g. 001" inputmode="numeric"></div>
+<div class="y span2"><label for="DATE">Letter date <span class="req">*</span></label><input id="DATE" type="date"><div class="hint" id="refShow"></div></div>
+</div></fieldset>
+<fieldset><legend>Employee</legend><div class="grid">
+<div class="span2 y"><label for="NAME">Name <span class="req">*</span></label><input id="NAME" list="emp_list" placeholder="Type to search employees" autocomplete="off"><datalist id="emp_list"></datalist><div class="hint" id="empShow">Pick from the list to fill Emp ID, position, location and joining date</div></div>
+<div class="y"><label for="EMPID">Emp ID <span class="req">*</span></label><input id="EMPID" placeholder="e.g. AR000455" autocomplete="off"></div>
+<div class="y"><label for="DESIG">Position <span class="req">*</span></label><input id="DESIG" list="desig_list" placeholder="Type to search or pick" autocomplete="off"><datalist id="desig_list"><option value="">Select…</option><option value="__other">+ Add new…</option><option>Accountant</option><option>Accounts Assistant - Trainee</option><option>Admin Assistant</option><option>Administrative Officer</option><option>Administrative Security Coordinator</option><option>AGM - Accounts</option><option>AGM - Sales</option><option>AGM Marketing</option><option>Alu-form Fabricator</option><option>Aluform Supervisor</option><option>Aluform Welder</option><option>Architect</option><option>Assistant</option><option>Assistant Electrician</option><option>Assistant Engineer</option><option>Assistant Engineer - Execution</option><option>Assistant Engineer - Landscaping</option><option>Assistant Executive</option><option>Assistant Manager</option><option>Assistant Manager - Accounts</option><option>Assistant Manager - Civil</option><option>Assistant Manager - Civil (Execution)</option><option>Assistant Manager - Execution</option><option>Assistant Manager - Execution (Civil and Finishing)</option><option>Assistant Manager - Mall Leasing</option><option>Assistant Manager - Mall Marketing &amp; Leasing</option><option>Assistant Manager - Post Sales</option><option>Assistant Manager - Q.C</option><option>Assistant Manager Sales</option><option>Assistant Ship Captain</option><option>Assistant Store Keeper</option><option>Assistant Surveyor</option><option>Asst Manager Purchase</option><option>Asst. Electrician</option><option>Asst. Manager</option><option>Asst. Manager - Accounts</option><option>Asst. Manager - Architectural Design Development</option><option>Asst. Manager - Budget / Analysis and MIS</option><option>Asst. Manager - Electrical</option><option>Asst. Manager - Fire</option><option>Asst. Manager - HR</option><option>Asst. Manager - Landscape</option><option>Asst. Manager - QA/QC</option><option>Asst. Manager - Store</option><option>Asst. Mechanic</option><option>Asst. Welder</option><option>Batching Plant Helper</option><option>Batching Plant Operator</option><option>Builder Hoist Operator</option><option>Call Auditor Executive</option><option>Care Taker - Vedic Village</option><option>Carpenter</option><option>Carpenter - Aluform</option><option>CCTV Technician</option><option>Civil Supervisor</option><option>Civil Supervisor (Finishing)</option><option>Client Relations &amp; CRM Support Executive</option><option>CNC Laser Operator</option><option>Company Secretary</option><option>Concrete Pump Helper</option><option>Concrete Pump Operator</option><option>Contracts</option><option>Cook</option><option>Cook Helper</option><option>CRM Executive</option><option>Data Entry Operator</option><option>Data Management Executive</option><option>DEO</option><option>Deputy HR Manager</option><option>Deputy Manager</option><option>Deputy Manager - CRM</option><option>Deputy Manager - Customer Relation</option><option>Deputy Manager - Sales</option><option>Deputy Manager - Sales and Mrkt. Accelerator</option><option>Designated Partner</option><option>DevOps Administrator</option><option>DGM - Contracts</option><option>DGM - Purchase</option><option>DGM - Sales</option><option>Digital Transformation &amp; Systems Engineer</option><option>Diploma Trainee Engineer</option><option>Director</option><option>Director (Sales)</option><option>Director Branding and Communication</option><option>Director Finance</option><option>Document Controller</option><option>Dog Trainer</option><option>Driver</option><option>Driver - LMV</option><option>DTE</option><option>Dty. Manager</option><option>Dty. Manager - Banking</option><option>Dty. Manager - Construction</option><option>Dty. Manager - Post Sales</option><option>Electrical Foreman</option><option>Electrical Helper</option><option>Electrical Helper - PM</option><option>Electrician</option><option>Electrician - PM</option><option>Engineer</option><option>Engineer - Billing</option><option>Engineer - Electrical</option><option>Engineer - Execution</option><option>Engineer - Facade</option><option>Engineer - Finishing</option><option>Engineer - QA/QC</option><option>Estate Coordinator</option><option>Excavator Helper</option><option>Excavator Operator</option><option>Executive</option><option>Executive - Administration (Srm)</option><option>Executive - Budget/Analysis and MIS</option><option>Executive - IT</option><option>Executive - Secretarial</option><option>Executive Accounts</option><option>Executive Assistant</option><option>Executive Assistant - Administration</option><option>Executive Assistant to Director</option><option>Executive Bank and Petty Cash</option><option>Executive Director</option><option>Executive Purchase</option><option>Executive Store</option><option>Facility Operations Manager</option><option>Factory Manager</option><option>Finance Controller (Project Finance)</option><option>Finishing Carpenter</option><option>Finishing Supervisor</option><option>Finishing Supervisor - QC</option><option>Fire - Rigger</option><option>Fire Helper</option><option>Fire Semi Fitter</option><option>Fire Supervisor</option><option>Fitter</option><option>Fitter cum Welder</option><option>Foreman</option><option>Front Desk Executive</option><option>Front Office Executive</option><option>Front Office Executive and Security</option><option>Gardener</option><option>Gardener - Vedic</option><option>General Manager - QA/QC</option><option>General Manager Mall</option><option>GM - Architectural Design Development</option><option>Golf Cart Driver</option><option>Golf Cart Supervisor</option><option>Graduate Trainee Engineer</option><option>GTE</option><option>GTE - BBS</option><option>Guard Supervisor</option><option>Head - Finance</option><option>Head - Land Acquisition</option><option>Head - Mall</option><option>Head - Purchase</option><option>Helper</option><option>Helper - Batching Plant</option><option>Helper - Mason</option><option>Helper - Q/C Lab</option><option>Horticulture</option><option>Horticulturist</option><option>House Executive</option><option>House Keeper</option><option>House Keeping</option><option>House Keeping - Supervisor</option><option>House Manager / Document Controller</option><option>House Staff</option><option>Housekeeping Boy</option><option>HR Executive</option><option>HVAC - Incharge</option><option>IT - Helper</option><option>IT Executive</option><option>JCB Helper</option><option>JCB Operator</option><option>Jr Engineer</option><option>Jr Engineer - QA/QC</option><option>Jr Executive - IT</option><option>Jr. Admin Executive</option><option>Jr. Architect</option><option>Jr. Engineer - Execution</option><option>Jr. Engineer - Fire</option><option>Jr. Executive</option><option>Jr. Executive - HR</option><option>Jr. Executive - Vendor Relation</option><option>Jr. Executive Post Sales Operations</option><option>Junior Engineer</option><option>Junior Engineer (PHE)</option><option>Junior Executive - Budget Analysis and MIS</option><option>Lab Assistant</option><option>Lab Asst. Trainee</option><option>Lab Technician</option><option>Labour</option><option>Liaison President</option><option>Lift Operator</option><option>Maintenance Executive</option><option>Manager</option><option>Manager - Architect</option><option>Manager - Architectural Design Development</option><option>Manager - Branding and Communication</option><option>Manager - Budget/Analysis and MIS</option><option>Manager - Digital Marketing</option><option>Manager - Fire</option><option>Manager - Food court &amp; Floor</option><option>Manager - HR</option><option>Manager - Marketing Facade</option><option>Manager - MIS</option><option>Manager - Planning</option><option>Manager - Pre Sales</option><option>Manager - PRO</option><option>Manager - QA/QC</option><option>Manager - Sales</option><option>Manager Accounts</option><option>Manager Business Development</option><option>Manager Electrical</option><option>Manager Finance</option><option>Manager Inventory</option><option>Manager MEP</option><option>Manager Plumbing</option><option>Manager Post Sales</option><option>Manager Taxation</option><option>Managing Director</option><option>Mason</option><option>Mason Labour</option><option>MEP Supervisor</option><option>Mig - Welder</option><option>MIS Executive</option><option>Office Assistant</option><option>Office Boy</option><option>P.A. To Chairman</option><option>Painter - Fire</option><option>Pandit</option><option>Partner</option><option>Partner (Working)</option><option>Passenger Hoist Operator</option><option>Personal Assistant to MD</option><option>Personal Secretary to Director</option><option>Planner</option><option>Planning Engineer</option><option>Plant Manager</option><option>Plumber</option><option>Plumber Helper</option><option>Plumbing Supervisor</option><option>Powder Coating Operator</option><option>Pre Sales Executive</option><option>President - Business Development</option><option>Principal</option><option>Process Coordinator</option><option>Project Manager</option><option>Purchase Executive</option><option>Python Developer</option><option>Record Keeper</option><option>Reinforcement Supervisor</option><option>Rigger</option><option>RSP Helper</option><option>RSP Scaffolder</option><option>Safety Helper</option><option>Safety Helper and Housekeeping</option><option>Safety Labour</option><option>Safety Officer</option><option>Safety Supervisor</option><option>Sales Executive</option><option>Sales Promotion</option><option>Scaffolder</option><option>Security Coordinator</option><option>Security Guard</option><option>Security Officer</option><option>Security Supervisor</option><option>Semi Fitter</option><option>Semi Welder</option><option>Senior Civil Supervisor</option><option>Senior Electrician</option><option>Senior Engineer</option><option>Senior Engineer - Billing</option><option>Senior Engineer - QS</option><option>Senior Executive - IT</option><option>Senior Executive Customer Relations Marketing</option><option>Senior Executive Purchase</option><option>Senior Executive Sales</option><option>Senior Foreman - P/M</option><option>Senior Manager Purchase</option><option>Senior Safety Supervisor</option><option>Senior Supervisor</option><option>Senior Supervisor - Facade</option><option>Senior Supervisor - Plumbing</option><option>Senior Supervisor - Safety</option><option>Senior Surveyor</option><option>Server Administrator</option><option>Ship Captain</option><option>Shuttering Foreman</option><option>Signal Man Cum Helper</option><option>Signal Man Cum Tower Crane Helper</option><option>Site - Sr. HR Executive</option><option>Site Engineer</option><option>Site HR Executive</option><option>Site Supervisor</option><option>Sr Engineer</option><option>Sr First Aider - Safety</option><option>Sr Supervisor</option><option>Sr. Accountant</option><option>Sr. Architectural Designer</option><option>Sr. Cashier - Food Court</option><option>Sr. Company Secretary</option><option>Sr. Data Entry Operator - Execution</option><option>Sr. Document Controller</option><option>Sr. Electrician</option><option>Sr. Electrician - PM</option><option>Sr. Engineer - BBS and Billing</option><option>Sr. Engineer - BMS</option><option>Sr. Engineer - Civil (Finishing)</option><option>Sr. Engineer - Finishing</option><option>Sr. Engineer - QA/QC</option><option>Sr. Executive</option><option>Sr. Executive - Accounts</option><option>Sr. Executive - Branding and Communication</option><option>Sr. Executive - CRE</option><option>Sr. Executive - CRM and MIS</option><option>Sr. Executive - Customer Happiness</option><option>Sr. Executive - Customer Relation</option><option>Sr. Executive - Post Sales Operations</option><option>Sr. Executive - Purchase</option><option>Sr. Executive - Store</option><option>Sr. Executive CRM</option><option>Sr. Executive Land Acquisition</option><option>Sr. Fitter</option><option>Sr. Foreman</option><option>Sr. Foreman - Execution</option><option>Sr. Foreman Shuttering</option><option>Sr. Lab Technician</option><option>Sr. Law Officer</option><option>Sr. Manager</option><option>Sr. Manager - Contracts</option><option>Sr. Manager - Facade</option><option>Sr. Manager - Finance</option><option>Sr. Manager - Pre Sales</option><option>Sr. Manager - Safety</option><option>Sr. Manager Accounts</option><option>Sr. Manager Fire</option><option>Sr. Manager IT</option><option>Sr. Mechanic</option><option>Sr. Mig Welder</option><option>Sr. MIS Executive</option><option>Sr. Plumber</option><option>Sr. Pre Sales Executive</option><option>Sr. Process Coordinator</option><option>Sr. Rigger - Fire</option><option>Sr. Safety Supervisor</option><option>Sr. Sales Coordinator</option><option>Sr. Sales Executive</option><option>Sr. Security Coordinator</option><option>Sr. Supervisor - Electrical</option><option>Sr. Supervisor - Execution</option><option>Sr. Supervisor - PHE</option><option>Sr. Supervisor - Security</option><option>Sr. Vice President - Accounts</option><option>Sr. Welder</option><option>Steel Fitter</option><option>Steward</option><option>Store Assistant</option><option>Store Assistant - Facade</option><option>Store Executive</option><option>Store Executive - Aluform</option><option>Store Helper</option><option>Store Incharge</option><option>Store Keeper</option><option>Store Officer</option><option>Store Supervisor</option><option>Stores Assistant</option><option>Supervisor</option><option>Supervisor - Civil</option><option>Supervisor - Finishing</option><option>Supervisor - Fitter</option><option>Supervisor - PM</option><option>Supervisor - Scaffolding</option><option>Supervisor - Shuttering</option><option>Supervisor - TMT</option><option>Supervisor CCTV</option><option>Supervisor Electrical</option><option>Surveyor</option><option>Sweeper</option><option>Technician</option><option>Tiles Helper</option><option>Tiles Mason</option><option>TM Helper</option><option>TM Operator</option><option>Tower Crane Helper</option><option>Tower Crane Operator</option><option>Tower Crane Signal Man</option><option>Tower Crane Signal Man Cum Helper</option><option>Tractor Driver</option><option>Trainee Engineer - BBS</option><option>Transit Mixer Helper</option><option>Transit Mixer Operator</option><option>Travel Desk Professional Cum EA</option><option>Typist</option><option>Vendor Relation Executive</option><option>Vice President - Accounts &amp; Taxation</option><option>Vice President - Operations</option><option>Vice President - PR and Legal</option><option>Vice President - R &amp; D</option><option>Vice President - Sales</option><option>Vice President Budget / Analysis &amp; MIS</option><option>VP (Sales)</option><option>VP-R</option><option>Water Controller</option><option>Weigh Bridge Operator</option><option>Welder</option><option>Welder &amp; Cutter</option><option>Welder Helper</option></datalist></div>
+<div class="span2 y"><label for="LOC">Location <span class="req">*</span></label><input id="LOC" list="loc_list" placeholder="e.g. Head Office" autocomplete="off"><datalist id="loc_list"></datalist></div>
+<div class="y"><label for="DOJ">Date of joining <span class="req">*</span></label><input id="DOJ" type="date"><div class="hint">Appointment letter date</div></div>
+<div><label for="PROB">Probation period</label><select id="PROB"><option value="6">6 months</option><option value="3">3 months</option><option value="12">1 year</option><option value="">Other — pick the date</option></select></div>
+<div class="span2 y"><label for="EFF">Confirmed with effect from <span class="req">*</span></label><input id="EFF" type="date"><div class="hint" id="effShow"></div></div>
+</div></fieldset>
+<div class="actions">
+<button class="primary" id="prn" type="button">Print / Save as PDF</button>
+<button type="button" id="clr">Clear employee</button>
+<span id="msg" role="status"></span>
+<span id="used" hidden></span>
+</div>
+</form>
+<section class="pv" aria-label="Preview">
+<div class="pvhead"><span>Live preview — A4 letterhead</span><label><input type="checkbox" id="HL" checked> Highlight filled fields</label></div>
+<div class="sw hlon" id="wrap"></div>
+</section>
+</main>
+<div id="printArea"></div>
+<script>
+const FOOTS=[["Alcove Realty Private Limited", "68/2, Harish Mukherjee Road Kolkata 700 025 P +91 33 6684 2100 F +91 2455 7052 E secretarial@alcoverealty.in W alcoverealty.in", "(CIN: U70200WB2022PTC257572)"], ["AMBA HIGHRISE PVT.LTD.", "Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E hr@alcoverealty.in W alcoverealty.in", ""], ["ALCOVE CONSTRUCTION PVT LTD", "Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E secretarial@alcoverealty.in", "(CIN: U70101WB1996PTC079790)"], ["SUNDARVAN REALTY PRIVATE LIMITED", "Vedic Village, Flat No. 32B, P.S. Rajarhat, Dist. North 24 Parganas- 700135 P +91 9088801668 E secretarial@alcoverealty.in Group W alcoverealty.in", "(CIN: U68100WB2024PTC270454)"], ["Alcove Developers LLP", "Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E hr@alcoverealty.in W alcoverealty.in", "(LLPIN: AAC - 2250)"]];
+const LOGO_B64="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";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt=iso=>{if(!iso)return"";const[y,m,d]=iso.slice(0,10).split("-");return d+"-"+m+"-"+y;};
+const isoOf=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function fyOf(iso){if(!iso)return"";const[y,m]=iso.split("-").map(Number);const s=m>=4?y:y-1;return s+"-"+String((s+1)%100).padStart(2,"0");}
+function nextSl(s){const m=String(s||"").match(/^(.*?)(\d+)$/);if(!m)return s;return m[1]+String(Number(m[2])+1).padStart(m[2].length,"0");}
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+
+/* ---------- companies (same list and footers as the Experience / Relieving letters) ---------- */
+const findFoot=kw=>FOOTS.find(f=>f[0].toLowerCase().includes(kw))||["","",""];
+const ENT={
+  ADLLP:{short:"Alcove Developers LLP",foot:findFoot("developers")},
+  ARPL:{short:"Alcove Realty Pvt. Ltd.",foot:findFoot("alcove realty")},
+  AMBA:{short:"AMBA Highrise Pvt. Ltd.",foot:findFoot("amba")},
+  ACPL:{short:"Alcove Construction Pvt. Ltd.",foot:findFoot("construction")},
+  SRPL:{short:"Sundarvan Realty Pvt. Ltd.",foot:findFoot("sundarvan")}
+};
+const LH_FOOT={ADLLP:["Alcove Developers LLP","Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E info@alcoverealty.in W alcoverealty.in","(LLPIN: AAC - 2250)"]};
+const coName=c=>ENT[c]?(ENT[c].foot[0]||ENT[c].short):"";
+Object.keys(ENT).forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c+" — "+ENT[c].short;$("ENT").appendChild(o);});
+// company in the HR sheet -> company code
+const ENT_RX=[[/developers/i,"ADLLP"],[/alcove realty|\barpl\b|origyn/i,"ARPL"],[/amba|curve/i,"AMBA"],[/construction|\bacpl\b|duets/i,"ACPL"],[/sundarvan|\bsrpl\b/i,"SRPL"]];
+const entOf=e=>{const m=ENT_RX.find(x=>x[0].test(e.co||""))||ENT_RX.find(x=>x[0].test((e.co||"")+" "+(e.loc||"")));return m?m[1]:"";};
+
+/* ---------- employee list from the portal (HR Master Data) ---------- */
+const emps=()=>{try{return(parent.__emps&&parent.__emps.list)||[];}catch(e){return[];}};
+const nice=s=>{try{if(parent.__empNice)return parent.__empNice(s);}catch(e){}return String(s||"").trim();};
+const PROJECTS=["Head Office","New Kolkata - Sangam","New Kolkata - Triveni","Triveni - Mall & Multiplex","Maintenance-Sangam","ARPL - ORIGYN","The Curve","AMBA HO"];
+function lists(){const all=emps(),act=all.filter(e=>e.a!==false);
+  $("emp_list").innerHTML=act.map(e=>'<option value="'+esc(nice(e.n)+" — "+(e.c||""))+'">'+esc([e.g,e.loc].filter(Boolean).join(" · "))+"</option>").join("");
+  const locs=[...new Set(PROJECTS.concat(all.map(e=>String(e.loc||"").trim()).filter(Boolean)))].sort((a,b)=>a.localeCompare(b));
+  $("loc_list").innerHTML=locs.map(l=>'<option value="'+esc(l)+'"></option>').join("");
+  $("empShow").textContent=act.length?"Pick from "+act.length+" active employees to fill Emp ID, position, location and joining date":"Sign in to the portal to pick employees from HR Master Data — or type the details";}
+try{parent.document.addEventListener("hremps",lists);}catch(e){}
+lists();
+[...$("desig_list").options].forEach(o=>{if(!o.value||o.value==="__other")o.remove();});
+// "Name — EMPID" picked from the list: fill everything from the sheet
+function pickEmp(){const m=$("NAME").value.match(/^(.*?)\s+—\s+(\S+)$/);if(!m)return false;
+  const e=emps().find(x=>String(x.c||"")===m[2]);if(!e)return false;
+  $("NAME").value=nice(e.n);$("EMPID").value=e.c||"";if(e.g)$("DESIG").value=e.g;if(e.loc)$("LOC").value=e.loc;if(e.doj)$("DOJ").value=String(e.doj).slice(0,10);
+  const c=entOf(e);if(c)$("ENT").value=c;autoEff();return true;}
+
+/* ---------- confirmation date = joining date + probation ---------- */
+function plusMonths(iso,n){const[y,m,d]=iso.split("-").map(Number),t=new Date(y,m-1+n,1),last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();t.setDate(Math.min(d,last));return isoOf(t);}
+function autoEff(){const p=$("PROB").value,j=$("DOJ").value;if(p&&j)$("EFF").value=plusMonths(j,Number(p));}
+
+/* ---------- draft ---------- */
+const PERSON=["ENT","NAME","EMPID","DESIG","LOC","DOJ","PROB","EFF"],REF=["SL","SLNO","DATE"];
+const K_DRAFT="alcove-conf-draft",K_REF="alcove-conf-ref";
+(function restore(){const d=load(K_DRAFT,{}),r=load(K_REF,{});PERSON.forEach(k=>{if(d[k]!==undefined)$(k).value=d[k];});REF.forEach(k=>{if(r[k]!==undefined)$(k).value=r[k];});})();
+if(!$("DATE").value)$("DATE").value=isoOf(new Date());
+if(!$("SL").value)$("SL").value="HO";
+function persist(){const d={},r={};PERSON.forEach(k=>d[k]=$(k).value);REF.forEach(k=>r[k]=$(k).value);save(K_DRAFT,d);save(K_REF,r);}
+
+/* ---------- the letter ---------- */
+const v=k=>$(k).value.trim();
+const LABEL={ENT:"Short-company",SL:"Short-location",SLNO:"Sl. no.",DATE:"Letter date",NAME:"Name",EMPID:"Emp ID",DESIG:"Position",LOC:"Location",DOJ:"Date of joining",EFF:"Confirmed with effect from"};
+const NEED=["ENT","SL","SLNO","DATE","NAME","EMPID","DESIG","LOC","DOJ","EFF"];
+// filled value (highlighted on screen only) or a placeholder
+function V(x,label){return x?'<span class="f v">'+esc(x)+"</span>":'<span class="f empty">['+esc(label)+"]</span>";}
+let LOGO="data:image/png;base64,"+LOGO_B64;
+try{const b=atob(LOGO_B64),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);LOGO=URL.createObjectURL(new Blob([u],{type:"image/png"}));}catch(e){}
+function footer(c){const f=LH_FOOT[c]||(ENT[c]&&ENT[c].foot);if(!f||!f[0])return"";
+  const l2=esc(f[1]).replace(/(^|\s)([PFEW])(?=\s)/g,'$1<b>$2</b>').replace(/([\w.+-]+@[\w-]+(?:\.[\w-]+)+)/,'<span class="em">$1</span>');
+  return'<div class="ft"><div class="n">'+esc(f[0])+"</div><div>"+l2+"</div>"+(f[2]?"<div><b>"+esc(f[2])+"</b></div>":"")+"</div>";}
+const refNo=()=>V(v("ENT"),"Short-company")+"/"+V(v("SL"),"Short-location")+"/HR/Conf./"+V(fyOf(v("DATE")),"FY")+"/"+V(v("SLNO"),"Sl. no.");
+function sheet(){const c=v("ENT"),name=v("NAME");
+  return'<div class="sheet"><img class="logo" src="'+LOGO+'" alt=""><div class="bd" style="padding-top:42.5mm">'+
+   "<p>Ref. No: "+refNo()+"</p>"+
+   "<p><b>Date: "+V(fmt(v("DATE")),"Date")+"</b></p>"+
+   '<p style="margin-top:12mm;font-weight:700;line-height:1.33">'+V(name,"Name")+"<br>Emp ID: "+V(v("EMPID"),"Emp ID")+"<br>Position: "+V(v("DESIG"),"Position")+"<br>Location: "+V(v("LOC"),"Location")+"</p>"+
+   '<p class="ttl" style="margin-top:14mm">CONFIRMATION LETTER</p>'+
+   '<p style="margin-top:14mm"><b>Dear '+V(name,"Name")+",</b></p>"+
+   '<p class="j" style="margin-top:2mm">In reference to your Appointment Letter dated <b>'+V(fmt(v("DOJ")),"Date of joining")+"</b>, the Management is pleased to inform you that you have successfully completed the probation period and your services are being confirmed as <b>"+V(v("DESIG"),"Position")+"</b> with effect from <b>"+V(fmt(v("EFF")),"Date")+"</b>. All the terms and conditions remain same as mentioned in the aforesaid Appointment Letter.</p>"+
+   '<p class="j" style="margin-top:3mm">We hope that you will continue to put in your efforts with greater zeal and enthusiasm during the ensuing year too.</p>'+
+   '<p style="margin-top:15mm">Wish you a rewarding career with us.</p>'+
+   '<p style="margin-top:4mm;padding-left:2.5mm">For <b class="cal" style="font-size:10pt">'+V(coName(c),"Company Name")+"</b></p>"+
+   '<p class="cal" style="margin-top:26mm;font-size:10pt;line-height:1.1">______________________<br>(Authorized Signatory)</p></div>'+footer(c)+"</div>";}
+
+/* ---------- preview ---------- */
+function render(){$("wrap").innerHTML=sheet();
+  const c=v("ENT");$("entShow").textContent=c?"Company name: "+coName(c):"Sets the company name, “For …” line and the footer address";
+  $("refShow").textContent=v("ENT")&&v("SLNO")?"Ref. No: "+v("ENT")+"/"+v("SL")+"/HR/Conf./"+fyOf(v("DATE"))+"/"+v("SLNO"):"";
+  $("effShow").textContent=$("PROB").value?"Worked out from the joining date + probation — change it if needed":"";fit();}
+function fit(){const w=$("wrap"),s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";}
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("wrap"));else window.addEventListener("resize",fit);
+$("HL").addEventListener("change",()=>$("wrap").classList.toggle("hlon",$("HL").checked));
+
+/* ---------- inputs ---------- */
+document.querySelectorAll("#f input,#f select").forEach(el=>el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{
+  el.classList.remove("bad");
+  if(el.id==="NAME")pickEmp();
+  if(el.id==="DOJ"||el.id==="PROB")autoEff();
+  if(el.id==="EFF"&&$("DOJ").value&&$("PROB").value&&el.value!==plusMonths($("DOJ").value,Number($("PROB").value)))$("PROB").value="";
+  persist();render();}));
+$("clr").onclick=()=>{["NAME","EMPID","DESIG","LOC","DOJ","EFF"].forEach(k=>{$(k).value="";$(k).classList.remove("bad");});$("PROB").value="6";persist();render();say("");$("used").hidden=true;};
+$("prn").onclick=()=>{const missing=NEED.filter(k=>!v(k));
+  NEED.forEach(k=>$(k).classList.toggle("bad",missing.includes(k)));
+  if(missing.length){say("Please fill: "+missing.map(k=>LABEL[k]).join(", "),"err");$(missing[0]).focus();return;}
+  $("printArea").innerHTML=sheet();
+  say("Opening print… choose “Save as PDF” as the printer to get a PDF.","ok");
+  setTimeout(()=>{window.print();const used=v("SLNO"),u=$("used");u.hidden=false;
+    u.innerHTML="Ref Sl. no. "+esc(used)+' used? <button class="sm primary" id="uYes" type="button">Mark as used → '+esc(nextSl(used))+'</button> <button class="sm" id="uNo" type="button">Not now</button>';
+    $("uYes").onclick=()=>{$("SLNO").value=nextSl(used);persist();render();u.hidden=true;say("Next Sl. no. is "+$("SLNO").value+".","ok");};
+    $("uNo").onclick=()=>{u.hidden=true;};},60);};
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+render();
+</script></body></html>

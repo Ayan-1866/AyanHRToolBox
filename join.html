@@ -114,15 +114,22 @@ body.joiner .hronly,body:not(.joiner) .jonly{display:none!important}
     <div class="hint jonly" style="margin-top:6px">Your details are saved on this device so you can come back later. Tap <b>Clear form</b> when you're done if this is a shared device.</div>
     <div class="sharep hronly" id="sharePanel" hidden>
       <div class="grid">
-        <div class="span2"><label for="shLink">Link for the new joiner</label><input id="shLink" readonly></div>
         <div><label for="shWa">HR WhatsApp no. for replies</label><input id="shWa" inputmode="tel" placeholder="Optional"></div>
+        <div class="span2"><label for="shLink">Link for this joiner</label><input id="shLink" readonly></div>
       </div>
       <div class="actions" style="margin-top:8px">
         <button class="b" id="shCopy" type="button">Copy link</button>
         <button class="b" id="shWapp" type="button">Send on WhatsApp</button>
         <button class="b" id="shMail" type="button">Send by email</button>
       </div>
-      <div class="hint">The joiner fills their own kit and sends you back one PDF. The link carries only the name, employee ID, joining date, mobile and email typed here.</div>
+      <div class="hint">Comes with the name, employee ID, joining date, mobile and email typed above already filled in.</div>
+      <div class="grid" style="margin-top:12px"><div class="span2"><label for="shAny">Link for anyone — candidates before joining</label><input id="shAny" readonly></div></div>
+      <div class="actions" style="margin-top:8px">
+        <button class="b" id="anyCopy" type="button">Copy link</button>
+        <button class="b" id="anyWapp" type="button">Send on WhatsApp</button>
+        <button class="b" id="anyMail" type="button">Send by email</button>
+      </div>
+      <div class="hint">A blank Joining Kit — the candidate fills everything in and sends you back one PDF. Nothing is uploaded anywhere.</div>
     </div>
   </div>
   <details class="card" open><summary>Personal details</summary><div class="grid">
@@ -449,20 +456,22 @@ $("send").onclick=async()=>{if(!ready(false))return;const pend=pending();
 /* ---------- HR: link for a new joiner, sent by WhatsApp or email ---------- */
 const SITE="https://employees.alcoverealty.in/p/hr-tool-box/";
 try{$("shWa").value=localStorage.getItem("alcove-onb-hrwa")||"";}catch(e){}
-function joinLink(){const o={n:v("NAME"),id:v("EMPID"),doj:v("DOJ"),m:v("MOBILE"),e:v("EMAIL"),w:$("shWa").value.trim()};Object.keys(o).forEach(k=>{if(!o[k])delete o[k];});
+// anyone=true: the general link, with no joiner's details (only HR's WhatsApp number for replies)
+function joinLink(anyone){const o=anyone?{w:$("shWa").value.trim()}:{n:v("NAME"),id:v("EMPID"),doj:v("DOJ"),m:v("MOBILE"),e:v("EMAIL"),w:$("shWa").value.trim()};Object.keys(o).forEach(k=>{if(!o[k])delete o[k];});
   return SITE+"join.html"+(Object.keys(o).length?"#j="+enc(o):"");}
-function inviteText(link){const fn=(v("NAME").split(/\s+/)[0]||"");
+function inviteText(link,anyone){const fn=anyone?"":(v("NAME").split(/\s+/)[0]||"");
   return"Dear "+(fn?fn[0].toUpperCase()+fn.slice(1).toLowerCase():"Candidate")+",\n\nWelcome to Alcove Realty! Please fill in your joining kit and attach your documents using this link:\n"+link+
     "\n\nPlease keep these ready:\n"+REQ.map(r=>"• "+r[1]+(r[2]?" – "+r[2]:"")+(r[3]?" (mandatory)":"")).join("\n")+"\n• A passport-size photograph"+
     "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the page and send us the PDF.\n\nRegards,\nHR Team, Alcove Realty";}
-function shareUI(){if(!$("sharePanel").hidden)$("shLink").value=joinLink();}
-$("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();
-  if(!p.hidden&&!v("NAME"))say("Tip: fill the joiner's name, mobile and email first (or use Fill from employee) — the link carries them.");};
+function shareUI(){if(!$("sharePanel").hidden){$("shLink").value=joinLink();$("shAny").value=joinLink(true);}}
+$("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();};
 $("form").addEventListener("input",shareUI);
 $("shWa").addEventListener("change",()=>{try{localStorage.setItem("alcove-onb-hrwa",$("shWa").value.trim());}catch(e){}});
-$("shCopy").onclick=async()=>{const l=joinLink();try{await navigator.clipboard.writeText(l);say("Link copied.","ok");}catch(e){$("shLink").select();say("Press Ctrl+C to copy the link.");}};
-$("shWapp").onclick=()=>{const n=waNo(v("MOBILE"));window.open("https://wa.me/"+(n.length>=11?n:"")+"?text="+encodeURIComponent(inviteText(joinLink())),"_blank","noopener");};
-$("shMail").onclick=()=>{const a=document.createElement("a");a.href="mailto:"+encodeURIComponent(v("EMAIL"))+"?subject="+encodeURIComponent("Welcome to Alcove Realty – your joining kit")+"&body="+encodeURIComponent(inviteText(joinLink()));document.body.appendChild(a);a.click();a.remove();};
+const copyLink=async(anyone)=>{try{await navigator.clipboard.writeText(joinLink(anyone));say("Link copied.","ok");}catch(e){$(anyone?"shAny":"shLink").select();say("Press Ctrl+C to copy the link.");}};
+const waSend=anyone=>{const n=anyone?"":waNo(v("MOBILE"));window.open("https://wa.me/"+(n.length>=11?n:"")+"?text="+encodeURIComponent(inviteText(joinLink(anyone),anyone)),"_blank","noopener");};
+const mailSend=anyone=>{const a=document.createElement("a");a.href="mailto:"+(anyone?"":encodeURIComponent(v("EMAIL")))+"?subject="+encodeURIComponent("Welcome to Alcove Realty – your joining kit")+"&body="+encodeURIComponent(inviteText(joinLink(anyone),anyone));document.body.appendChild(a);a.click();a.remove();};
+$("shCopy").onclick=()=>copyLink(false);$("shWapp").onclick=()=>waSend(false);$("shMail").onclick=()=>mailSend(false);
+$("anyCopy").onclick=()=>copyLink(true);$("anyWapp").onclick=()=>waSend(true);$("anyMail").onclick=()=>mailSend(true);
 
 $("clr").onclick=()=>{if(MODE==="joiner"&&!confirm("Clear everything you've filled in on this device?"))return;
   ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";

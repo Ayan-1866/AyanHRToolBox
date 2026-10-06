@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Confirmation Letter — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef0f3;--panel:#ffffff;--ink:#14213d;--muted:#5b6478;--line:#d7dbe3;--gold:#b8862b;--teal:#1f7a7a;--field:#f7f8fa;--err:#b3261e;--ok:#1f7a3a;--tok:#fbefd5;--hl:#fff27a}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1420;--panel:#171e2d;--ink:#e6e9f0;--muted:#9aa3b6;--line:#2a3347;--gold:#d9a94e;--teal:#4fb3b3;--field:#111827;--err:#f2867e;--ok:#6fcf8f;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:28px 24px 8px;max-width:1240px;margin:0 auto}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font:700 clamp(26px,4vw,36px)/1.15 "Source Serif 4",Georgia,serif;margin:6px 0 4px}
+header p{margin:0;color:var(--muted);max-width:66ch}
+main{max-width:1240px;margin:0 auto;padding:16px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){header{padding:20px 16px 6px}main{padding:12px 16px 32px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;padding:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:500;margin-bottom:4px}
+label .req{color:var(--gold)}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+/* the fields that were highlighted yellow in the template */
+.y input,.y select{border-left:4px solid #f2d300}
+input:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.bad{border-color:var(--err)!important}
+.hint{font-size:12px;color:var(--muted);margin-top:3px}
+.span2{grid-column:1/-1}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+button{font:600 15px "IBM Plex Sans",system-ui,sans-serif;border-radius:9px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--field);color:var(--ink)}
+button.sm{font-size:13px;padding:6px 11px}
+button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+:root[data-theme="dark"] button.primary{background:var(--gold);color:#111;border-color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.primary{background:var(--gold);color:#111;border-color:var(--gold)}}
+#msg{font-size:14px;flex-basis:100%}
+#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+#used{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.pv{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));min-width:0}
+@media (max-width:900px){.pv{position:static}}
+.pvhead{margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pvhead label{display:flex;gap:6px;align-items:center;margin:0;font-size:12px;letter-spacing:0;text-transform:none;font-weight:500}.pvhead input{width:auto}
+.sw{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:#fff}
+.sw .sheet{transform-origin:top left}
+
+/* ---------- A4 letter, laid out like the Word template ---------- */
+.sheet{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff;color:#000}
+.sheet p{margin:0}
+.sheet .logo{position:absolute;left:17.5mm;top:7.5mm;width:39mm;height:auto}
+.sheet .bd{position:absolute;left:17.5mm;right:14mm;top:0;font-family:Cambria,"Source Serif 4",Georgia,serif;font-size:11pt}
+.sheet .ttl{text-align:center;font-weight:700;text-decoration:underline}
+.sheet .j{text-align:justify;line-height:2.3}
+.cal{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif}
+.sheet .ft{position:absolute;left:12mm;right:12mm;bottom:8mm;text-align:center;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;font-size:6.6pt;line-height:1.3;color:#000}
+.sheet .ft .n{color:#1f78d1;font-weight:700;font-size:9pt}
+.sheet .ft .em{color:#1f5fbf;text-decoration:underline}
+.f.empty{background:var(--tok);border-radius:2px;color:#8a6d2f;font-style:italic;font-weight:400}
+.hlon .sheet .f.v{background:var(--hl)}
+#printArea{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+}
+</style></head><body>
+<header>
+<div class="kicker">Alcove HR</div>
+<h1>Confirmation Letter</h1>
+<p>Confirms an employee's services after the probation period. Pick the employee and the rest fills in. The fields with a yellow edge are the ones that change in the letter.</p>
+</header>
+<main>
+<form class="card" id="f" onsubmit="return false" novalidate>
+<fieldset><legend>Reference</legend><div class="grid">
+<div class="span2 y"><label for="ENT">Short-company <span class="req">*</span></label><select id="ENT"><option value="">Select…</option></select><div class="hint" id="entShow">Sets the company name, “For …” line and the footer address</div></div>
+<div class="y"><label for="SL">Short-location <span class="req">*</span></label><select id="SL"><option>HO</option><option>Site</option></select></div>
+<div class="y"><label for="SLNO">Sl. no. <span class="req">*</span></label><input id="SLNO" placeholder="e.g. 001" inputmode="numeric"></div>
+<div class="y span2"><label for="DATE">Letter date <span class="req">*</span></label><input id="DATE" type="date"><div class="hint" id="refShow"></div></div>
+</div></fieldset>
+<fieldset><legend>Employee</legend><div class="grid">
+<div class="span2 y"><label for="NAME">Name <span class="req">*</span></label><input id="NAME" list="emp_list" placeholder="Type to search employees" autocomplete="off"><datalist id="emp_list"></datalist><div class="hint" id="empShow">Pick from the list to fill Emp ID, position, location and joining date</div></div>
+<div class="y"><label for="EMPID">Emp ID <span class="req">*</span></label><input id="EMPID" placeholder="e.g. AR000455" autocomplete="off"></div>
+<div class="y"><label for="DESIG">Position <span class="req">*</span></label><input id="DESIG" list="desig_list" placeholder="Type to search or pick" autocomplete="off"><datalist id="desig_list">__DESIG__</datalist></div>
+<div class="span2 y"><label for="LOC">Location <span class="req">*</span></label><input id="LOC" list="loc_list" placeholder="e.g. Head Office" autocomplete="off"><datalist id="loc_list"></datalist></div>
+<div class="y"><label for="DOJ">Date of joining <span class="req">*</span></label><input id="DOJ" type="date"><div class="hint">Appointment letter date</div></div>
+<div><label for="PROB">Probation period</label><select id="PROB"><option value="6">6 months</option><option value="3">3 months</option><option value="12">1 year</option><option value="">Other — pick the date</option></select></div>
+<div class="span2 y"><label for="EFF">Confirmed with effect from <span class="req">*</span></label><input id="EFF" type="date"><div class="hint" id="effShow"></div></div>
+</div></fieldset>
+<div class="actions">
+<button class="primary" id="prn" type="button">Print / Save as PDF</button>
+<button type="button" id="clr">Clear employee</button>
+<span id="msg" role="status"></span>
+<span id="used" hidden></span>
+</div>
+</form>
+<section class="pv" aria-label="Preview">
+<div class="pvhead"><span>Live preview — A4 letterhead</span><label><input type="checkbox" id="HL" checked> Highlight filled fields</label></div>
+<div class="sw hlon" id="wrap"></div>
+</section>
+</main>
+<div id="printArea"></div>
+<script>
+const FOOTS=__FOOTS__;
+const LOGO_B64="__LOGO__";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt=iso=>{if(!iso)return"";const[y,m,d]=iso.slice(0,10).split("-");return d+"-"+m+"-"+y;};
+const isoOf=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function fyOf(iso){if(!iso)return"";const[y,m]=iso.split("-").map(Number);const s=m>=4?y:y-1;return s+"-"+String((s+1)%100).padStart(2,"0");}
+function nextSl(s){const m=String(s||"").match(/^(.*?)(\d+)$/);if(!m)return s;return m[1]+String(Number(m[2])+1).padStart(m[2].length,"0");}
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+
+/* ---------- companies (same list and footers as the Experience / Relieving letters) ---------- */
+const findFoot=kw=>FOOTS.find(f=>f[0].toLowerCase().includes(kw))||["","",""];
+const ENT={
+  ADLLP:{short:"Alcove Developers LLP",foot:findFoot("developers")},
+  ARPL:{short:"Alcove Realty Pvt. Ltd.",foot:findFoot("alcove realty")},
+  AMBA:{short:"AMBA Highrise Pvt. Ltd.",foot:findFoot("amba")},
+  ACPL:{short:"Alcove Construction Pvt. Ltd.",foot:findFoot("construction")},
+  SRPL:{short:"Sundarvan Realty Pvt. Ltd.",foot:findFoot("sundarvan")}
+};
+const LH_FOOT={ADLLP:["Alcove Developers LLP","Ganapati 68/2 Harish Mukherjee Road Kolkata 700025 P +91 33 6684 2100 F +91 2455 7052 E info@alcoverealty.in W alcoverealty.in","(LLPIN: AAC - 2250)"]};
+const coName=c=>ENT[c]?(ENT[c].foot[0]||ENT[c].short):"";
+Object.keys(ENT).forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c+" — "+ENT[c].short;$("ENT").appendChild(o);});
+// company in the HR sheet -> company code
+const ENT_RX=[[/developers/i,"ADLLP"],[/alcove realty|\barpl\b|origyn/i,"ARPL"],[/amba|curve/i,"AMBA"],[/construction|\bacpl\b|duets/i,"ACPL"],[/sundarvan|\bsrpl\b/i,"SRPL"]];
+const entOf=e=>{const m=ENT_RX.find(x=>x[0].test(e.co||""))||ENT_RX.find(x=>x[0].test((e.co||"")+" "+(e.loc||"")));return m?m[1]:"";};
+
+/* ---------- employee list from the portal (HR Master Data) ---------- */
+const emps=()=>{try{return(parent.__emps&&parent.__emps.list)||[];}catch(e){return[];}};
+const nice=s=>{try{if(parent.__empNice)return parent.__empNice(s);}catch(e){}return String(s||"").trim();};
+const PROJECTS=["Head Office","New Kolkata - Sangam","New Kolkata - Triveni","Triveni - Mall & Multiplex","Maintenance-Sangam","ARPL - ORIGYN","The Curve","AMBA HO"];
+function lists(){const all=emps(),act=all.filter(e=>e.a!==false);
+  $("emp_list").innerHTML=act.map(e=>'<option value="'+esc(nice(e.n)+" — "+(e.c||""))+'">'+esc([e.g,e.loc].filter(Boolean).join(" · "))+"</option>").join("");
+  const locs=[...new Set(PROJECTS.concat(all.map(e=>String(e.loc||"").trim()).filter(Boolean)))].sort((a,b)=>a.localeCompare(b));
+  $("loc_list").innerHTML=locs.map(l=>'<option value="'+esc(l)+'"></option>').join("");
+  $("empShow").textContent=act.length?"Pick from "+act.length+" active employees to fill Emp ID, position, location and joining date":"Sign in to the portal to pick employees from HR Master Data — or type the details";}
+try{parent.document.addEventListener("hremps",lists);}catch(e){}
+lists();
+[...$("desig_list").options].forEach(o=>{if(!o.value||o.value==="__other")o.remove();});
+// "Name — EMPID" picked from the list: fill everything from the sheet
+function pickEmp(){const m=$("NAME").value.match(/^(.*?)\s+—\s+(\S+)$/);if(!m)return false;
+  const e=emps().find(x=>String(x.c||"")===m[2]);if(!e)return false;
+  $("NAME").value=nice(e.n);$("EMPID").value=e.c||"";if(e.g)$("DESIG").value=e.g;if(e.loc)$("LOC").value=e.loc;if(e.doj)$("DOJ").value=String(e.doj).slice(0,10);
+  const c=entOf(e);if(c)$("ENT").value=c;autoEff();return true;}
+
+/* ---------- confirmation date = joining date + probation ---------- */
+function plusMonths(iso,n){const[y,m,d]=iso.split("-").map(Number),t=new Date(y,m-1+n,1),last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();t.setDate(Math.min(d,last));return isoOf(t);}
+function autoEff(){const p=$("PROB").value,j=$("DOJ").value;if(p&&j)$("EFF").value=plusMonths(j,Number(p));}
+
+/* ---------- draft ---------- */
+const PERSON=["ENT","NAME","EMPID","DESIG","LOC","DOJ","PROB","EFF"],REF=["SL","SLNO","DATE"];
+const K_DRAFT="alcove-conf-draft",K_REF="alcove-conf-ref";
+(function restore(){const d=load(K_DRAFT,{}),r=load(K_REF,{});PERSON.forEach(k=>{if(d[k]!==undefined)$(k).value=d[k];});REF.forEach(k=>{if(r[k]!==undefined)$(k).value=r[k];});})();
+if(!$("DATE").value)$("DATE").value=isoOf(new Date());
+if(!$("SL").value)$("SL").value="HO";
+function persist(){const d={},r={};PERSON.forEach(k=>d[k]=$(k).value);REF.forEach(k=>r[k]=$(k).value);save(K_DRAFT,d);save(K_REF,r);}
+
+/* ---------- the letter ---------- */
+const v=k=>$(k).value.trim();
+const LABEL={ENT:"Short-company",SL:"Short-location",SLNO:"Sl. no.",DATE:"Letter date",NAME:"Name",EMPID:"Emp ID",DESIG:"Position",LOC:"Location",DOJ:"Date of joining",EFF:"Confirmed with effect from"};
+const NEED=["ENT","SL","SLNO","DATE","NAME","EMPID","DESIG","LOC","DOJ","EFF"];
+// filled value (highlighted on screen only) or a placeholder
+function V(x,label){return x?'<span class="f v">'+esc(x)+"</span>":'<span class="f empty">['+esc(label)+"]</span>";}
+let LOGO="data:image/png;base64,"+LOGO_B64;
+try{const b=atob(LOGO_B64),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);LOGO=URL.createObjectURL(new Blob([u],{type:"image/png"}));}catch(e){}
+function footer(c){const f=LH_FOOT[c]||(ENT[c]&&ENT[c].foot);if(!f||!f[0])return"";
+  const l2=esc(f[1]).replace(/(^|\s)([PFEW])(?=\s)/g,'$1<b>$2</b>').replace(/([\w.+-]+@[\w-]+(?:\.[\w-]+)+)/,'<span class="em">$1</span>');
+  return'<div class="ft"><div class="n">'+esc(f[0])+"</div><div>"+l2+"</div>"+(f[2]?"<div><b>"+esc(f[2])+"</b></div>":"")+"</div>";}
+const refNo=()=>V(v("ENT"),"Short-company")+"/"+V(v("SL"),"Short-location")+"/HR/Conf./"+V(fyOf(v("DATE")),"FY")+"/"+V(v("SLNO"),"Sl. no.");
+function sheet(){const c=v("ENT"),name=v("NAME");
+  return'<div class="sheet"><img class="logo" src="'+LOGO+'" alt=""><div class="bd" style="padding-top:42.5mm">'+
+   "<p>Ref. No: "+refNo()+"</p>"+
+   "<p><b>Date: "+V(fmt(v("DATE")),"Date")+"</b></p>"+
+   '<p style="margin-top:12mm;font-weight:700;line-height:1.33">'+V(name,"Name")+"<br>Emp ID: "+V(v("EMPID"),"Emp ID")+"<br>Position: "+V(v("DESIG"),"Position")+"<br>Location: "+V(v("LOC"),"Location")+"</p>"+
+   '<p class="ttl" style="margin-top:14mm">CONFIRMATION LETTER</p>'+
+   '<p style="margin-top:14mm"><b>Dear '+V(name,"Name")+",</b></p>"+
+   '<p class="j" style="margin-top:2mm">In reference to your Appointment Letter dated <b>'+V(fmt(v("DOJ")),"Date of joining")+"</b>, the Management is pleased to inform you that you have successfully completed the probation period and your services are being confirmed as <b>"+V(v("DESIG"),"Position")+"</b> with effect from <b>"+V(fmt(v("EFF")),"Date")+"</b>. All the terms and conditions remain same as mentioned in the aforesaid Appointment Letter.</p>"+
+   '<p class="j" style="margin-top:3mm">We hope that you will continue to put in your efforts with greater zeal and enthusiasm during the ensuing year too.</p>'+
+   '<p style="margin-top:15mm">Wish you a rewarding career with us.</p>'+
+   '<p style="margin-top:4mm;padding-left:2.5mm">For <b class="cal" style="font-size:10pt">'+V(coName(c),"Company Name")+"</b></p>"+
+   '<p class="cal" style="margin-top:26mm;font-size:10pt;line-height:1.1">______________________<br>(Authorized Signatory)</p></div>'+footer(c)+"</div>";}
+
+/* ---------- preview ---------- */
+function render(){$("wrap").innerHTML=sheet();
+  const c=v("ENT");$("entShow").textContent=c?"Company name: "+coName(c):"Sets the company name, “For …” line and the footer address";
+  $("refShow").textContent=v("ENT")&&v("SLNO")?"Ref. No: "+v("ENT")+"/"+v("SL")+"/HR/Conf./"+fyOf(v("DATE"))+"/"+v("SLNO"):"";
+  $("effShow").textContent=$("PROB").value?"Worked out from the joining date + probation — change it if needed":"";fit();}
+function fit(){const w=$("wrap"),s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";}
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("wrap"));else window.addEventListener("resize",fit);
+$("HL").addEventListener("change",()=>$("wrap").classList.toggle("hlon",$("HL").checked));
+
+/* ---------- inputs ---------- */
+document.querySelectorAll("#f input,#f select").forEach(el=>el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{
+  el.classList.remove("bad");
+  if(el.id==="NAME")pickEmp();
+  if(el.id==="DOJ"||el.id==="PROB")autoEff();
+  if(el.id==="EFF"&&$("DOJ").value&&$("PROB").value&&el.value!==plusMonths($("DOJ").value,Number($("PROB").value)))$("PROB").value="";
+  persist();render();}));
+$("clr").onclick=()=>{["NAME","EMPID","DESIG","LOC","DOJ","EFF"].forEach(k=>{$(k).value="";$(k).classList.remove("bad");});$("PROB").value="6";persist();render();say("");$("used").hidden=true;};
+$("prn").onclick=()=>{const missing=NEED.filter(k=>!v(k));
+  NEED.forEach(k=>$(k).classList.toggle("bad",missing.includes(k)));
+  if(missing.length){say("Please fill: "+missing.map(k=>LABEL[k]).join(", "),"err");$(missing[0]).focus();return;}
+  $("printArea").innerHTML=sheet();
+  say("Opening print… choose “Save as PDF” as the printer to get a PDF.","ok");
+  setTimeout(()=>{window.print();const used=v("SLNO"),u=$("used");u.hidden=false;
+    u.innerHTML="Ref Sl. no. "+esc(used)+' used? <button class="sm primary" id="uYes" type="button">Mark as used → '+esc(nextSl(used))+'</button> <button class="sm" id="uNo" type="button">Not now</button>';
+    $("uYes").onclick=()=>{$("SLNO").value=nextSl(used);persist();render();u.hidden=true;say("Next Sl. no. is "+$("SLNO").value+".","ok");};
+    $("uNo").onclick=()=>{u.hidden=true;};},60);};
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+render();
+</script></body></html>
