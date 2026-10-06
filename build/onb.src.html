@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Joining Kit — Alcove HR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f2f4f7;--panel:#fff;--ink:#1a2433;--muted:#5f6b7a;--line:#dfe3e9;--navy:#14294a;--teal:#1d4f91;--field:#f8f9fb;--err:#b3261e;--ok:#1f7a3a;--chip:#eef1f5}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--panel:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--teal:#8fb3e6;--field:#101a27;--err:#f2867e;--ok:#6fcf8f;--chip:#1d2a3c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1621;--panel:#152030;--ink:#e3e8ef;--muted:#97a3b3;--line:#263346;--teal:#8fb3e6;--field:#101a27;--err:#f2867e;--ok:#6fcf8f;--chip:#1d2a3c;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,sans-serif}
+header{padding:22px 24px 4px;max-width:1360px;margin:0 auto}
+.kicker{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font:600 1.5rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif;margin:4px 0 2px}
+header p{margin:0;color:var(--muted);max-width:78ch}
+main{max-width:1360px;margin:0 auto;padding:12px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:20px;align-items:start}
+@media (max-width:1000px){main{grid-template-columns:1fr}}
+details.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;margin-bottom:10px}
+details.card>summary{cursor:pointer;padding:12px 16px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;list-style:none;display:flex;justify-content:space-between}
+details.card>summary::after{content:"▾"}details.card:not([open])>summary::after{content:"▸"}
+details.card>div{padding:0 16px 16px}
+.card2{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.span2{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:600;margin-bottom:3px}
+input,select,textarea{width:100%;font:inherit;font-size:13.5px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:5px;padding:7px 9px}
+textarea{min-height:52px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.hint{font-size:11.5px;color:var(--muted);margin-top:3px}
+table.rows{width:100%;border-collapse:collapse;font-size:12.5px}
+table.rows th{text-align:left;font-size:11px;color:var(--muted);font-weight:600;padding:2px 4px}
+table.rows td{padding:2px}
+table.rows input,table.rows select{padding:5px 6px;font-size:12.5px}
+table.rows td.n{width:22px;color:var(--muted);text-align:center}
+.pages{display:flex;flex-wrap:wrap;gap:6px 14px;margin:2px 0 10px;font-size:13px}
+.pages label{display:flex;gap:6px;align-items:center;font-weight:500;margin:0}
+.pages input{width:auto}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button.b{font:600 13.5px "IBM Plex Sans","Segoe UI",sans-serif;border-radius:5px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+#msg{font-size:13px;flex-basis:100%}#msg.err{color:var(--err)}#msg.ok{color:var(--ok)}
+.ph{display:flex;gap:10px;align-items:center}.ph .pv{width:56px;height:70px;border:1px dashed var(--line);border-radius:4px;background:var(--field) center/cover no-repeat;flex:none}
+.prev{position:sticky;top:12px;min-width:0}@media (max-width:1000px){.prev{position:static}}
+.prevhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.prevhead select{width:auto;padding:4px 8px;font-size:12px;text-transform:none;letter-spacing:0}
+.sw{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:#fff}
+.sw .kp{transform-origin:top left}
+/* ---------- A4 form pages: original form as image, details typed on top ---------- */
+.kp{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff}
+.kp>img.bg{position:absolute;inset:0;width:100%;height:100%}
+.kp .v{position:absolute;white-space:nowrap;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;color:#0b2a7a;line-height:1;transform-origin:left bottom}
+.kp img.photo{position:absolute;object-fit:cover}
+#printArea{display:none}
+@media print{@page{size:A4;margin:0}body{background:#fff}body>*:not(#printArea){display:none!important}#printArea{display:block!important}
+  #printArea .kp{break-after:page;page-break-after:always}#printArea .kp:last-child{break-after:auto;page-break-after:auto}}
+</style></head><body>
+<header><div class="kicker">Alcove HR · Onboarding</div><h1>Joining Kit</h1>
+<p>Fill the new joiner's details once — the Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 are filled in for you and print as one PDF. Use <b>Fill from employee</b> above to start from the HR Master Data.</p></header>
+<main>
+<div id="form">
+  <div class="card2">
+    <div class="pages" id="pageSel"></div>
+    <div class="actions">
+      <button class="b primary" id="prn" type="button">Print / Save as PDF</button>
+      <button class="b" id="blank" type="button">Print blank kit</button>
+      <button class="b" id="clr" type="button">Clear joiner</button>
+      <span id="msg" role="status"></span>
+    </div>
+    <div class="hint" style="margin-top:6px">Aadhaar, PAN and bank details stay only in this tab and are cleared when the browser is closed.</div>
+  </div>
+  <details class="card" open><summary>Personal details</summary><div class="grid">
+    <div class="span2"><label for="NAME">Name (as per Aadhaar)</label><input id="NAME"></div>
+    <div><label for="GENDER">Gender</label><select id="GENDER"><option></option><option>Male</option><option>Female</option><option>Transgender</option></select></div>
+    <div><label for="DOB">Date of birth (as per Aadhaar)</label><input id="DOB" type="date"></div>
+    <div><label for="MARITAL">Marital status</label><select id="MARITAL"><option></option><option>Unmarried</option><option>Married</option><option>Widow</option><option>Widower</option><option>Divorcee</option></select></div>
+    <div><label for="BLOOD">Blood group</label><select id="BLOOD"><option></option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+    <div><label for="FATHER">Father's name</label><input id="FATHER"></div>
+    <div><label for="MOTHER">Mother's name</label><input id="MOTHER"></div>
+    <div><label for="SPOUSE">Spouse's name</label><input id="SPOUSE"><div class="hint">EPF form uses the father's name unless only this is filled</div></div>
+    <div><label for="QUAL">Qualification</label><input id="QUAL"></div>
+    <div><label for="MOBILE">Mobile no.</label><input id="MOBILE" inputmode="tel"></div>
+    <div><label for="EMAIL">Email ID</label><input id="EMAIL" type="email"></div>
+    <div class="span2 ph"><div class="pv" id="phPrev"></div><div><label for="PHOTO">Photograph (Joining Form)</label><input id="PHOTO" type="file" accept="image/*"></div></div>
+  </div></details>
+  <details class="card" open><summary>Joining &amp; Alcove details</summary><div class="grid">
+    <div><label for="DOJ">Date of joining</label><input id="DOJ" type="date"></div>
+    <div><label for="EMPID">Employee ID</label><input id="EMPID"></div>
+    <div><label for="TOTEXP">Total years of experience</label><input id="TOTEXP" placeholder="e.g. 4 years"></div>
+    <div><label for="EARLIER">Worked with Alcove earlier?</label><select id="EARLIER"><option></option><option>No</option><option>Yes</option></select></div>
+    <div><label for="PLACE">Place (for signatures)</label><input id="PLACE" value="Kolkata"></div>
+    <div><label for="SIGNDATE">Declaration date</label><input id="SIGNDATE" type="date"></div>
+  </div></details>
+  <details class="card"><summary>Addresses</summary><div class="grid">
+    <div class="span2"><label for="PADDR">Present / correspondence address with PIN</label><textarea id="PADDR"></textarea></div>
+    <div class="span2"><label for="PERM">Permanent address with PIN</label><textarea id="PERM"></textarea><label style="display:flex;gap:6px;font-weight:500;margin-top:4px"><input type="checkbox" id="SAME" style="width:auto"> Same as present address</label></div>
+  </div></details>
+  <details class="card"><summary>KYC &amp; bank</summary><div class="grid">
+    <div><label for="AADHAR">Aadhaar number</label><input id="AADHAR" inputmode="numeric"></div>
+    <div><label for="PAN">PAN</label><input id="PAN" style="text-transform:uppercase"></div>
+    <div><label for="ACC">Bank account number</label><input id="ACC" inputmode="numeric"></div>
+    <div><label for="BANK">Bank name</label><input id="BANK"></div>
+    <div><label for="IFSC">IFSC</label><input id="IFSC" style="text-transform:uppercase"></div>
+    <div><label for="MICR">MICR</label><input id="MICR" inputmode="numeric"></div>
+  </div></details>
+  <details class="card"><summary>PF / ESIC</summary><div class="grid">
+    <div><label for="UANOLD">Existing UAN (if any)</label><input id="UANOLD"></div>
+    <div><label for="ESICOLD">Existing ESIC (if any)</label><input id="ESICOLD"></div>
+    <div><label for="UANNEW">UAN allotted by ADLLP</label><input id="UANNEW"></div>
+    <div><label for="ESICNEW">ESIC allotted by ADLLP</label><input id="ESICNEW"></div>
+    <div><label for="PFNO">PF number (employer declaration)</label><input id="PFNO"></div>
+    <div><label for="DISP">Dispensary (ESIC)</label><input id="DISP"></div>
+    <div><label for="EPFOLD">Earlier member of EPF Scheme?</label><select id="EPFOLD"><option></option><option>No</option><option>Yes</option></select></div>
+    <div><label for="EPSOLD">Earlier member of EPS 1995?</label><select id="EPSOLD"><option></option><option>No</option><option>Yes</option></select></div>
+  </div></details>
+  <details class="card"><summary>Nominee &amp; emergency contact</summary><div class="grid">
+    <div><label for="NOMINEE">Nominee name</label><input id="NOMINEE"></div>
+    <div><label for="NOMREL">Nominee relation</label><input id="NOMREL"></div>
+    <div class="span2"><label for="FAMDET">Family details (nomination form)</label><input id="FAMDET" placeholder="e.g. Father, Mother, Spouse"></div>
+    <div><label for="EMNAME">Emergency contact name</label><input id="EMNAME"></div>
+    <div><label for="EMREL">Relation</label><input id="EMREL"></div>
+    <div><label for="EMPH">Contact no.</label><input id="EMPH"></div>
+  </div></details>
+  <details class="card"><summary>Family members (up to 5)</summary><div><table class="rows" id="famT"></table></div></details>
+  <details class="card"><summary>Education (up to 4)</summary><div><table class="rows" id="eduT"></table></div></details>
+  <details class="card"><summary>Last three employers</summary><div><table class="rows" id="jobT"></table></div></details>
+  <details class="card"><summary>Professional references</summary><div><table class="rows" id="refT"></table></div></details>
+</div>
+<section class="prev" aria-label="Preview">
+  <div class="prevhead"><span>Preview</span><select id="pvSel" aria-label="Page to preview"></select></div>
+  <div class="sw" id="wrap"></div>
+</section>
+</main>
+<div id="printArea"></div>
+<script>
+const PAGES=__PAGES__;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function say(t,c){const m=$("msg");m.textContent=t;m.className=c||"";}
+const K="alcove-onb-draft",KSEL="alcove-onb-pages";
+// the six pages of the Alcove joining kit
+const DOCS=[["Onboarding Form",[0]],["Nomination Form",[1]],["Employee Joining Form",[2,3]],["EPF Form 11",[4,5]]];
+
+/* ---------- repeating rows ---------- */
+function rows(id,cols,n){const t=$(id);t.innerHTML="<tr><th></th>"+cols.map(c=>"<th>"+c[1]+"</th>").join("")+"</tr>"+
+  Array.from({length:n},(_,i)=>'<tr><td class="n">'+(i+1)+"</td>"+cols.map(c=>"<td>"+(c[2]==="date"?'<input type="date" id="'+c[0]+(i+1)+'" aria-label="'+c[1]+" "+(i+1)+'">':c[2]==="sex"?'<select id="'+c[0]+(i+1)+'" aria-label="'+c[1]+" "+(i+1)+'"><option></option><option>Male</option><option>Female</option></select>':'<input id="'+c[0]+(i+1)+'" aria-label="'+c[1]+" "+(i+1)+'">')+"</td>").join("")+"</tr>").join("");}
+rows("famT",[["FN","Name"],["FR","Relation"],["FG","Gender","sex"],["FD","Date of birth","date"],["FA","Aadhaar"],["FO","Occupation"]],5);
+rows("eduT",[["ED","Degree"],["EU","University / institute"],["EF","From"],["ET","To"],["EP","% / grade"],["ES","Specialization"]],4);
+rows("jobT",[["JO","Organization"],["JD","Designation"],["JF","From"],["JT","To"],["JC","Annual CTC"]],3);
+rows("refT",[["RN","Name"],["RO","Organization"],["RD","Designation"],["RC","Contact no."]],2);
+
+/* ---------- where each value goes (pixels of the 1240×1754 page images; y = text baseline) ---------- */
+const v=id=>{const e=$(id);return e?String(e.value||"").trim():"";};
+const dmy=iso=>{if(!iso)return"";const[y,m,d]=iso.split("-");return d+"/"+m+"/"+y;};
+const up=s=>s.toUpperCase();
+const F=[];// {p, x, y, w, t:()=>text, lines:[y...]}
+const add=(p,x,y,w,t,o)=>F.push(Object.assign({p,x,y,w,t},o||{}));
+// page 1 — Onboarding Form (value column)
+[[150,()=>v("NAME")],[191,()=>dmy(v("DOJ"))],[231,()=>v("MOBILE")],[272,()=>v("GENDER")],[312,()=>dmy(v("DOB"))],[353,()=>v("MARITAL")],[394,()=>v("FATHER")],[434,()=>v("QUAL")],
+ [628,()=>v("UANOLD")],[682,()=>v("ESICOLD")],[736,()=>v("TOTEXP")],[790,()=>v("EARLIER")],[871,()=>v("AADHAR")],[911,()=>up(v("PAN"))],[993,()=>v("ACC")],[1033,()=>v("BANK")],[1074,()=>up(v("IFSC"))],[1114,()=>v("MICR")],
+ [1260,()=>v("EMPID")],[1300,()=>v("UANNEW")],[1341,()=>v("ESICNEW")]].forEach(([y,t])=>add(0,458,y,760,t));
+add(0,458,0,760,()=>v("PADDR"),{lines:[474,497,520]});add(0,458,0,760,()=>perm(),{lines:[544,567,590]});
+// page 2 — Nomination Form
+[[140,()=>v("NAME")],[195,()=>v("NOMINEE")],[251,()=>v("NOMREL")],[306,()=>v("FAMDET")],[362,()=>v("AADHAR")],[417,()=>up(v("PAN"))],[450,()=>v("DISP")]].forEach(([y,t])=>add(1,486,y,740,t));
+[561,616,672,727,782].forEach((y,i)=>{const n=i+1;add(1,132,y,330,()=>v("FN"+n));add(1,480,y,140,()=>v("FR"+n));add(1,634,y,100,()=>v("FG"+n));add(1,750,y,170,()=>dmy(v("FD"+n)));add(1,938,y,290,()=>v("FA"+n));});
+// page 3 — Employee Joining Form (personal)
+add(2,192,313,710,()=>v("NAME"));add(2,280,366,620,()=>v("FATHER"));add(2,288,419,612,()=>v("MOTHER"));
+add(2,372,0,540,()=>v("PADDR"),{lines:[513,548]});add(2,322,0,820,()=>perm(),{lines:[637,690]});
+add(2,290,766,320,()=>v("AADHAR"));add(2,758,766,400,()=>up(v("PAN")));add(2,262,819,350,()=>dmy(v("DOB")));add(2,720,819,440,()=>v("EMAIL"));
+add(2,288,872,320,()=>v("MARITAL"));add(2,762,872,390,()=>v("BLOOD"));add(2,192,978,270,()=>v("EMNAME"));add(2,568,978,240,()=>v("EMREL"));add(2,940,978,220,()=>v("EMPH"));
+[1238,1307,1376,1445].forEach((y,i)=>{const n=i+1;[[116,156,"ED"],[288,156,"EU"],[461,156,"EF"],[632,156,"ET"],[805,156,"EP"],[977,158,"ES"]].forEach(([x,w,k])=>add(2,x,y,w,()=>v(k+n)));});
+// page 4 — Employee Joining Form (employment, family, references, place)
+[330,386,441].forEach((y,i)=>{const n=i+1;[[192,232,"JO"],[440,215,"JD"],[668,135,"JF"],[815,138,"JT"],[966,150,"JC"]].forEach(([x,w,k])=>add(3,x,y,w,()=>v(k+n)));});
+[630,684,738,791,844].forEach((y,i)=>{const n=i+1;add(3,205,y,205,()=>v("FN"+n));add(3,422,y,232,()=>v("FR"+n));add(3,665,y,232,()=>v("FO"+n));add(3,910,y,220,()=>dmy(v("FD"+n)));});
+[[979,192,700],[1032,262,772],[1086,252,762],[1140,240,750]].forEach(([y,x1,x2],r)=>{const k=["RN","RO","RD","RC"][r];add(3,x1,y,600-x1,()=>v(k+"1"));add(3,x2,y,1110-x2,()=>v(k+"2"));});
+add(3,192,1515,400,()=>v("PLACE"));
+// page 5 — EPF Form 11
+const relOf=()=>v("FATHER")?"F":v("SPOUSE")?"S":"";
+[[322,()=>up(v("NAME"))],[367,()=>up(v("FATHER")||v("SPOUSE"))],[418,()=>dmy(v("DOB"))],[450,()=>v("GENDER")],[479,()=>v("MARITAL")],[508,()=>v("EMAIL")],[551,()=>v("MOBILE")],[597,()=>dmy(v("DOJ"))],
+ [665,()=>v("ACC")],[690,()=>up(v("IFSC"))],[722,()=>v("AADHAR")],[749,()=>up(v("PAN"))],[1440,()=>"India"]].forEach(([y,t])=>add(4,700,y,450,t));
+add(4,336,363,20,()=>relOf()==="F"?"✓":"");add(4,336,389,20,()=>relOf()==="S"?"✓":"");
+// Yes / No boxes: tick the left box for Yes, the right box for No
+const tick=(y,val)=>{add(4,860,y,26,()=>val()==="Yes"?"✓":"");add(4,972,y,26,()=>val()==="No"?"✓":"");};
+tick(786,()=>v("EPFOLD"));tick(824,()=>v("EPSOLD"));tick(1407,()=>"No");
+// page 6 — Undertaking + declaration by present employer
+add(5,218,429,300,()=>dmy(v("SIGNDATE")));add(5,224,448,300,()=>v("PLACE"));
+add(5,420,610,345,()=>up(v("NAME")));add(5,862,610,200,()=>dmy(v("DOJ")));add(5,352,650,290,()=>v("PFNO"));add(5,716,650,410,()=>v("UANNEW"));
+const PHOTO={p:2,x:930,y:290,w:225,h:272};
+const perm=()=>$("SAME").checked?v("PADDR"):v("PERM");
+
+/* ---------- drawing ---------- */
+const MM=210/1240,FONT=20;// 20px on the page image ≈ 9.6 pt
+const meas=document.createElement("canvas").getContext("2d");meas.font=FONT+"px Arial";
+function wrap(t,w,max){const words=t.replace(/\s*\n\s*/g," , ").split(/\s+/),L=[""];
+  words.forEach(wd=>{if(wd===",")wd="";const cur=L[L.length-1],tryL=(cur?cur+" ":"")+wd;if(meas.measureText(tryL).width>w&&cur){L.push(wd);}else L[L.length-1]=tryL;});
+  const out=L.map(s=>s.replace(/\s+,/g,",").replace(/^,\s*/,"").trim()).filter(Boolean);if(out.length>max){out[max-1]=out.slice(max-1).join(" ");out.length=max;}return out;}
+function span(x,y,t,w){const tw=meas.measureText(t).width,sc=tw>w?w/tw:1;
+  return'<span class="v" style="left:'+(x*MM).toFixed(2)+"mm;top:"+((y-FONT*0.78*sc)*MM).toFixed(2)+"mm;font-size:"+(FONT*sc*MM).toFixed(3)+'mm">'+esc(t)+"</span>";}
+let photo="";
+function pageHtml(i,blank){let h='<div class="kp"><img class="bg" src="'+PAGES[i]+'" alt="">';
+  if(!blank){F.filter(f=>f.p===i).forEach(f=>{const t=f.t();if(!t)return;
+    if(f.lines)wrap(t,f.w,f.lines.length).forEach((ln,k)=>{h+=span(f.x,f.lines[k],ln,f.w);});else h+=span(f.x,f.y,t,f.w);});
+    if(i===PHOTO.p&&photo)h+='<img class="photo" src="'+photo+'" alt="" style="left:'+(PHOTO.x*MM)+"mm;top:"+(PHOTO.y*MM)+"mm;width:"+(PHOTO.w*MM)+"mm;height:"+(PHOTO.h*MM)+'mm">';}
+  return h+"</div>";}
+const chosen=()=>DOCS.filter((d,i)=>$("pg"+i).checked).flatMap(d=>d[1]);
+function preview(){const i=Number($("pvSel").value||0);$("wrap").innerHTML=pageHtml(i,false);fit();}
+function fit(){const w=$("wrap"),s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";}
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("wrap"));else window.addEventListener("resize",fit);
+
+/* ---------- page choice, preview list ---------- */
+const sel=(()=>{try{return JSON.parse(localStorage.getItem(KSEL)||"null");}catch(e){return null;}})()||[true,true,true,true];
+$("pageSel").innerHTML=DOCS.map((d,i)=>'<label><input type="checkbox" id="pg'+i+'"'+(sel[i]!==false?" checked":"")+"> "+d[0]+' <span class="hint" style="margin:0">('+d[1].length+" page"+(d[1].length>1?"s":"")+")</span></label>").join("");
+$("pageSel").addEventListener("change",()=>{try{localStorage.setItem(KSEL,JSON.stringify(DOCS.map((d,i)=>$("pg"+i).checked)));}catch(e){}});
+$("pvSel").innerHTML=DOCS.flatMap(d=>d[1].map((p,k)=>'<option value="'+p+'">'+d[0]+(d[1].length>1?" — page "+(k+1):"")+"</option>")).join("");
+$("pvSel").addEventListener("change",preview);
+
+/* ---------- draft for this tab only (sensitive details) ---------- */
+const ids=()=>[...document.querySelectorAll("#form input:not([type=file]):not([type=checkbox]),#form select,#form textarea")].map(e=>e.id);
+function keep(){try{const o={};ids().forEach(id=>o[id]=$(id).value);o.SAME=$("SAME").checked;sessionStorage.setItem(K,JSON.stringify(o));}catch(e){}}
+try{const o=JSON.parse(sessionStorage.getItem(K)||"null");if(o){ids().forEach(id=>{if(o[id]!==undefined)$(id).value=o[id];});$("SAME").checked=!!o.SAME;}}catch(e){}
+if(!$("SIGNDATE").value){const t=new Date();$("SIGNDATE").value=new Date(t.getTime()-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);}
+let T;document.getElementById("form").addEventListener("input",e=>{if(e.target.id==="PHOTO")return;clearTimeout(T);T=setTimeout(()=>{keep();preview();},120);});
+document.getElementById("form").addEventListener("change",e=>{if(e.target.id==="PHOTO")return;keep();preview();});
+$("PHOTO").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{photo=r.result;$("phPrev").style.backgroundImage="url("+photo+")";$("pvSel").value="2";preview();};r.readAsDataURL(f);});
+// jump the preview to the page that holds the field being edited
+const PAGE_OF={EMPID:0,UANOLD:0,ESICOLD:0,TOTEXP:0,EARLIER:0,MICR:0,UANNEW:0,ESICNEW:0,NOMINEE:1,NOMREL:1,FAMDET:1,DISP:1,MOTHER:2,BLOOD:2,EMNAME:2,EMREL:2,EMPH:2,PFNO:5,EPFOLD:4,EPSOLD:4,SPOUSE:4};
+document.getElementById("form").addEventListener("focusin",e=>{const id=e.target.id;let p=PAGE_OF[id];
+  if(p===undefined){if(/^(FN|FR|FG|FD|FA)\d/.test(id))p=1;else if(/^E[DUFTPS]\d/.test(id))p=2;else if(/^(J.|R.|FO)\d/.test(id))p=3;}
+  if(p!==undefined&&String(p)!==$("pvSel").value){$("pvSel").value=String(p);preview();}});
+
+/* ---------- print ---------- */
+function printPages(blank){const ps=chosen();if(!ps.length){say("Tick at least one form to print.","err");return;}
+  if(!blank&&!v("NAME")){say("Enter the joiner's name first (or use Print blank kit).","err");$("NAME").focus();return;}
+  $("printArea").innerHTML=ps.map(i=>pageHtml(i,blank)).join("");say("Opening print… choose “Save as PDF” to get one PDF of "+ps.length+" page"+(ps.length>1?"s":"")+".","ok");setTimeout(()=>window.print(),80);}
+$("prn").onclick=()=>printPages(false);
+$("blank").onclick=()=>printPages(true);
+window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
+$("clr").onclick=()=>{ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";
+  try{sessionStorage.removeItem(K);}catch(e){}preview();say("Joiner cleared.");};
+preview();
+</script></body></html>

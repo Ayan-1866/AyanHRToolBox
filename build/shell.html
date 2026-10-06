@@ -313,6 +313,8 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     <button data-view="loi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>LOI Generator</button>
     <button data-view="appt"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>Appointment Letter</button>
     <button data-view="joiner"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg>New Joiner Toolkit</button>
+    <div class="grp">Onboarding</div>
+    <button data-view="onb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2"/><path d="m9 13 2 2 4-4"/></svg>Joining Kit</button>
     <div class="grp">Exit</div>
     <button data-view="exp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M9 13.5 7.5 21l4.5-2.5 4.5 2.5L15 13.5"/></svg>Experience Letter</button>
     <button data-view="rel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/><path d="M10 16l4-4-4-4M14 12H4"/></svg>Relieving Letter</button>
@@ -416,6 +418,18 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
       </div>
     </section>
 
+    <section class="sec" aria-labelledby="s-onb">
+      <div class="hd"><h2 id="s-onb">Onboarding</h2><p>Joining forms, filled and ready to sign</p></div>
+      <div class="tiles">
+        <button class="tile" data-view="onb">
+          <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2"/><path d="m9 13 2 2 4-4"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          <h3>Joining Kit</h3>
+          <p>Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 — filled from one set of details and printed as one PDF.</p>
+          <div class="tags"><span class="tag">6 pages</span><span class="tag">PDF</span><span class="tag">Blank kit</span></div>
+        </button>
+      </div>
+    </section>
+
     <section class="sec exit" aria-labelledby="s-exit">
       <div class="hd"><h2 id="s-exit">Exit</h2><p>Enter the employee once — both letters share the details</p></div>
       <div class="tiles">
@@ -493,6 +507,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
   </section>
   <iframe class="frame" id="v-cv" title="CV Inbox" data-url="cv.html" hidden></iframe>
   <iframe class="frame" id="v-jd" title="JD Maker" allow="clipboard-write" hidden></iframe>
+  <iframe class="frame" id="v-onb" title="Joining Kit" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-exp" title="Experience Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-rel" title="Relieving Letter" allow="clipboard-write" hidden></iframe>
   <iframe class="frame" id="v-loi" title="LOI Generator" allow="clipboard-write" hidden></iframe>
@@ -509,9 +524,10 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
 <script id="src-joiner" type="application/octet-stream">__JOINER__</script>
 <script id="src-bday" type="application/octet-stream">__BDAY__</script>
 <script id="src-jd" type="application/octet-stream">__JD__</script>
+<script id="src-onb" type="application/octet-stream">__ONB__</script>
 <script>
 (function(){
-  const VIEWS=["home","emp","cv","jd","exp","rel","loi","appt","joiner","bday"];
+  const VIEWS=["home","emp","cv","jd","onb","exp","rel","loi","appt","joiner","bday"];
   const $=id=>document.getElementById(id);
   function decode(id){const b=atob($(id).textContent.trim()),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder("utf-8").decode(u);}
   function show(v){
@@ -685,6 +701,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     joiner:e=>[["name",nice(e.n)],["desig",e.g],["loc",e.loc],["email",e.email],["cno",e.phone],["empid",e.c],["doj",e.doj],["mgr",nice(e.mgr)]],
     exp:e=>[["PROJ",e.loc],["ENT",ent(e).code],["NAME",nice(e.n)],["EMPID",e.c],["DESIG",e.g],["DEPT",e.dept],["DOJ",e.doj],["DOL",e.dol],["PRON",pron(e.sex)]],
     rel:e=>MAP.exp(e),
+    onb:e=>[["NAME",nice(e.n)],["EMPID",e.c],["DOJ",e.doj],["DOB",e.dob],["GENDER",/^\s*f|female/i.test(e.sex||"")?"Female":/^\s*m|male/i.test(e.sex||"")?"Male":""],["MOBILE",e.phone],["EMAIL",e.email],["PADDR",e.addr]],
     bday:e=>[["who",nice(e.n)]]
   };
   const LABEL={ADDRESS:"address",DESIG:"designation",DOJ:"joining date",DOB:"date of birth",EMPID:"Emp ID",empid:"Emp ID",COMPANY:"company",ENT:"company",
@@ -773,7 +790,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
   $("colPick").addEventListener("click",e=>{const b=e.target.closest("button[data-all]");if(!b)return;
     if(b.dataset.all==="1")visible=D.headers.map((h,i)=>i);else{try{localStorage.removeItem(KC);}catch(x){}visible=null;visible=defaultCols();}saveCols();$("empCols").click();$("empCols").click();render();});
   // details panel with quick actions
-  const ACTS=[["loi","LOI"],["appt","Appointment Letter"],["joiner","New Joiner kit"],["exp","Experience Letter"],["rel","Relieving Letter"],["bday","Birthday card"]];
+  const ACTS=[["loi","LOI"],["appt","Appointment Letter"],["joiner","New Joiner kit"],["onb","Joining Kit"],["exp","Experience Letter"],["rel","Relieving Letter"],["bday","Birthday card"]];
   function mapped(r){const row=D.rows[r],c=D.cols,code=c.code===undefined?"":row[c.code],name=String(row[c.name]||"").toLowerCase().replace(/\s+/g," ");
     const e=((window.__emps&&window.__emps.list)||[]).find(p=>(code&&p.c===code)||String(p.n).toLowerCase().replace(/\s+/g," ")===name);
     return e||{n:row[c.name],c:code,g:c.desig===undefined?"":row[c.desig],dept:c.dept===undefined?"":row[c.dept],loc:c.loc===undefined?"":row[c.loc],a:D.active[r]};}

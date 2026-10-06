@@ -55,9 +55,14 @@ $desigOpts=(([regex]::Matches((& $sel "DESIG"),"<option>(.*?)</option>") | ForEa
 $deptOpts=$depts -replace '<option>(.*?)</option>','<option value="$1"></option>'
 [IO.File]::WriteAllText("$code\jd.html",$src.Replace("__DESIG__",$desigOpts).Replace("__DEPTS__",$deptOpts).Replace("__LOGO__",$logo).Replace("__JSZIP__",$jszip),$u8)
 
+# Joining Kit (Onboarding): the six pages of the Alcove joining kit as images, details typed on top
+$kitPages=(1..6 | ForEach-Object { '"data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$sp\onboarding\page$_.jpg"))+'"' }) -join ","
+$src=& $read "$sp\onb.src.html"
+[IO.File]::WriteAllText("$code\onboarding.html",$src.Replace("__PAGES__","["+$kitPages+"]"),$u8)
+
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}
-$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html'))
+$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html')).Replace('__ONB__',(& $b 'onboarding.html'))
 [IO.File]::WriteAllText("$code\index.html",$out,$u8)
 "built loi.html, experience.html, relieving.html, cv.html, birthday.html and index.html"
