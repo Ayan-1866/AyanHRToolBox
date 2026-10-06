@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Joining Kit — Alcove HR</title>
+<title>__TITLE__</title>
+<meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -17,7 +18,7 @@ header{padding:22px 24px 4px;max-width:1360px;margin:0 auto}
 h1{font:600 1.5rem/1.2 "IBM Plex Sans","Segoe UI",sans-serif;margin:4px 0 2px}
 header p{margin:0;color:var(--muted);max-width:78ch}
 main{max-width:1360px;margin:0 auto;padding:12px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:20px;align-items:start}
-@media (max-width:1000px){main{grid-template-columns:1fr}}
+@media (max-width:1000px){main{grid-template-columns:minmax(0,1fr)}}
 details.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;margin-bottom:10px}
 details.card>summary{cursor:pointer;padding:12px 16px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;list-style:none;display:flex;justify-content:space-between}
 details.card>summary::after{content:"▾"}details.card:not([open])>summary::after{content:"▸"}
@@ -79,22 +80,50 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
 .kp .ah{position:absolute;left:10mm;right:10mm;top:6mm;font:9pt Arial,Helvetica,sans-serif;color:#333;display:flex;justify-content:space-between;gap:6mm;border-bottom:1px solid #bbb;padding-bottom:1.5mm}
 .kp img.doc{position:absolute;left:10mm;top:15mm;width:190mm;height:274mm;object-fit:contain}
 #printArea{display:none}
+/* HR portal vs. the public page sent to new joiners */
+body.joiner .hronly,body:not(.joiner) .jonly{display:none!important}
+.jbrand img{height:44px;display:block;margin-bottom:10px}
+.tw{overflow-x:auto}.tw table.rows{min-width:620px}
+.sharep{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.sharep input[readonly]{font-size:12px;color:var(--muted)}
+#after{margin-top:8px;font-size:13px}#after a{color:var(--teal);font-weight:600;margin-right:14px}
+@media (max-width:600px){header{padding:16px 16px 4px}main{padding:10px 16px 32px}}
 @media print{@page{size:A4;margin:0}body{background:#fff}body>*:not(#printArea){display:none!important}#printArea{display:block!important}
   #printArea .kp{break-after:page;page-break-after:always}#printArea .kp:last-child{break-after:auto;page-break-after:auto}}
 </style></head><body>
-<header><div class="kicker">Alcove HR · Onboarding</div><h1>Joining Kit</h1>
+<script>const MODE="__MODE__";if(MODE==="joiner")document.body.classList.add("joiner");</script>
+<header class="jonly"><div class="jbrand"><img src="data:image/png;base64,__LOGO__" alt="Alcove Realty"></div><h1>Welcome to Alcove Realty<span id="jName"></span></h1>
+<p>Please fill in your joining forms and attach your documents below. What you type stays on this phone or computer — nothing is uploaded. When you're done, tap <b>Send to HR</b> at the bottom: it makes one PDF of your joining kit to send to HR on WhatsApp or email.</p></header>
+<header class="hronly"><div class="kicker">Alcove HR · Onboarding</div><h1>Joining Kit</h1>
 <p>Fill the new joiner's details once — the Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 are filled in for you and print as one PDF, followed by a documents checklist and the joiner's attached documents. Use <b>Fill from employee</b> above to start from the HR Master Data.</p></header>
 <main>
 <div id="form">
-  <div class="card2">
-    <div class="pages" id="pageSel"></div>
+  <div class="card2" id="actCard">
+    <div class="pages hronly" id="pageSel"></div>
     <div class="actions">
-      <button class="b primary" id="prn" type="button">Print / Save as PDF</button>
-      <button class="b" id="blank" type="button">Print blank kit</button>
-      <button class="b" id="clr" type="button">Clear joiner</button>
+      <button class="b primary jonly" id="send" type="button">Send to HR</button>
+      <button class="b primary hronly" id="prn" type="button">Print / Save as PDF</button>
+      <button class="b" id="dl" type="button">Download PDF</button>
+      <button class="b hronly" id="blank" type="button">Print blank kit</button>
+      <button class="b hronly" id="share" type="button" aria-expanded="false">Share with joiner</button>
+      <button class="b" id="clr" type="button"><span class="hronly">Clear joiner</span><span class="jonly">Clear form</span></button>
       <span id="msg" role="status"></span>
     </div>
-    <div class="hint" style="margin-top:6px">Aadhaar, PAN and bank details stay only in this tab and are cleared when the browser is closed.</div>
+    <div id="after" class="jonly" hidden></div>
+    <div class="hint hronly" style="margin-top:6px">Aadhaar, PAN and bank details stay only in this tab and are cleared when the browser is closed.</div>
+    <div class="hint jonly" style="margin-top:6px">Your details are saved on this device so you can come back later. Tap <b>Clear form</b> when you're done if this is a shared device.</div>
+    <div class="sharep hronly" id="sharePanel" hidden>
+      <div class="grid">
+        <div class="span2"><label for="shLink">Link for the new joiner</label><input id="shLink" readonly></div>
+        <div><label for="shWa">HR WhatsApp no. for replies</label><input id="shWa" inputmode="tel" placeholder="Optional"></div>
+      </div>
+      <div class="actions" style="margin-top:8px">
+        <button class="b" id="shCopy" type="button">Copy link</button>
+        <button class="b" id="shWapp" type="button">Send on WhatsApp</button>
+        <button class="b" id="shMail" type="button">Send by email</button>
+      </div>
+      <div class="hint">The joiner fills their own kit and sends you back one PDF. The link carries only the name, employee ID, joining date, mobile and email typed here.</div>
+    </div>
   </div>
   <details class="card" open><summary>Personal details</summary><div class="grid">
     <div class="span2"><label for="NAME">Name (as per Aadhaar)</label><input id="NAME"></div>
@@ -112,7 +141,7 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
   </div></details>
   <details class="card" open><summary>Joining &amp; Alcove details</summary><div class="grid">
     <div><label for="DOJ">Date of joining</label><input id="DOJ" type="date"></div>
-    <div><label for="EMPID">Employee ID</label><input id="EMPID"></div>
+    <div class="hronly"><label for="EMPID">Employee ID</label><input id="EMPID"></div>
     <div><label for="TOTEXP">Total years of experience</label><input id="TOTEXP" placeholder="e.g. 4 years"></div>
     <div><label for="EARLIER">Worked with Alcove earlier?</label><select id="EARLIER"><option></option><option>No</option><option>Yes</option></select></div>
     <div><label for="PLACE">Place (for signatures)</label><input id="PLACE" value="Kolkata"></div>
@@ -133,9 +162,9 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
   <details class="card"><summary>PF / ESIC</summary><div class="grid">
     <div><label for="UANOLD">Existing UAN (if any)</label><input id="UANOLD"></div>
     <div><label for="ESICOLD">Existing ESIC (if any)</label><input id="ESICOLD"></div>
-    <div><label for="UANNEW">UAN allotted by ADLLP</label><input id="UANNEW"></div>
-    <div><label for="ESICNEW">ESIC allotted by ADLLP</label><input id="ESICNEW"></div>
-    <div><label for="PFNO">PF number (employer declaration)</label><input id="PFNO"></div>
+    <div class="hronly"><label for="UANNEW">UAN allotted by ADLLP</label><input id="UANNEW"></div>
+    <div class="hronly"><label for="ESICNEW">ESIC allotted by ADLLP</label><input id="ESICNEW"></div>
+    <div class="hronly"><label for="PFNO">PF number (employer declaration)</label><input id="PFNO"></div>
     <div><label for="DISP">Dispensary (ESIC)</label><input id="DISP"></div>
     <div><label for="EPFOLD">Earlier member of EPF Scheme?</label><select id="EPFOLD"><option></option><option>No</option><option>Yes</option></select></div>
     <div><label for="EPSOLD">Earlier member of EPS 1995?</label><select id="EPSOLD"><option></option><option>No</option><option>Yes</option></select></div>
@@ -148,10 +177,10 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
     <div><label for="EMREL">Relation</label><input id="EMREL"></div>
     <div><label for="EMPH">Contact no.</label><input id="EMPH"></div>
   </div></details>
-  <details class="card"><summary>Family members (up to 5)</summary><div><table class="rows" id="famT"></table></div></details>
-  <details class="card"><summary>Education (up to 4)</summary><div><table class="rows" id="eduT"></table></div></details>
-  <details class="card"><summary>Last three employers</summary><div><table class="rows" id="jobT"></table></div></details>
-  <details class="card"><summary>Professional references</summary><div><table class="rows" id="refT"></table></div></details>
+  <details class="card"><summary>Family members (up to 5)</summary><div class="tw"><table class="rows" id="famT"></table></div></details>
+  <details class="card"><summary>Education (up to 4)</summary><div class="tw"><table class="rows" id="eduT"></table></div></details>
+  <details class="card"><summary>Last three employers</summary><div class="tw"><table class="rows" id="jobT"></table></div></details>
+  <details class="card"><summary>Professional references</summary><div class="tw"><table class="rows" id="refT"></table></div></details>
   <details class="card" open><summary><span>Documents to attach <span id="docCount" style="text-transform:none;letter-spacing:0"></span></span></summary><div>
     <ul class="docs" id="docList"></ul>
     <div class="hint">Photos or PDFs — each page is added to the kit after the forms, with a checklist page in front. Files stay only in this tab and are gone after a refresh.</div>
@@ -228,12 +257,16 @@ function wrap(t,w,max){const words=t.replace(/\s*\n\s*/g," , ").split(/\s+/),L=[
 function span(x,y,t,w){const tw=meas.measureText(t).width,sc=tw>w?w/tw:1;
   return'<span class="v" style="left:'+(x*MM).toFixed(2)+"mm;top:"+((y-FONT*0.78*sc)*MM).toFixed(2)+"mm;font-size:"+(FONT*sc*MM).toFixed(3)+'mm">'+esc(t)+"</span>";}
 let photo="";
+// every piece of text on form page i, as [x, baseline y, text, max width]
+function pageTexts(i){const out=[];F.filter(f=>f.p===i).forEach(f=>{const t=f.t();if(!t)return;
+  if(f.lines)wrap(t,f.w,f.lines.length).forEach((ln,k)=>out.push([f.x,f.lines[k],ln,f.w]));else out.push([f.x,f.y,t,f.w]);});return out;}
 function pageHtml(i,blank){let h='<div class="kp"><img class="bg" src="'+PAGES[i]+'" alt="">';
-  if(!blank){F.filter(f=>f.p===i).forEach(f=>{const t=f.t();if(!t)return;
-    if(f.lines)wrap(t,f.w,f.lines.length).forEach((ln,k)=>{h+=span(f.x,f.lines[k],ln,f.w);});else h+=span(f.x,f.y,t,f.w);});
+  if(!blank){pageTexts(i).forEach(([x,y,t,w])=>{h+=span(x,y,t,w);});
     if(i===PHOTO.p&&photo)h+='<img class="photo" src="'+photo+'" alt="" style="left:'+(PHOTO.x*MM)+"mm;top:"+(PHOTO.y*MM)+"mm;width:"+(PHOTO.w*MM)+"mm;height:"+(PHOTO.h*MM)+'mm">';}
   return h+"</div>";}
-const chosen=()=>DOCS.filter((d,i)=>$("pg"+i).checked).flatMap(d=>d[1]);
+// joiners always get every form plus the checklist and their documents
+const chosen=()=>MODE==="joiner"?DOCS.flatMap(d=>d[1]):DOCS.filter((d,i)=>$("pg"+i).checked).flatMap(d=>d[1]);
+const withDocs=()=>MODE==="joiner"||$("pgAtt").checked;
 function preview(){const s=$("pvSel").value||"0",ax=s[0]==="a"?annexPages()[Number(s.slice(1))]:null;
   $("wrap").innerHTML=s==="c"?checklistHtml(false):ax?annexHtml(ax):pageHtml(s[0]==="a"?0:Number(s),false);fit();}
 function fit(){const w=$("wrap"),s=w.firstElementChild;if(!s)return;const k=w.clientWidth/s.offsetWidth;s.style.transform="scale("+k+")";w.style.height=Math.ceil(s.offsetHeight*k)+"px";}
@@ -285,7 +318,7 @@ function imgPage(file){return new Promise((res,rej)=>{const u=URL.createObjectUR
   im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("this photo couldn't be opened (iPhone HEIC photos: send them as JPG)."));};im.src=u;});}
 // PDF reader, loaded the first time a PDF is attached
 const PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";let pdfReady=null;
-const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error("couldn't load the PDF reader — check the internet connection."));document.head.appendChild(s);});
+const loadScript=(src,what)=>new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>{s.remove();rej(new Error("couldn't load the "+(what||"PDF reader")+" — check the internet connection."));};document.head.appendChild(s);});
 const pdfLib=()=>pdfReady||(pdfReady=loadScript(PDFJS+"pdf.min.js").then(()=>loadScript(PDFJS+"pdf.worker.min.js"))
   .then(()=>{pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.js";return pdfjsLib;}).catch(e=>{pdfReady=null;throw e;}));
 async function pdfPages(file){const lib=await pdfLib(),task=lib.getDocument({data:new Uint8Array(await file.arrayBuffer())});let cancelled=false;
@@ -312,10 +345,18 @@ function checklistHtml(blank){const ax=annexPages(),f=(l,t)=>"<div><b>"+l+"</b><
     '</table><div style="font-size:8.5pt;color:#555;margin-top:2mm">* Mandatory</div>'+
     '<div class="sig"><div>Employee signature</div><div>Verified by (HR)</div><div>Date</div></div></div>';}
 
-/* ---------- draft for this tab only (sensitive details) ---------- */
-const ids=()=>[...document.querySelectorAll("#form input:not([type=file]):not([type=checkbox]),#form select,#form textarea")].map(e=>e.id);
-function keep(){try{const o={};ids().forEach(id=>o[id]=$(id).value);o.SAME=$("SAME").checked;sessionStorage.setItem(K,JSON.stringify(o));}catch(e){}}
-try{const o=JSON.parse(sessionStorage.getItem(K)||"null");if(o){ids().forEach(id=>{if(o[id]!==undefined)$(id).value=o[id];});$("SAME").checked=!!o.SAME;}}catch(e){}
+/* ---------- draft: HR keeps it for this tab only; a joiner keeps it on their own device ---------- */
+const store=(()=>{try{return MODE==="joiner"?localStorage:sessionStorage;}catch(e){return null;}})();
+const ids=()=>[...document.querySelectorAll("#form input:not([type=file]):not([type=checkbox]),#form select,#form textarea")].map(e=>e.id).filter(id=>!/^sh/.test(id));
+// a joiner's link carries what HR already knows: #j=<name, employee ID, joining date, mobile, email, HR WhatsApp>
+const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const JL=(()=>{if(MODE!=="joiner")return{};try{const m=location.hash.match(/j=([\w-]+)/);return m?JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,"+").replace(/_/g,"/"))))):{};}catch(e){return{};}})();
+const JKEY=MODE==="joiner"?location.hash:"";
+function fromLink(){[["NAME","n"],["EMPID","id"],["DOJ","doj"],["MOBILE","m"],["EMAIL","e"]].forEach(([id,k])=>{if(JL[k]&&!$(id).value)$(id).value=JL[k];});}
+function keep(){try{const o={};ids().forEach(id=>o[id]=$(id).value);o.SAME=$("SAME").checked;o.__j=JKEY;store.setItem(K,JSON.stringify(o));}catch(e){}}
+try{const o=JSON.parse(store.getItem(K)||"null");if(o&&(o.__j||"")===JKEY){ids().forEach(id=>{if(o[id]!==undefined)$(id).value=o[id];});$("SAME").checked=!!o.SAME;}}catch(e){}
+fromLink();
+if(MODE==="joiner"){const fn=(v("NAME")||JL.n||"").split(/\s+/)[0];if(fn)$("jName").textContent=", "+fn[0].toUpperCase()+fn.slice(1).toLowerCase();$("form").appendChild($("actCard"));}
 if(!$("SIGNDATE").value){const t=new Date();$("SIGNDATE").value=new Date(t.getTime()-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);}
 let T;document.getElementById("form").addEventListener("input",e=>{if(e.target.id==="PHOTO")return;clearTimeout(T);T=setTimeout(()=>{keep();preview();},120);});
 document.getElementById("form").addEventListener("change",e=>{if(e.target.id==="PHOTO")return;keep();preview();});
@@ -327,20 +368,105 @@ document.getElementById("form").addEventListener("focusin",e=>{const id=e.target
   if(p!==undefined&&String(p)!==$("pvSel").value){$("pvSel").value=String(p);preview();}});
 
 /* ---------- print ---------- */
-function printPages(blank){const ps=chosen(),att=$("pgAtt").checked;if(!ps.length&&!att){say("Tick at least one form to print.","err");return;}
-  if(!blank&&!v("NAME")){say("Enter the joiner's name first (or use Print blank kit).","err");$("NAME").focus();return;}
-  if(!blank&&att&&REQ.some(r=>ATT[r[0]].files.some(f=>f.busy))){say("Still reading the attached files — try again in a moment.","err");return;}
+const pending=()=>REQ.filter(r=>!ATT[r[0]].files.length&&!ATT[r[0]].na).map(r=>r[1]);
+// checks before printing or making the PDF; returns false (with a message) when something is missing
+function ready(blank){const ps=chosen(),att=withDocs();if(!ps.length&&!att){say("Tick at least one form to print.","err");return false;}
+  if(!blank&&!v("NAME")){say(MODE==="joiner"?"Please enter your name first.":"Enter the joiner's name first (or use Print blank kit).","err");$("NAME").focus();return false;}
+  if(!blank&&att&&REQ.some(r=>ATT[r[0]].files.some(f=>f.busy))){say("Still reading the attached files — try again in a moment.","err");return false;}
+  return true;}
+function printPages(blank){if(!ready(blank))return;const ps=chosen(),att=withDocs();
   const ax=att&&!blank?annexPages():[],n=ps.length+(att?1:0)+ax.length;
   $("printArea").innerHTML=ps.map(i=>pageHtml(i,blank)).join("")+(att?checklistHtml(blank)+ax.map(annexHtml).join(""):"");
-  const pend=att&&!blank?REQ.filter(r=>!ATT[r[0]].files.length&&!ATT[r[0]].na).map(r=>r[1]):[];
+  const pend=att&&!blank?pending():[];
   say("Opening print… choose “Save as PDF” to get one PDF of "+plural(n,"page")+"."+(pend.length?" Pending documents: "+pend.join(", ")+".":""),"ok");
   const imgs=[...$("printArea").querySelectorAll("img")];
   Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r;}))).then(()=>setTimeout(()=>window.print(),80));}
 $("prn").onclick=()=>printPages(false);
 $("blank").onclick=()=>printPages(true);
 window.addEventListener("afterprint",()=>{$("printArea").innerHTML="";});
-$("clr").onclick=()=>{ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";
+
+/* ---------- the kit as a real PDF file (each page drawn at 1240×1754, as in the page images) ---------- */
+const PW=1240,PH=1754,PX=PW/210;
+const loadImg=src=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error("an image couldn't be drawn."));i.src=src;});
+function sheet(){const c=document.createElement("canvas");c.width=PW;c.height=PH;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,PW,PH);g.textBaseline="alphabetic";return[c,g];}
+function txt(g,t,x,y,w,size,color,weight){g.font=(weight||"")+" "+size+"px Arial";const tw=g.measureText(t).width;if(w&&tw>w)g.font=(weight||"")+" "+(size*w/tw)+"px Arial";g.fillStyle=color||"#111";g.fillText(t,x,y);}
+function lines(g,t,w,font){g.font=font;const L=[""];t.split(/\s+/).forEach(wd=>{const cur=L[L.length-1],n=(cur?cur+" ":"")+wd;if(cur&&g.measureText(n).width>w)L.push(wd);else L[L.length-1]=n;});return L.filter(Boolean);}
+function rule(g,x1,y1,x2,y2,color){g.strokeStyle=color||"#777";g.lineWidth=1.4;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();}
+async function formSheet(i,blank){const[c,g]=sheet();g.drawImage(await loadImg(PAGES[i]),0,0,PW,PH);
+  if(!blank){pageTexts(i).forEach(([x,y,t,w])=>txt(g,t,x,y,w,FONT,"#0b2a7a"));
+    if(i===PHOTO.p&&photo){const im=await loadImg(photo),s=Math.max(PHOTO.w/im.width,PHOTO.h/im.height),sw=PHOTO.w/s,sh=PHOTO.h/s;
+      g.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,PHOTO.x,PHOTO.y,PHOTO.w,PHOTO.h);}}
+  return c;}
+function checklistSheet(blank){const[c,g]=sheet(),L=16*PX,R=PW-16*PX,ax=annexPages();
+  g.textAlign="center";txt(g,"Joining Documents Checklist",PW/2,18*PX+24,0,31,"#111","bold");
+  txt(g,"Self-attested copies to be submitted on or before the date of joining",PW/2,18*PX+60,0,19,"#444");g.textAlign="left";
+  const colW=(R-L-8*PX)/2;[["Name",v("NAME")],["Employee ID",v("EMPID")],["Date of joining",dmy(v("DOJ"))],["Mobile no.",v("MOBILE")]].forEach(([l,val],i)=>{
+    const x=L+(i%2)*(colW+8*PX),y=18*PX+130+Math.floor(i/2)*54;txt(g,l,x,y,0,17,"#555");g.font="17px Arial";const lw=g.measureText(l).width+14;
+    if(!blank)txt(g,val,x+lw,y,colW-lw,21,"#0b2a7a");rule(g,x,y+10,x+colW,y+10,"#999");});
+  const X=[L,L+48,R-2*180,R-180,R];let y=18*PX+250;const pad=12;
+  g.fillStyle="#eceff3";g.fillRect(L,y,R-L,44);["#","Document","Status","Attached as"].forEach((h,k)=>txt(g,h,X[k]+pad,y+29,0,16,"#111","bold"));
+  const rowsY=[y];y+=44;rowsY.push(y);
+  REQ.forEach(([k,n,d,m],i)=>{const det=d?lines(g,d,X[2]-X[1]-2*pad,"15px Arial"):[],h=Math.max(52,24+26+det.length*20+6),p=pagesOf(k),a=ax.find(z=>z.k===k);
+    txt(g,String(i+1),X[0]+pad,y+30,0,18);txt(g,n+(m?" *":""),X[1]+pad,y+30,0,18);det.forEach((ln,j)=>txt(g,ln,X[1]+pad,y+54+j*20,0,15,"#555"));
+    if(!blank){txt(g,p?"Received":ATT[k].na?"Not applicable":"Pending",X[2]+pad,y+30,X[3]-X[2]-2*pad,18,"#0b2a7a");
+      if(a){txt(g,"Annexure "+a.a,X[3]+pad,y+30,0,18,"#0b2a7a");txt(g,plural(p,"page"),X[3]+pad,y+52,0,15,"#555");}}
+    y+=h;rowsY.push(y);});
+  rowsY.forEach(yy=>rule(g,L,yy,R,yy));X.forEach(xx=>rule(g,xx,rowsY[0],xx,y));
+  txt(g,"* Mandatory",L,y+30,0,15,"#555");
+  const sy=PH-22*PX,sw=(R-L-2*10*PX)/3;["Employee signature","Verified by (HR)","Date"].forEach((s,k)=>{const x=L+k*(sw+10*PX);rule(g,x,sy,x+sw,sy,"#333");g.textAlign="center";txt(g,s,x+sw/2,sy+26,0,17);g.textAlign="left";});
+  return c;}
+async function annexSheet(x){const[c,g]=sheet();txt(g,x.label,10*PX,6*PX+20,0,17,"#333");g.textAlign="right";txt(g,whoLine(),PW-10*PX,6*PX+20,0,17,"#333");g.textAlign="left";
+  rule(g,10*PX,6*PX+31,PW-10*PX,6*PX+31,"#bbb");const im=await loadImg(x.src),bx=10*PX,by=15*PX,bw=190*PX,bh=274*PX,s=Math.min(bw/im.width,bh/im.height);
+  g.drawImage(im,bx+(bw-im.width*s)/2,by+(bh-im.height*s)/2,im.width*s,im.height*s);return c;}
+let jsReady=null;
+const pdfMaker=()=>jsReady||(jsReady=loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js","PDF maker").then(()=>window.jspdf.jsPDF).catch(e=>{jsReady=null;throw e;}));
+async function buildPdf(){const JsPDF=await pdfMaker(),doc=new JsPDF({unit:"mm",format:"a4",compress:true}),att=withDocs();
+  const jobs=chosen().map(i=>()=>formSheet(i,false)).concat(att?[()=>checklistSheet(false)].concat(annexPages().map(x=>()=>annexSheet(x))):[]);
+  for(let k=0;k<jobs.length;k++){say("Making the PDF… page "+(k+1)+" of "+jobs.length);const c=await jobs[k]();if(k)doc.addPage();doc.addImage(c.toDataURL("image/jpeg",.82),"JPEG",0,0,210,297,undefined,"FAST");c.width=c.height=0;}
+  return{blob:doc.output("blob"),pages:jobs.length};}
+const pdfName=()=>"Joining Kit - "+(v("NAME")||"New joiner").replace(/[\\/:*?"<>|]+/g," ").trim()+".pdf";
+function saveFile(blob,name){const a=document.createElement("a"),u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),6e4);}
+let making=false;
+async function makePdf(){if(making||!ready(false))return null;making=true;try{return await buildPdf();}catch(e){say("Couldn't make the PDF: "+(e.message||e),"err");return null;}finally{making=false;}}
+$("dl").onclick=async()=>{const r=await makePdf();if(!r)return;saveFile(r.blob,pdfName());const pend=withDocs()?pending():[];
+  say("Saved “"+pdfName()+"” ("+plural(r.pages,"page")+")."+(pend.length?" Pending documents: "+pend.join(", ")+".":""),"ok");};
+
+/* ---------- joiner: send the finished kit to HR ---------- */
+const HRMAIL="__HRMAIL__";
+const waNo=s=>{const d=String(s||"").replace(/\D/g,"");return d.length===10?"91"+d:d;};
+function showAfter(sent){const name=v("NAME"),body="Dear HR,\n\nPlease find my joining kit attached.\n\nRegards,\n"+name+(v("MOBILE")?"\n"+v("MOBILE"):"");
+  let h=(sent?"":"Your PDF is saved as “"+esc(pdfName())+"”. Attach it and send it to HR: ")+'<a href="mailto:'+HRMAIL+"?subject="+encodeURIComponent("Joining kit – "+name)+"&body="+encodeURIComponent(body)+'">Email HR</a>';
+  if(JL.w)h+='<a href="https://wa.me/'+waNo(JL.w)+"?text="+encodeURIComponent("Hello, this is "+name+". I'm sending my joining kit PDF.")+'" target="_blank" rel="noopener">WhatsApp HR</a>';
+  $("after").innerHTML=h;$("after").hidden=false;}
+$("send").onclick=async()=>{if(!ready(false))return;const pend=pending();
+  if(pend.length&&!confirm("These documents are not attached yet:\n\n• "+pend.join("\n• ")+"\n\nSend your joining kit anyway?"))return;
+  const r=await makePdf();if(!r)return;const file=new File([r.blob],pdfName(),{type:"application/pdf"});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:"Joining kit – "+v("NAME")});say("Done — choose HR's WhatsApp chat or "+HRMAIL+" in the share menu if you haven't already.","ok");showAfter(true);return;}
+    catch(e){if(e&&e.name==="AbortError"){say("Not sent. Tap Send to HR again when you're ready.");return;}}}
+  saveFile(r.blob,pdfName());say("PDF ready ("+plural(r.pages,"page")+").","ok");showAfter(false);};
+
+/* ---------- HR: link for a new joiner, sent by WhatsApp or email ---------- */
+const SITE="__SITE__";
+try{$("shWa").value=localStorage.getItem("alcove-onb-hrwa")||"";}catch(e){}
+function joinLink(){const o={n:v("NAME"),id:v("EMPID"),doj:v("DOJ"),m:v("MOBILE"),e:v("EMAIL"),w:$("shWa").value.trim()};Object.keys(o).forEach(k=>{if(!o[k])delete o[k];});
+  return SITE+"join.html"+(Object.keys(o).length?"#j="+enc(o):"");}
+function inviteText(link){const fn=(v("NAME").split(/\s+/)[0]||"");
+  return"Dear "+(fn?fn[0].toUpperCase()+fn.slice(1).toLowerCase():"Candidate")+",\n\nWelcome to Alcove Realty! Please fill in your joining kit and attach your documents using this link:\n"+link+
+    "\n\nPlease keep these ready:\n"+REQ.map(r=>"• "+r[1]+(r[2]?" – "+r[2]:"")+(r[3]?" (mandatory)":"")).join("\n")+"\n• A passport-size photograph"+
+    "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the page and send us the PDF.\n\nRegards,\nHR Team, Alcove Realty";}
+function shareUI(){if(!$("sharePanel").hidden)$("shLink").value=joinLink();}
+$("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();
+  if(!p.hidden&&!v("NAME"))say("Tip: fill the joiner's name, mobile and email first (or use Fill from employee) — the link carries them.");};
+$("form").addEventListener("input",shareUI);
+$("shWa").addEventListener("change",()=>{try{localStorage.setItem("alcove-onb-hrwa",$("shWa").value.trim());}catch(e){}});
+$("shCopy").onclick=async()=>{const l=joinLink();try{await navigator.clipboard.writeText(l);say("Link copied.","ok");}catch(e){$("shLink").select();say("Press Ctrl+C to copy the link.");}};
+$("shWapp").onclick=()=>{const n=waNo(v("MOBILE"));window.open("https://wa.me/"+(n.length>=11?n:"")+"?text="+encodeURIComponent(inviteText(joinLink())),"_blank","noopener");};
+$("shMail").onclick=()=>{const a=document.createElement("a");a.href="mailto:"+encodeURIComponent(v("EMAIL"))+"?subject="+encodeURIComponent("Welcome to Alcove Realty – your joining kit")+"&body="+encodeURIComponent(inviteText(joinLink()));document.body.appendChild(a);a.click();a.remove();};
+
+$("clr").onclick=()=>{if(MODE==="joiner"&&!confirm("Clear everything you've filled in on this device?"))return;
+  ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";
   resetAtt();REQ.forEach(r=>{$("na-"+r[0]).checked=false;docUI(r[0]);});
-  try{sessionStorage.removeItem(K);}catch(e){}refreshPv();say("Joiner cleared.");};
+  try{store.removeItem(K);}catch(e){}if(MODE==="joiner")fromLink();shareUI();refreshPv();say(MODE==="joiner"?"Form cleared.":"Joiner cleared.");};
 refreshPv();
 </script></body></html>
