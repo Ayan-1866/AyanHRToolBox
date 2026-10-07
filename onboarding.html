@@ -139,14 +139,7 @@ table.subs td.acts{text-align:right}table.subs td.acts button{margin:0 0 4px 4px
         <button class="b" id="shWapp" type="button">Send on WhatsApp</button>
         <button class="b" id="shMail" type="button">Send by email</button>
       </div>
-      <div class="hint">Comes with the name, employee ID, joining date, mobile and email typed above already filled in.</div>
-      <div class="grid" style="margin-top:12px"><div class="span2"><label for="shAny">Onboarding link for anyone — no login needed</label><input id="shAny" readonly></div></div>
-      <div class="actions" style="margin-top:8px">
-        <button class="b" id="anyCopy" type="button">Copy link</button>
-        <button class="b" id="anyWapp" type="button">Send on WhatsApp</button>
-        <button class="b" id="anyMail" type="button">Send by email</button>
-      </div>
-      <div class="hint">Opens the onboarding page: Joining Kit, HR Manual, holiday list and management chart. The candidate submits the kit straight to you — it arrives under <b>Received from joiners</b> at the top of this page, and by email.</div>
+      <div class="hint">Comes with the name, employee ID, joining date, mobile and email typed above already filled in. When the joiner taps <b>Submit to HR</b>, the kit arrives under <b>Received from joiners</b> at the top of this page, and by email.</div>
     </div>
   </div>
   <details class="card" open><summary>Personal details</summary><div class="grid">
@@ -546,15 +539,14 @@ function inviteText(link,anyone){const fn=anyone?"":(v("NAME").split(/\s+/)[0]||
     "\n\nPlease keep these ready:\n"+REQ.map(r=>"• "+r[1]+(r[2]?" – "+r[2]:"")+(r[3]?" (mandatory)":"")).join("\n")+"\n• A passport-size photograph"+
     "\n\nWhen you're done, tap \"Submit to HR\" at the bottom of the joining kit – it comes straight to us."+
     (anyone?"":"\n\nPlease also read our new joiner handbook – HR Manual, holiday list 2026 and management:\n"+SITE+"handbook.html")+"\n\nRegards,\nHR Team, Alcove Realty";}
-function shareUI(){if(!$("sharePanel").hidden){$("shLink").value=joinLink();$("shAny").value=joinLink(true);}}
+function shareUI(){if(!$("sharePanel").hidden){$("shLink").value=joinLink();}}
 $("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();};
 $("form").addEventListener("input",shareUI);
 $("shWa").addEventListener("change",()=>{try{localStorage.setItem("alcove-onb-hrwa",$("shWa").value.trim());}catch(e){}});
-const copyLink=async(anyone)=>{try{await navigator.clipboard.writeText(joinLink(anyone));say("Link copied.","ok");}catch(e){$(anyone?"shAny":"shLink").select();say("Press Ctrl+C to copy the link.");}};
+const copyLink=async(anyone)=>{try{await navigator.clipboard.writeText(joinLink(anyone));say("Link copied.","ok");}catch(e){$("shLink").select();say("Press Ctrl+C to copy the link.");}};
 const waSend=anyone=>{const n=anyone?"":waNo(v("MOBILE"));window.open("https://wa.me/"+(n.length>=11?n:"")+"?text="+encodeURIComponent(inviteText(joinLink(anyone),anyone)),"_blank","noopener");};
 const mailSend=anyone=>{const a=document.createElement("a");a.href="mailto:"+(anyone?"":encodeURIComponent(v("EMAIL")))+"?subject="+encodeURIComponent("Welcome to Alcove Realty – your joining kit")+"&body="+encodeURIComponent(inviteText(joinLink(anyone),anyone));document.body.appendChild(a);a.click();a.remove();};
 $("shCopy").onclick=()=>copyLink(false);$("shWapp").onclick=()=>waSend(false);$("shMail").onclick=()=>mailSend(false);
-$("anyCopy").onclick=()=>copyLink(true);$("anyWapp").onclick=()=>waSend(true);$("anyMail").onclick=()=>mailSend(true);
 
 $("clr").onclick=()=>{if(MODE==="joiner"&&!confirm("Clear everything you've filled in on this device?"))return;
   ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";
