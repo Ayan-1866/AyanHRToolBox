@@ -232,6 +232,14 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
 .home>.ovhead,.home>.kpis,.home>.journey,.home>.note,.home>.sec[aria-labelledby="s-rec"],.home>.sec[aria-labelledby="s-join"]{grid-column:1/-1}
 .home .tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 @media (max-width:1000px){.home{grid-template-columns:minmax(0,1fr)}}
+/* onboarding link (public page for new joiners) */
+.olink{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:.84rem}
+.olink #olLbl{font-weight:600;flex-basis:100%}.olink small{font-weight:400;color:var(--muted)}
+.olink input{flex:1;min-width:0;font:inherit;font-size:.8rem;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:6px 8px}
+.olink .olb{display:flex;gap:6px}
+.olink button{font:600 .8rem "IBM Plex Sans","Segoe UI",sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:5px;padding:6px 11px;cursor:pointer}
+.olink button:hover{border-color:var(--navy);background:var(--hover)}
+.olink button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}.olink #olMsg{flex-basis:100%;color:var(--muted);font-size:.78rem}.olink #olMsg:empty{display:none}
 /* dark mode: navy accents would vanish on the dark background */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .steps .dot{border-color:var(--join);color:var(--join)}
   :root:not([data-theme="light"]) .steps button:hover .dot{background:var(--join);color:#0e1621}
@@ -361,6 +369,12 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
 
     <section class="sec" aria-labelledby="s-onb">
       <div class="hd"><h2 id="s-onb">Onboarding</h2><p>Joining forms and the joiner handbook</p></div>
+      <div class="olink" role="group" aria-labelledby="olLbl">
+        <span id="olLbl">Onboarding link <small>· anyone can open it, no login</small></span>
+        <input id="olUrl" readonly aria-label="Onboarding link" value="__SITE__welcome.html">
+        <span class="olb"><button class="btn" id="olCopy" type="button">Copy</button><button class="btn" id="olWa" type="button">WhatsApp</button><button class="btn" id="olMail" type="button">Email</button></span>
+        <span id="olMsg" role="status" aria-live="polite"></span>
+      </div>
       <div class="tiles">
         <button class="tile" data-view="onb">
           <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2"/><path d="m9 13 2 2 4-4"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
@@ -437,7 +451,16 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     const act=L.filter(p=>p.a!==false),bd=act.filter(p=>p.d===md);
     $("kBd").textContent=bd.length;$("kBdS").textContent=bd.length?bd.slice(0,2).map(p=>String(p.n).split(" ")[0]).join(", ")+(bd.length>2?" +"+(bd.length-2):""):"Birthday Cards";
     $("kJn").textContent=L.filter(p=>p.doj&&p.doj.slice(0,7)===ym).length;$("kIn").textContent=(L.length-act.length).toLocaleString("en-IN");}
-  document.addEventListener("hremps",kpis);kpis();})();
+  document.addEventListener("hremps",kpis);kpis();
+  // onboarding link: one public page for new joiners (welcome.html), shared by WhatsApp or email
+  const OL=document.getElementById("olUrl").value,olSay=t=>{document.getElementById("olMsg").textContent=t;};
+  const OL_TEXT="Dear Candidate,\n\nWelcome to Alcove Realty! Please open your onboarding page – read the HR Manual, holiday list and management chart, then fill in your joining kit and attach your documents:\n"+OL+
+    "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the joining kit and send us the PDF.\n\nRegards,\nHR Team, Alcove Realty";
+  document.getElementById("olCopy").onclick=async()=>{try{await navigator.clipboard.writeText(OL);olSay("Link copied.");}catch(e){document.getElementById("olUrl").select();olSay("Press Ctrl+C to copy.");}};
+  document.getElementById("olWa").onclick=()=>window.open("https://wa.me/?text="+encodeURIComponent(OL_TEXT),"_blank","noopener");
+  document.getElementById("olMail").onclick=()=>{location.href="mailto:?subject="+encodeURIComponent("Welcome to Alcove Realty – your onboarding")+"&body="+encodeURIComponent(OL_TEXT);};
+  document.getElementById("olUrl").addEventListener("focus",e=>e.target.select());
+})();
 </script>
   <iframe class="frame" id="v-cv" title="CV Inbox" data-url="cv.html" hidden></iframe>
   <iframe class="frame" id="v-jd" title="JD Maker" allow="clipboard-write" hidden></iframe>

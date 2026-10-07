@@ -73,9 +73,13 @@ $manual=(Get-ChildItem "$sp\handbook\manual-*.jpg" | Sort-Object Name | ForEach-
 $src=& $read "$sp\handbook.src.html"
 [IO.File]::WriteAllText("$code\handbook.html",$src.Replace("__LOGO__",$logo).Replace("__HOLIMG__",(& $jpg "$sp\handbook\holidays-2026.jpg")).Replace("__MANUAL__","["+$manual+"]").Replace("__HRMAIL__",$portalUsers[0]),$u8)
 
+# Onboarding landing page (public, no login): the one link sent to new joiners
+$src=& $read "$sp\welcome.src.html"
+[IO.File]::WriteAllText("$code\welcome.html",$src.Replace("__LOGO__",$logo).Replace("__HRMAIL__",$portalUsers[0]),$u8)
+
 # Dashboard
 $shell=& $read "$sp\shell.html"
 $b={param($f)[Convert]::ToBase64String([IO.File]::ReadAllBytes("$code\$f"))}
-$out=$shell.Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html')).Replace('__ONB__',(& $b 'onboarding.html')).Replace('__CONF__',(& $b 'confirmation.html'))
+$out=$shell.Replace("__SITE__",$site).Replace("__BUILD__",(Get-Date).ToString("d MMM yyyy, h:mm tt")).Replace("__LOGO__",$logo).Replace("__CLIENT_ID__",$clientId).Replace("__ALLOWED__",$allowedJson).Replace("__OTP_API__",$otpApi).Replace("__EXP__",(& $b "experience.html")).Replace("__REL__",(& $b "relieving.html")).Replace('__LOI__',(& $b 'loi.html')).Replace('__APPT__',(& $b 'appointment-letter.html')).Replace('__JOINER__',(& $b 'index2.html')).Replace('__BDAY__',(& $b 'birthday.html')).Replace('__JD__',(& $b 'jd.html')).Replace('__ONB__',(& $b 'onboarding.html')).Replace('__CONF__',(& $b 'confirmation.html'))
 [IO.File]::WriteAllText("$code\index.html",$out,$u8)
 "built loi.html, experience.html, relieving.html, cv.html, birthday.html and index.html"
