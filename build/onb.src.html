@@ -482,12 +482,13 @@ $("submit").onclick=async()=>{if(sending||!ready(false))return;const pend=pendin
     say("Sending your joining kit to HR ("+(r.blob.size/1048576).toFixed(1)+" MB)… please keep this page open.");
     const res=await fetch(API,{method:"POST",body:JSON.stringify({action:"submit",data:data,pdf:pdf,website:$("hpWeb").value})});
     const j=await res.json().catch(()=>({error:"HR's server didn't answer properly."}));
-    if(!j.ok)throw new Error(j.error==="Unknown request."?"online submission isn't switched on yet.":(j.error||"it wasn't received."));
+    if(j.error==="Unknown request."){const er=new Error("HR's online form isn't open yet — your details are safe on this device. Please tap “Share PDF instead” to send your kit to HR on WhatsApp or email.");er.side="hr";throw er;}
+    if(!j.ok)throw new Error(j.error||"it wasn't received.");
     say("Submitted ✓ HR has received your joining kit"+(j.ref&&j.ref!=="—"?" (reference "+j.ref+")":"")+".","ok");
     $("after").innerHTML='Thank you — the HR team will be in touch. Keep a copy for yourself: <a href="#" id="keepCopy">download your PDF</a>';$("after").hidden=false;
     $("keepCopy").onclick=e=>{e.preventDefault();if(lastPdf)saveFile(lastPdf,pdfName());};
     $("submit").textContent="Submit again";}
-  catch(e){say("Couldn't submit: "+(e.message||e)+" Check your internet connection and try again, or use “Share PDF instead” to send it on WhatsApp or email.","err");}
+  catch(e){say(e.side==="hr"?e.message:"Couldn't submit: "+(e.message||e)+" Check your internet connection and try again, or use “Share PDF instead” to send it on WhatsApp or email.","err");}
   finally{sending=false;$("submit").disabled=false;}};
 
 /* ---------- HR: kits submitted by joiners (read through the portal's HR login service) ---------- */
