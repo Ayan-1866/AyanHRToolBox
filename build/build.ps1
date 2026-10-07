@@ -39,6 +39,8 @@ $src=& $read "$sp\conf.src.html"
 $clientId="806459433972-nu3ab2cje78au731potll9bfu8pdv0pb.apps.googleusercontent.com"
 # Google accounts allowed to open the portal (the sign-in screen on the website)
 $portalUsers=@("hr@alcoverealty.in")
+# HR's WhatsApp number shown to new joiners (for sending the joining kit and for questions)
+$hrWa="918017014704"; $hrWaShow="+91 80170 14704"
 $allowedJson=ConvertTo-Json -Compress -InputObject @($portalUsers | ForEach-Object { $_.ToLower() })
 # Login codes emailed to HR: the Google Apps Script Web app URL (see server\google-apps-script\SETUP.md).
 # Leave the file out to keep the plain "allowed Google accounts only" sign-in.
@@ -63,7 +65,7 @@ $deptOpts=$depts -replace '<option>(.*?)</option>','<option value="$1"></option>
 $kitPages=(1..6 | ForEach-Object { '"data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$sp\onboarding\page$_.jpg"))+'"' }) -join ","
 # onboarding.html sits inside the HR portal; join.html is the public page whose link is sent to new joiners
 $site="https://employees.alcoverealty.in/p/hr-tool-box/"
-$src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace("__LOGO__",$logo).Replace("__SITE__",$site).Replace("__HRMAIL__",$portalUsers[0]).Replace("__OTP_API__",$otpApi)
+$src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace("__LOGO__",$logo).Replace("__SITE__",$site).Replace("__HRMAIL__",$portalUsers[0]).Replace("__HRWA_SHOW__",$hrWaShow).Replace("__HRWA__",$hrWa).Replace("__OTP_API__",$otpApi)
 [IO.File]::WriteAllText("$code\onboarding.html",$src.Replace("__MODE__","hr").Replace("__TITLE__",("Joining Kit "+[char]0x2014+" Alcove HR")),$u8)
 [IO.File]::WriteAllText("$code\join.html",$src.Replace("__MODE__","joiner").Replace("__TITLE__",("Joining Kit "+[char]0x2014+" Alcove Realty")),$u8)
 
@@ -71,11 +73,11 @@ $src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace
 $jpg={param($f)'data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes($f))}
 $manual=(Get-ChildItem "$sp\handbook\manual-*.jpg" | Sort-Object Name | ForEach-Object { '"'+(& $jpg $_.FullName)+'"' }) -join ","
 $src=& $read "$sp\handbook.src.html"
-[IO.File]::WriteAllText("$code\handbook.html",$src.Replace("__LOGO__",$logo).Replace("__HOLIMG__",(& $jpg "$sp\handbook\holidays-2026.jpg")).Replace("__MANUAL__","["+$manual+"]").Replace("__HRMAIL__",$portalUsers[0]),$u8)
+[IO.File]::WriteAllText("$code\handbook.html",$src.Replace("__LOGO__",$logo).Replace("__HOLIMG__",(& $jpg "$sp\handbook\holidays-2026.jpg")).Replace("__MANUAL__","["+$manual+"]").Replace("__HRMAIL__",$portalUsers[0]).Replace("__HRWA_SHOW__",$hrWaShow).Replace("__HRWA__",$hrWa),$u8)
 
 # Onboarding landing page (public, no login): the one link sent to new joiners
 $src=& $read "$sp\welcome.src.html"
-[IO.File]::WriteAllText("$code\welcome.html",$src.Replace("__LOGO__",$logo).Replace("__HRMAIL__",$portalUsers[0]),$u8)
+[IO.File]::WriteAllText("$code\welcome.html",$src.Replace("__LOGO__",$logo).Replace("__HRMAIL__",$portalUsers[0]).Replace("__HRWA_SHOW__",$hrWaShow).Replace("__HRWA__",$hrWa),$u8)
 
 # Dashboard
 $shell=& $read "$sp\shell.html"

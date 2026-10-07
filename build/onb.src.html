@@ -128,10 +128,9 @@ table.subs td.acts{text-align:right}table.subs td.acts button{margin:0 0 4px 4px
     </div>
     <div id="after" class="jonly" hidden></div>
     <div class="hint hronly" style="margin-top:6px">Aadhaar, PAN and bank details stay only in this tab and are cleared when the browser is closed.</div>
-    <div class="hint jonly" style="margin-top:6px">Your details are saved on this device so you can come back later. Tap <b>Clear form</b> when you're done if this is a shared device.</div>
+    <div class="hint jonly" style="margin-top:6px">Your details are saved on this device so you can come back later. Tap <b>Clear form</b> when you're done if this is a shared device.<br>Need help? WhatsApp HR on <a href="https://wa.me/__HRWA__" target="_blank" rel="noopener">__HRWA_SHOW__</a> or email <a href="mailto:__HRMAIL__">__HRMAIL__</a>.</div>
     <div class="sharep hronly" id="sharePanel" hidden>
       <div class="grid">
-        <div><label for="shWa">HR WhatsApp no. for replies</label><input id="shWa" inputmode="tel" placeholder="Optional"></div>
         <div class="span2"><label for="shLink">Link for this joiner</label><input id="shLink" readonly></div>
       </div>
       <div class="actions" style="margin-top:8px">
@@ -450,17 +449,17 @@ $("dl").onclick=async()=>{const r=await makePdf();if(!r)return;saveFile(r.blob,p
   say("Saved “"+pdfName()+"” ("+plural(r.pages,"page")+")."+(pend.length?" Pending documents: "+pend.join(", ")+".":""),"ok");};
 
 /* ---------- joiner: send the finished kit to HR ---------- */
-const HRMAIL="__HRMAIL__";
+const HRMAIL="__HRMAIL__",HRWA="__HRWA__";// HR's WhatsApp number, always the same
 const waNo=s=>{const d=String(s||"").replace(/\D/g,"");return d.length===10?"91"+d:d;};
 function showAfter(sent){const name=v("NAME"),body="Dear HR,\n\nPlease find my joining kit attached.\n\nRegards,\n"+name+(v("MOBILE")?"\n"+v("MOBILE"):"");
   let h=(sent?"":"Your PDF is saved as “"+esc(pdfName())+"”. Attach it and send it to HR: ")+'<a href="mailto:'+HRMAIL+"?subject="+encodeURIComponent("Joining kit – "+name)+"&body="+encodeURIComponent(body)+'">Email HR</a>';
-  if(JL.w)h+='<a href="https://wa.me/'+waNo(JL.w)+"?text="+encodeURIComponent("Hello, this is "+name+". I'm sending my joining kit PDF.")+'" target="_blank" rel="noopener">WhatsApp HR</a>';
+  h+='<a href="https://wa.me/'+HRWA+"?text="+encodeURIComponent("Hello, this is "+name+". I'm sending my joining kit PDF.")+'" target="_blank" rel="noopener">WhatsApp HR</a>';
   $("after").innerHTML=h;$("after").hidden=false;}
 $("send").onclick=async()=>{if(!ready(false))return;const pend=pending();
   if(pend.length&&!confirm("These documents are not attached yet:\n\n• "+pend.join("\n• ")+"\n\nSend your joining kit anyway?"))return;
   const r=await makePdf();if(!r)return;const file=new File([r.blob],pdfName(),{type:"application/pdf"});
   if(navigator.canShare&&navigator.canShare({files:[file]})){
-    try{await navigator.share({files:[file],title:"Joining kit – "+v("NAME")});say("Done — choose HR's WhatsApp chat or "+HRMAIL+" in the share menu if you haven't already.","ok");showAfter(true);return;}
+    try{await navigator.share({files:[file],title:"Joining kit – "+v("NAME")});say("Done — choose HR's WhatsApp (__HRWA_SHOW__) or "+HRMAIL+" in the share menu if you haven't already.","ok");showAfter(true);return;}
     catch(e){if(e&&e.name==="AbortError"){say("Not sent. Tap Send to HR again when you're ready.");return;}}}
   saveFile(r.blob,pdfName());say("PDF ready ("+plural(r.pages,"page")+").","ok");showAfter(false);};
 
@@ -528,9 +527,8 @@ if(MODE==="hr"){
 
 /* ---------- HR: link for a new joiner, sent by WhatsApp or email ---------- */
 const SITE="__SITE__";
-try{$("shWa").value=localStorage.getItem("alcove-onb-hrwa")||"";}catch(e){}
 // anyone=true: the general link, with no joiner's details (only HR's WhatsApp number for replies)
-function joinLink(anyone){const o=anyone?{w:$("shWa").value.trim()}:{n:v("NAME"),id:v("EMPID"),doj:v("DOJ"),m:v("MOBILE"),e:v("EMAIL"),w:$("shWa").value.trim()};Object.keys(o).forEach(k=>{if(!o[k])delete o[k];});
+function joinLink(anyone){const o=anyone?{}:{n:v("NAME"),id:v("EMPID"),doj:v("DOJ"),m:v("MOBILE"),e:v("EMAIL")};Object.keys(o).forEach(k=>{if(!o[k])delete o[k];});
   // the general link opens the onboarding page (welcome.html), which leads to the kit and the handbook
   return SITE+(anyone?"welcome.html":"join.html")+(Object.keys(o).length?"#j="+enc(o):"");}
 function inviteText(link,anyone){const fn=anyone?"":(v("NAME").split(/\s+/)[0]||"");
@@ -543,7 +541,6 @@ function inviteText(link,anyone){const fn=anyone?"":(v("NAME").split(/\s+/)[0]||
 function shareUI(){if(!$("sharePanel").hidden){$("shLink").value=joinLink();}}
 $("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();};
 $("form").addEventListener("input",shareUI);
-$("shWa").addEventListener("change",()=>{try{localStorage.setItem("alcove-onb-hrwa",$("shWa").value.trim());}catch(e){}});
 const copyLink=async(anyone)=>{try{await navigator.clipboard.writeText(joinLink(anyone));say("Link copied.","ok");}catch(e){$("shLink").select();say("Press Ctrl+C to copy the link.");}};
 const waSend=anyone=>{const n=anyone?"":waNo(v("MOBILE"));window.open("https://wa.me/"+(n.length>=11?n:"")+"?text="+encodeURIComponent(inviteText(joinLink(anyone),anyone)),"_blank","noopener");};
 const mailSend=anyone=>{const a=document.createElement("a");a.href="mailto:"+(anyone?"":encodeURIComponent(v("EMAIL")))+"?subject="+encodeURIComponent("Welcome to Alcove Realty – your joining kit")+"&body="+encodeURIComponent(inviteText(joinLink(anyone),anyone));document.body.appendChild(a);a.click();a.remove();};
