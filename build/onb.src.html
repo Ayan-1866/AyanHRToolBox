@@ -88,6 +88,15 @@ header p.jread{margin-top:10px;padding:10px 12px;background:var(--panel);border:
 .tw{overflow-x:auto}.tw table.rows{min-width:620px}
 .sharep{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .sharep input[readonly]{font-size:12px;color:var(--muted)}
+/* kits submitted by joiners (HR) */
+.subh{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.subh b{font-size:14px}.subh #subsInfo{font-size:12.5px;color:var(--muted)}.subh #subsRef{margin-left:auto}
+button.b.sm{padding:4px 10px;font-size:12px}
+table.subs{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+table.subs th{text-align:left;font-size:11px;color:var(--muted);font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line)}
+table.subs td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}table.subs tr.done td{color:var(--muted)}
+table.subs td.acts{text-align:right}table.subs td.acts button{margin:0 0 4px 4px}table.subs td:first-child{white-space:nowrap}
+.chip{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 7px;background:var(--chip)}.chip.st-New{background:#fff1bf;color:#6b4e00}
+#subsMore{margin-top:8px}
 #after{margin-top:8px;font-size:13px}#after a{color:var(--teal);font-weight:600;margin-right:14px}
 @media (max-width:600px){header{padding:16px 16px 4px}main{padding:10px 16px 32px}}
 @media print{@page{size:A4;margin:0}body{background:#fff}body>*:not(#printArea){display:none!important}#printArea{display:block!important}
@@ -95,16 +104,21 @@ header p.jread{margin-top:10px;padding:10px 12px;background:var(--panel);border:
 </style></head><body>
 <script>const MODE="__MODE__";if(MODE==="joiner")document.body.classList.add("joiner");</script>
 <header class="jonly"><div class="jbrand"><img src="data:image/png;base64,__LOGO__" alt="Alcove Realty"></div><h1>Welcome to Alcove Realty<span id="jName"></span></h1>
-<p>Please fill in your joining forms and attach your documents below. What you type stays on this phone or computer — nothing is uploaded. When you're done, tap <b>Send to HR</b> at the bottom: it makes one PDF of your joining kit to send to HR on WhatsApp or email.</p>
+<p>Please fill in your joining forms and attach your documents below. Your details are saved on this device as you type, so you can come back later. When you're done, tap <b>Submit to HR</b> at the bottom — your joining kit goes straight to the Alcove HR team.</p>
 <p class="jread">Before you join, please read: <a href="handbook.html#manual" target="_blank" rel="noopener">HR Manual</a> · <a href="handbook.html#holidays" target="_blank" rel="noopener">Holiday list 2026</a> · <a href="handbook.html#management" target="_blank" rel="noopener">Management</a></p></header>
 <header class="hronly"><div class="kicker">Alcove HR · Onboarding</div><h1>Joining Kit</h1>
 <p>Fill the new joiner's details once — the Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 are filled in for you and print as one PDF, followed by a documents checklist and the joiner's attached documents. Use <b>Fill from employee</b> above to start from the HR Master Data.</p></header>
 <main>
 <div id="form">
+  <div class="card2 hronly" id="subsCard">
+    <div class="subh"><b>Received from joiners</b><span id="subsInfo"></span><button class="b sm" id="subsRef" type="button">Refresh</button></div>
+    <div id="subsList"></div>
+  </div>
   <div class="card2" id="actCard">
     <div class="pages hronly" id="pageSel"></div>
     <div class="actions">
-      <button class="b primary jonly" id="send" type="button">Send to HR</button>
+      <button class="b primary jonly" id="submit" type="button">Submit to HR</button>
+      <button class="b jonly" id="send" type="button">Share PDF instead</button>
       <button class="b primary hronly" id="prn" type="button">Print / Save as PDF</button>
       <button class="b" id="dl" type="button">Download PDF</button>
       <button class="b hronly" id="blank" type="button">Print blank kit</button>
@@ -132,7 +146,7 @@ header p.jread{margin-top:10px;padding:10px 12px;background:var(--panel);border:
         <button class="b" id="anyWapp" type="button">Send on WhatsApp</button>
         <button class="b" id="anyMail" type="button">Send by email</button>
       </div>
-      <div class="hint">Opens the onboarding page: Joining Kit, HR Manual, holiday list and management chart. The candidate sends you back one PDF; nothing is uploaded anywhere.</div>
+      <div class="hint">Opens the onboarding page: Joining Kit, HR Manual, holiday list and management chart. The candidate submits the kit straight to you — it arrives under <b>Received from joiners</b> at the top of this page, and by email.</div>
     </div>
   </div>
   <details class="card" open><summary>Personal details</summary><div class="grid">
@@ -202,6 +216,7 @@ header p.jread{margin-top:10px;padding:10px 12px;background:var(--panel);border:
 </section>
 </main>
 <div id="printArea"></div>
+<input id="hpWeb" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 <script>
 const PAGES=__PAGES__;
 const $=id=>document.getElementById(id);
@@ -456,6 +471,67 @@ $("send").onclick=async()=>{if(!ready(false))return;const pend=pending();
     catch(e){if(e&&e.name==="AbortError"){say("Not sent. Tap Send to HR again when you're ready.");return;}}}
   saveFile(r.blob,pdfName());say("PDF ready ("+plural(r.pages,"page")+").","ok");showAfter(false);};
 
+/* ---------- joiner: submit the kit straight to HR (saved in HR's Google Drive, listed in the portal, emailed to HR) ---------- */
+const API="__OTP_API__";
+if(!API){$("submit").hidden=true;$("send").classList.add("primary");$("send").textContent="Send to HR";}
+const toB64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=()=>rej(new Error("couldn't read the PDF."));r.readAsDataURL(blob);});
+// a small copy of the photo, so HR can reopen the kit in the portal
+async function smallPhoto(){if(!photo)return"";try{const im=await loadImg(photo),s=Math.min(1,600/Math.max(im.width,im.height)),c=document.createElement("canvas");
+  c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.8);}catch(e){return"";}}
+let sending=false,lastPdf=null;
+$("submit").onclick=async()=>{if(sending||!ready(false))return;const pend=pending();
+  if(pend.length&&!confirm("These documents are not attached yet:\n\n• "+pend.join("\n• ")+"\n\nSubmit your joining kit anyway?"))return;
+  sending=true;$("submit").disabled=true;
+  try{const r=await makePdf();if(!r)return;lastPdf=r.blob;
+    const data={};ids().forEach(id=>{data[id]=$(id).value;});data.SAME=$("SAME").checked;data.__photo=await smallPhoto();
+    data.__docs=REQ.map(q=>[q[1],pagesOf(q[0]),ATT[q[0]].na]);
+    const pdf=await toB64(r.blob);
+    say("Sending your joining kit to HR ("+(r.blob.size/1048576).toFixed(1)+" MB)… please keep this page open.");
+    const res=await fetch(API,{method:"POST",body:JSON.stringify({action:"submit",data:data,pdf:pdf,website:$("hpWeb").value})});
+    const j=await res.json().catch(()=>({error:"HR's server didn't answer properly."}));
+    if(!j.ok)throw new Error(j.error==="Unknown request."?"online submission isn't switched on yet.":(j.error||"it wasn't received."));
+    say("Submitted ✓ HR has received your joining kit"+(j.ref&&j.ref!=="—"?" (reference "+j.ref+")":"")+".","ok");
+    $("after").innerHTML='Thank you — the HR team will be in touch. Keep a copy for yourself: <a href="#" id="keepCopy">download your PDF</a>';$("after").hidden=false;
+    $("keepCopy").onclick=e=>{e.preventDefault();if(lastPdf)saveFile(lastPdf,pdfName());};
+    $("submit").textContent="Submit again";}
+  catch(e){say("Couldn't submit: "+(e.message||e)+" Check your internet connection and try again, or use “Share PDF instead” to send it on WhatsApp or email.","err");}
+  finally{sending=false;$("submit").disabled=false;}};
+
+/* ---------- HR: kits submitted by joiners (read through the portal's HR login service) ---------- */
+let SUBS=[],subsAll=false;
+const hrLink=()=>{try{return parent!==window&&parent.__hrApi&&parent.__hrSession?{api:parent.__hrApi,s:parent.__hrSession()}:null;}catch(e){return null;}};
+const fmtAt=t=>t?new Date(t).toLocaleString("en-IN",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}):"";
+async function subsCall(body){const h=hrLink();if(!h||!h.s||!h.s.session)throw new Error("Sign in to the portal with your HR code to see kits from joiners.");
+  const r=await h.api(Object.assign({session:h.s.session},body));
+  if(!r.ok)throw new Error(r.error==="Unknown request."?"The HR login service (Apps Script) needs its new version before kits can be received.":(r.error||"No answer from the HR login service."));return r;}
+async function loadSubs(){if(MODE!=="hr")return;$("subsInfo").textContent="Loading…";
+  try{const r=await subsCall({action:"subs"});SUBS=r.list||[];renderSubs();}catch(e){$("subsInfo").textContent=e.message||String(e);$("subsList").innerHTML="";}}
+function renderSubs(){const n=SUBS.filter(x=>x.status==="New").length,rows=subsAll?SUBS:SUBS.slice(0,8);
+  $("subsInfo").textContent=SUBS.length?(n?n+" new · ":"")+SUBS.length+" in all":"Nothing yet — kits submitted from the onboarding link appear here.";
+  const btn=(a,id,t)=>'<button class="b sm" type="button" data-a="'+a+'" data-id="'+esc(id)+'">'+t+"</button>";
+  $("subsList").innerHTML=rows.length?'<div class="tw"><table class="subs"><tr><th>Received</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Status</th><th></th></tr>'+
+    rows.map(x=>'<tr class="'+(x.status==="Done"?"done":"")+'"><td>'+esc(fmtAt(x.at))+"</td><td><b>"+esc(x.name)+"</b>"+(x.email?'<span class="hint" style="display:block;margin:0">'+esc(x.email)+"</span>":"")+
+      "</td><td>"+esc(x.mobile)+"</td><td>"+esc(/^\d{4}-\d\d-\d\d/.test(x.doj)?dmy(x.doj.slice(0,10)):x.doj)+'</td><td><span class="chip st-'+esc(x.status)+'">'+esc(x.status)+'</span></td><td class="acts">'+
+      btn("open",x.id,"Open in kit")+btn("pdf",x.id,"PDF")+(x.status!=="Done"?btn("done",x.id,"Mark done"):"")+"</td></tr>").join("")+"</table></div>"+
+    (SUBS.length>8?'<button class="b sm" id="subsMore" type="button">'+(subsAll?"Show fewer":"Show all "+SUBS.length)+"</button>":""):"";}
+// put a submitted kit into this form (attached documents stay in the PDF)
+function loadKit(d){ids().forEach(id=>{if(d[id]!==undefined)$(id).value=d[id];});$("SAME").checked=!!d.SAME;
+  photo=d.__photo||"";$("phPrev").style.backgroundImage=photo?"url("+photo+")":"";
+  resetAtt();REQ.forEach(r=>{$("na-"+r[0]).checked=false;docUI(r[0]);});keep();shareUI();refreshPv();}
+if(MODE==="hr"){
+  $("subsRef").onclick=loadSubs;
+  $("subsList").addEventListener("click",async e=>{if(e.target.id==="subsMore"){subsAll=!subsAll;renderSubs();return;}
+    const b=e.target.closest("button[data-a]");if(!b)return;const id=b.dataset.id,x=SUBS.find(y=>y.id===id);b.disabled=true;
+    try{if(b.dataset.a==="open"){say("Opening the kit…");const r=await subsCall({action:"subdata",id:id});loadKit(r.data||{});
+        if(x&&x.status==="New"){x.status="Seen";renderSubs();subsCall({action:"substatus",id:id,status:"Seen"}).catch(()=>{});}
+        say("Loaded "+(x?x.name:"the joiner")+"'s kit — check it, then print or download. Their attached documents are in the PDF.","ok");}
+      else if(b.dataset.a==="pdf"){say("Fetching the PDF…");const r=await subsCall({action:"subpdf",id:id}),bin=atob(r.data),u=new Uint8Array(bin.length);
+        for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);saveFile(new Blob([u],{type:"application/pdf"}),r.name||"Joining Kit.pdf");say("PDF downloaded.","ok");}
+      else{await subsCall({action:"substatus",id:id,status:"Done"});if(x)x.status="Done";renderSubs();}}
+    catch(err){say(err.message||String(err),"err");}finally{b.disabled=false;}});
+  loadSubs();
+  try{parent.document.addEventListener("hrview",e=>{if(e.detail==="onb")loadSubs();});}catch(e){}}
+
 /* ---------- HR: link for a new joiner, sent by WhatsApp or email ---------- */
 const SITE="__SITE__";
 try{$("shWa").value=localStorage.getItem("alcove-onb-hrwa")||"";}catch(e){}
@@ -468,7 +544,7 @@ function inviteText(link,anyone){const fn=anyone?"":(v("NAME").split(/\s+/)[0]||
     (anyone?"Please open your onboarding page – read the HR Manual, holiday list and management chart, then fill in your joining kit and attach your documents:\n"
       :"Please fill in your joining kit and attach your documents using this link:\n")+link+
     "\n\nPlease keep these ready:\n"+REQ.map(r=>"• "+r[1]+(r[2]?" – "+r[2]:"")+(r[3]?" (mandatory)":"")).join("\n")+"\n• A passport-size photograph"+
-    "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the joining kit and send us the PDF."+
+    "\n\nWhen you're done, tap \"Submit to HR\" at the bottom of the joining kit – it comes straight to us."+
     (anyone?"":"\n\nPlease also read our new joiner handbook – HR Manual, holiday list 2026 and management:\n"+SITE+"handbook.html")+"\n\nRegards,\nHR Team, Alcove Realty";}
 function shareUI(){if(!$("sharePanel").hidden){$("shLink").value=joinLink();$("shAny").value=joinLink(true);}}
 $("share").onclick=()=>{const p=$("sharePanel");p.hidden=!p.hidden;$("share").setAttribute("aria-expanded",String(!p.hidden));shareUI();};

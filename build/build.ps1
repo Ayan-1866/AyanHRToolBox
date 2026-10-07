@@ -63,7 +63,7 @@ $deptOpts=$depts -replace '<option>(.*?)</option>','<option value="$1"></option>
 $kitPages=(1..6 | ForEach-Object { '"data:image/jpeg;base64,'+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$sp\onboarding\page$_.jpg"))+'"' }) -join ","
 # onboarding.html sits inside the HR portal; join.html is the public page whose link is sent to new joiners
 $site="https://employees.alcoverealty.in/p/hr-tool-box/"
-$src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace("__LOGO__",$logo).Replace("__SITE__",$site).Replace("__HRMAIL__",$portalUsers[0])
+$src=(& $read "$sp\onb.src.html").Replace("__PAGES__","["+$kitPages+"]").Replace("__LOGO__",$logo).Replace("__SITE__",$site).Replace("__HRMAIL__",$portalUsers[0]).Replace("__OTP_API__",$otpApi)
 [IO.File]::WriteAllText("$code\onboarding.html",$src.Replace("__MODE__","hr").Replace("__TITLE__",("Joining Kit "+[char]0x2014+" Alcove HR")),$u8)
 [IO.File]::WriteAllText("$code\join.html",$src.Replace("__MODE__","joiner").Replace("__TITLE__",("Joining Kit "+[char]0x2014+" Alcove Realty")),$u8)
 

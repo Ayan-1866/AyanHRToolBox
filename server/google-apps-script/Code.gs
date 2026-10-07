@@ -43,6 +43,15 @@ function doPost(e) {
       if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to open the Employee Master." });
       return out(master());
     }
+    // a new joiner submits their Joining Kit from the public page (no sign-in)
+    if (req.action === "submit") return out(submitKit(req));
+    if (["subs", "subdata", "subpdf", "substatus"].indexOf(req.action) >= 0) {
+      if (!checkSession(String(req.session || "")).ok) return out({ error: "Sign in again to see joining kit submissions." });
+      if (req.action === "subs") return out(subList());
+      if (req.action === "subdata") return out(subData(String(req.id || "")));
+      if (req.action === "subpdf") return out(subPdf(String(req.id || "")));
+      return out(subStatus(String(req.id || ""), String(req.status || "")));
+    }
     return out({ error: "Unknown request." });
   } catch (err) {
     return out({ error: String((err && err.message) || err) });
@@ -280,6 +289,111 @@ function master() {
   return { ok: true, at: Date.now(), source: t.ss.getName() + " › " + t.tab.getName(),
     headers: keep.map(function (i) { return String(shown[h.row][i]).trim() || "Column " + (i + 1); }),
     rows: rows.map(function (row) { return keep.map(function (i) { return row[i]; }); }), active: active, cols: map };
+}
+
+/* ---------- Joining Kit submissions ----------
+ * New joiners submit their kit from the public join.html page. Each one is saved in hr@'s Google Drive
+ * (folder "Alcove Joining Kit Submissions": the PDF + the typed details as JSON), listed in the
+ * "Joining Kit Submissions" sheet in that folder, and emailed to HR with the PDF attached.
+ */
+const SUB_FOLDER = "Alcove Joining Kit Submissions";
+const SUB_MAX_MB = 30;          // largest kit accepted
+const SUB_PER_HOUR = 40;        // overall cap, against abuse of the public form
+const SUB_COLS = ["Received", "Name", "Mobile", "Email", "Date of joining", "Employee ID", "Status", "PDF", "ID", "PDF file", "Data file"];
+function subStore() {
+  const p = PropertiesService.getScriptProperties();
+  let folder = null, ss = null;
+  try { if (p.getProperty("SUB_FOLDER")) folder = DriveApp.getFolderById(p.getProperty("SUB_FOLDER")); } catch (x) { folder = null; }
+  if (!folder) { folder = DriveApp.createFolder(SUB_FOLDER); p.setProperty("SUB_FOLDER", folder.getId()); }
+  try { if (p.getProperty("SUB_SHEET")) ss = SpreadsheetApp.openById(p.getProperty("SUB_SHEET")); } catch (x) { ss = null; }
+  if (!ss) {
+    ss = SpreadsheetApp.create("Joining Kit Submissions");
+    const sh = ss.getSheets()[0];
+    sh.setName("Submissions"); sh.appendRow(SUB_COLS); sh.setFrozenRows(1); sh.getRange(1, 1, 1, SUB_COLS.length).setFontWeight("bold");
+    DriveApp.getFileById(ss.getId()).moveTo(folder);
+    p.setProperty("SUB_SHEET", ss.getId());
+  }
+  return { folder: folder, sheet: ss.getSheetByName("Submissions") || ss.getSheets()[0] };
+}
+// text typed by the public goes into the sheet as plain text, never as a formula
+function cell(v) { v = String(v == null ? "" : v).slice(0, 300); return /^[=+\-@]/.test(v) ? "'" + v : v; }
+function submitKit(req) {
+  if (req.website) return { ok: true, ref: "—" };   // spam trap: a hidden field people never fill
+  const d = (req.data && typeof req.data === "object") ? req.data : {};
+  const name = String(d.NAME || "").replace(/\s+/g, " ").trim().slice(0, 120);
+  if (!name) return { error: "Please enter your name before submitting." };
+  if (typeof req.pdf !== "string" || !req.pdf) return { error: "The joining kit PDF is missing. Please try again." };
+  if (req.pdf.length > SUB_MAX_MB * 1.37e6) return { error: "Your kit is larger than " + SUB_MAX_MB + " MB. Attach smaller photos or fewer pages, then submit again." };
+  const cache = CacheService.getScriptCache(), n = Number(cache.get("subs:hour") || 0);
+  if (n >= SUB_PER_HOUR) return { error: "Too many submissions right now. Please try again in an hour." };
+  cache.put("subs:hour", String(n + 1), 3600);
+  const bytes = Utilities.base64Decode(req.pdf);
+  if (Utilities.newBlob(bytes.slice(0, 5)).getDataAsString() !== "%PDF-") return { error: "That file isn't a PDF. Please try again." };
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  let ref, pdf, s;
+  try {
+    s = subStore();
+    ref = Utilities.getUuid().replace(/-/g, "").slice(0, 8).toUpperCase();
+    const stamp = Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd HHmm");
+    const base = "Joining Kit - " + name.replace(/[\\/:*?"<>|]+/g, " ") + " - " + stamp;
+    pdf = s.folder.createFile(Utilities.newBlob(bytes, "application/pdf", base + ".pdf"));
+    const json = s.folder.createFile(Utilities.newBlob(JSON.stringify(d), "application/json", base + ".json"));
+    s.sheet.appendRow([new Date(), cell(name), cell(d.MOBILE), cell(d.EMAIL), cell(d.DOJ), cell(d.EMPID), "New", pdf.getUrl(), ref, pdf.getId(), json.getId()]);
+  } finally {
+    lock.releaseLock();
+  }
+  const when = Utilities.formatDate(new Date(), "Asia/Kolkata", "d MMM yyyy, h:mm a");
+  const lines = [["Name", name], ["Mobile", d.MOBILE], ["Email", d.EMAIL], ["Date of joining", d.DOJ], ["Reference", ref]].filter(function (x) { return x[1]; });
+  const mail = {
+    to: HR_EMAIL, name: "Alcove HR Tool", subject: "New joining kit: " + name + " (" + ref + ")",
+    body: name + " submitted their joining kit (" + when + ").\n\n" + lines.map(function (x) { return x[0] + ": " + x[1]; }).join("\n") +
+      "\n\nOpen it in the HR Tool → Joining Kit → Received from joiners, or in Drive: " + pdf.getUrl(),
+    htmlBody: '<div style="font-family:Segoe UI,Arial,sans-serif;max-width:480px;padding:22px;border:1px solid #e0e7f0;border-radius:12px">' +
+      '<div style="color:#204768;font-weight:600;letter-spacing:.1em;font-size:12px;text-transform:uppercase">Alcove HR Tool · Joining kit received</div>' +
+      '<p style="color:#16304d;font-size:15px"><b>' + esc(name) + '</b> submitted their joining kit<br><span style="color:#5d6e84;font-size:13px">' + when + '</span></p>' +
+      '<table style="font-size:14px;color:#16304d;border-collapse:collapse">' + lines.map(function (x) { return '<tr><td style="padding:2px 14px 2px 0;color:#5d6e84">' + esc(x[0]) + '</td><td>' + esc(x[1]) + '</td></tr>'; }).join("") + '</table>' +
+      '<p style="color:#5d6e84;font-size:13px">The PDF is attached. It is also in the HR Tool under Joining Kit → Received from joiners, and in Drive (' + esc(SUB_FOLDER) + ').</p></div>'
+  };
+  if (bytes.length < 20e6) mail.attachments = [pdf.getBlob()];
+  MailApp.sendEmail(mail);
+  return { ok: true, ref: ref };
+}
+function subRows() {
+  const s = subStore(), v = s.sheet.getDataRange().getValues();
+  return { s: s, rows: v.slice(1).map(function (r, i) { return { row: i + 2, r: r }; }).filter(function (x) { return x.r[8]; }) };
+}
+function subFind(id) {
+  const x = subRows().rows.filter(function (y) { return String(y.r[8]) === id; })[0];
+  if (!x) throw new Error("That submission wasn't found.");
+  return x;
+}
+function subList() {
+  const list = subRows().rows.map(function (x) {
+    const r = x.r;
+    return { id: String(r[8]), at: r[0] instanceof Date ? r[0].getTime() : Date.parse(r[0]) || 0, name: String(r[1]), mobile: String(r[2]), email: String(r[3]),
+      doj: String(r[4]), empid: String(r[5]), status: String(r[6] || "New"), url: String(r[7]) };
+  }).sort(function (a, b) { return b.at - a.at; });
+  return { ok: true, list: list };
+}
+function subData(id) {
+  const x = subFind(id);
+  return { ok: true, data: JSON.parse(DriveApp.getFileById(String(x.r[10])).getBlob().getDataAsString()) };
+}
+function subPdf(id) {
+  const x = subFind(id), f = DriveApp.getFileById(String(x.r[9]));
+  return { ok: true, name: f.getName(), data: Utilities.base64Encode(f.getBlob().getBytes()) };
+}
+function subStatus(id, status) {
+  if (["New", "Seen", "Done"].indexOf(status) < 0) throw new Error("Unknown status.");
+  const x = subFind(id), s = subStore();
+  s.sheet.getRange(x.row, 7).setValue(status);
+  return { ok: true };
+}
+/* Run once from the editor (select it → Run) to grant Drive access and create the submissions folder and sheet. */
+function testSubmissions() {
+  const s = subStore();
+  Logger.log("Submissions folder: " + s.folder.getUrl() + " | sheet rows: " + (s.sheet.getLastRow() - 1));
 }
 
 /* Run once from the editor to grant Sheets access and see which columns were found (no employee data is shown). */

@@ -25,3 +25,16 @@ They can open the portal only after HR gives them the code. No server access nee
 ## Changing it later
 Edit `Code.gs` in script.google.com, then **Deploy → Manage deployments → ✏️ → Version: New version
 → Deploy**. The URL stays the same.
+
+## Joining kit submissions (Submit to HR)
+
+New joiners can submit their Joining Kit from the public `join.html` page. Each kit is saved in hr@'s
+Google Drive (folder **Alcove Joining Kit Submissions** — the PDF plus the typed details), listed in the
+**Joining Kit Submissions** sheet in that folder, and emailed to HR with the PDF attached. In the portal,
+they appear at the top of **Joining Kit → Received from joiners**.
+
+After updating `Code.gs`:
+1. In the Apps Script editor, pick **testSubmissions** in the function list and press **Run**. Allow the
+   Google Drive permission it asks for. The log shows the new folder's link.
+2. **Deploy → Manage deployments →** the pencil on the existing deployment **→ Version: New version → Deploy.**
+   The Web app URL stays the same, so `build/otp-api.txt` doesn't change.

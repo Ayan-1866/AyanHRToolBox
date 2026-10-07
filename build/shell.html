@@ -379,7 +379,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
         <button class="tile" data-view="onb">
           <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2"/><path d="m9 13 2 2 4-4"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
           <h3>Joining Kit</h3>
-          <p>Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 — filled from one set of details and printed as one PDF.</p>
+          <p>Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 — filled from one set of details and printed as one PDF. Kits submitted by joiners arrive here.</p>
           <div class="tags"><span class="tag">6 pages</span><span class="tag">PDF</span><span class="tag">Blank kit</span></div>
         </button>
         <button class="tile" data-view="hb">
@@ -455,7 +455,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
   // onboarding link: one public page for new joiners (welcome.html), shared by WhatsApp or email
   const OL=document.getElementById("olUrl").value,olSay=t=>{document.getElementById("olMsg").textContent=t;};
   const OL_TEXT="Dear Candidate,\n\nWelcome to Alcove Realty! Please open your onboarding page – read the HR Manual, holiday list and management chart, then fill in your joining kit and attach your documents:\n"+OL+
-    "\n\nWhen you're done, tap \"Send to HR\" at the bottom of the joining kit and send us the PDF.\n\nRegards,\nHR Team, Alcove Realty";
+    "\n\nWhen you're done, tap \"Submit to HR\" at the bottom of the joining kit – it comes straight to us.\n\nRegards,\nHR Team, Alcove Realty";
   document.getElementById("olCopy").onclick=async()=>{try{await navigator.clipboard.writeText(OL);olSay("Link copied.");}catch(e){document.getElementById("olUrl").select();olSay("Press Ctrl+C to copy.");}};
   document.getElementById("olWa").onclick=()=>window.open("https://wa.me/?text="+encodeURIComponent(OL_TEXT),"_blank","noopener");
   document.getElementById("olMail").onclick=()=>{location.href="mailto:?subject="+encodeURIComponent("Welcome to Alcove Realty – your onboarding")+"&body="+encodeURIComponent(OL_TEXT);};
