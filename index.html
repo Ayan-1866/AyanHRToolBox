@@ -229,7 +229,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
 .note{border-radius:6px;border-style:solid;font-size:.82rem;background:var(--card)}
 /* Recruitment and the 3-tool sections span the full width; Exit and Celebrations share a row */
 .home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:22px;align-content:start}
-.home>.ovhead,.home>.kpis,.home>.journey,.home>.note,.home>.sec[aria-labelledby="s-rec"],.home>.sec[aria-labelledby="s-join"],.home>.sec[aria-labelledby="s-onb"]{grid-column:1/-1}
+.home>.ovhead,.home>.kpis,.home>.journey,.home>.note,.home>.sec[aria-labelledby="s-rec"],.home>.sec[aria-labelledby="s-join"]{grid-column:1/-1}
 .home .tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 @media (max-width:1000px){.home{grid-template-columns:minmax(0,1fr)}}
 /* dark mode: navy accents would vanish on the dark background */
@@ -265,15 +265,16 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     <button data-view="joiner"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg>New Joiner Toolkit</button>
     <div class="grp">Onboarding</div>
     <button data-view="onb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2"/><path d="m9 13 2 2 4-4"/></svg>Joining Kit</button>
-    <button data-view="conf"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="m8.5 14.5 2.5 2.5 4.5-5"/></svg>Confirmation Letter</button>
     <button data-view="hb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2z"/><path d="M20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2z"/></svg>Joiner Handbook</button>
+    <div class="grp">Confirmation</div>
+    <button data-view="conf"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="m8.5 14.5 2.5 2.5 4.5-5"/></svg>Confirmation Letter</button>
     <div class="grp">Exit</div>
     <button data-view="exp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M9 13.5 7.5 21l4.5-2.5 4.5 2.5L15 13.5"/></svg>Experience Letter</button>
     <button data-view="rel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/><path d="M10 16l4-4-4-4M14 12H4"/></svg>Relieving Letter</button>
     <div class="grp">Celebrations</div>
     <button data-view="bday"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 5 0M12 12V8M12 5.5c.8-.9.8-1.8 0-2.5-.8.7-.8 1.6 0 2.5z"/></svg>Birthday Cards</button>
   </nav>
-  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Confidential · for HR use only<span style="display:block;margin-top:4px;opacity:.75">Version 7 Oct 2026, 5:56 AM</span></span></div>
+  <div class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Confidential · for HR use only<span style="display:block;margin-top:4px;opacity:.75">Version 7 Oct 2026, 6:02 AM</span></span></div>
 </aside>
 
 <main class="content">
@@ -359,7 +360,7 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
     </section>
 
     <section class="sec" aria-labelledby="s-onb">
-      <div class="hd"><h2 id="s-onb">Onboarding &amp; confirmation</h2><p>Joining forms, the joiner handbook, and the confirmation letter after probation</p></div>
+      <div class="hd"><h2 id="s-onb">Onboarding</h2><p>Joining forms and the joiner handbook</p></div>
       <div class="tiles">
         <button class="tile" data-view="onb">
           <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2"/><path d="m9 13 2 2 4-4"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
@@ -367,17 +368,23 @@ body{font:14px/1.5 "IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans
           <p>Onboarding Form, Nomination Form, Employee Joining Form and EPF Form 11 — filled from one set of details and printed as one PDF.</p>
           <div class="tags"><span class="tag">6 pages</span><span class="tag">PDF</span><span class="tag">Blank kit</span></div>
         </button>
-        <button class="tile" data-view="conf">
-          <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="m8.5 14.5 2.5 2.5 4.5-5"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-          <h3>Confirmation Letter</h3>
-          <p>Confirms an employee's services after probation, on the Alcove letterhead with the ref no. filled in.</p>
-          <div class="tags"><span class="tag">PDF</span><span class="tag">Auto date from probation</span></div>
-        </button>
         <button class="tile" data-view="hb">
           <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2z"/><path d="M20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2z"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
           <h3>Joiner Handbook</h3>
           <p>What every new joiner should read: holiday list 2026, the management chart and the HR Manual. Also a public link for joiners.</p>
           <div class="tags"><span class="tag">Holidays 2026</span><span class="tag">Org chart</span><span class="tag">HR Manual</span></div>
+        </button>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s-conf">
+      <div class="hd"><h2 id="s-conf">Confirmation</h2><p>After the probation period</p></div>
+      <div class="tiles">
+        <button class="tile" data-view="conf">
+          <div class="top"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="m8.5 14.5 2.5 2.5 4.5-5"/></svg></span><span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          <h3>Confirmation Letter</h3>
+          <p>Confirms an employee's services after probation, on the Alcove letterhead with the ref no. filled in.</p>
+          <div class="tags"><span class="tag">PDF</span><span class="tag">Auto date from probation</span></div>
         </button>
       </div>
     </section>
