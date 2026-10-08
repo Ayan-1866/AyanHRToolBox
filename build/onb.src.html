@@ -54,6 +54,14 @@ button.b:hover{border-color:var(--teal)}button.primary{background:var(--navy);co
 .kp>img.bg{position:absolute;inset:0;width:100%;height:100%}
 .kp .v{position:absolute;white-space:nowrap;font-family:Arial,"Liberation Sans",Helvetica,sans-serif;color:#0b2a7a;line-height:1;transform-origin:left bottom}
 .kp img.photo{position:absolute;object-fit:cover}
+.kp img.sign{position:absolute;object-fit:contain}
+.kp.cl .sig div{position:relative}.kp.cl .sig img{position:absolute;left:0;right:0;bottom:100%;height:14mm;max-width:100%;margin:0 auto 1mm;object-fit:contain}
+/* signature pad */
+.sigpad{position:relative;border:1.5px dashed var(--line);border-radius:6px;background:#fff;height:170px;touch-action:none}
+.sigpad canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:none;border-radius:6px}
+.sigpad .sigline{position:absolute;left:16px;right:16px;bottom:30px;border-top:1px solid #c8ced8;font-size:11px;color:#8a94a3;padding-top:3px;pointer-events:none}
+
+.sigprev{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}.sigprev img{height:34px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:2px 6px}
 /* ---------- documents to attach ---------- */
 .docs{list-style:none;margin:0;padding:0}
 .docs li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 0;border-top:1px solid var(--line)}
@@ -197,6 +205,14 @@ table.subs td.acts{text-align:right}table.subs td.acts button{margin:0 0 4px 4px
   <details class="card"><summary>Education (up to 4)</summary><div class="tw"><table class="rows" id="eduT"></table></div></details>
   <details class="card"><summary>Last three employers</summary><div class="tw"><table class="rows" id="jobT"></table></div></details>
   <details class="card"><summary>Professional references</summary><div class="tw"><table class="rows" id="refT"></table></div></details>
+  <details class="card" open id="sigCard"><summary><span>Signature <span id="sigState" style="text-transform:none;letter-spacing:0"></span></span></summary><div>
+    <p class="hint" style="margin:0 0 8px">Sign inside the box with your finger or mouse — or upload a photo of your signature on white paper. It is printed on the Onboarding Form, the Declaration, EPF Form 11 and the documents checklist.</p>
+    <div class="sigpad"><canvas id="sigPad" aria-label="Signature pad: draw your signature here"></canvas><span class="sigline" aria-hidden="true">Sign above this line</span></div>
+    <div class="actions" style="margin-top:8px">
+      <button class="b" id="sigClear" type="button">Clear signature</button>
+      <button class="b" id="sigUp" type="button">Upload signature photo</button><input id="sigFile" type="file" accept="image/*" hidden>
+    </div>
+  </div></details>
   <details class="card" open><summary><span>Documents to attach <span id="docCount" style="text-transform:none;letter-spacing:0"></span></span></summary><div>
     <ul class="docs" id="docList"></ul>
     <div class="hint">Photos or PDFs — each page is added to the kit after the forms, with a checklist page in front. Files stay only in this tab and are gone after a refresh.</div>
@@ -264,6 +280,10 @@ add(5,218,429,300,()=>dmy(v("SIGNDATE")));add(5,224,448,300,()=>v("PLACE"));
 add(5,420,610,345,()=>up(v("NAME")));add(5,862,610,200,()=>dmy(v("DOJ")));add(5,352,650,290,()=>v("PFNO"));add(5,716,650,410,()=>v("UANNEW"));
 const PHOTO={p:2,x:930,y:290,w:225,h:272};
 const perm=()=>$("SAME").checked?v("PADDR"):v("PERM");
+// the employee's signature: Onboarding Form (with the date), Declaration box, EPF "Signature of Member"
+const SIGNS=[{p:0,x:452,y:1127,w:300,h:52,left:1},{p:3,x:794,y:1437,w:296,h:76},{p:5,x:918,y:372,w:200,h:62}];
+let sign="";
+add(0,780,1168,430,()=>sign?"Date: "+dmy(v("SIGNDATE")):"");
 
 /* ---------- drawing ---------- */
 const MM=210/1240,FONT=20;// 20px on the page image ≈ 9.6 pt
@@ -279,7 +299,8 @@ function pageTexts(i){const out=[];F.filter(f=>f.p===i).forEach(f=>{const t=f.t(
   if(f.lines)wrap(t,f.w,f.lines.length).forEach((ln,k)=>out.push([f.x,f.lines[k],ln,f.w]));else out.push([f.x,f.y,t,f.w]);});return out;}
 function pageHtml(i,blank){let h='<div class="kp"><img class="bg" src="'+PAGES[i]+'" alt="">';
   if(!blank){pageTexts(i).forEach(([x,y,t,w])=>{h+=span(x,y,t,w);});
-    if(i===PHOTO.p&&photo)h+='<img class="photo" src="'+photo+'" alt="" style="left:'+(PHOTO.x*MM)+"mm;top:"+(PHOTO.y*MM)+"mm;width:"+(PHOTO.w*MM)+"mm;height:"+(PHOTO.h*MM)+'mm">';}
+    if(i===PHOTO.p&&photo)h+='<img class="photo" src="'+photo+'" alt="" style="left:'+(PHOTO.x*MM)+"mm;top:"+(PHOTO.y*MM)+"mm;width:"+(PHOTO.w*MM)+"mm;height:"+(PHOTO.h*MM)+'mm">';
+    if(sign)SIGNS.filter(s=>s.p===i).forEach(s=>{h+='<img class="sign" src="'+sign+'" alt="" style="left:'+(s.x*MM)+"mm;top:"+(s.y*MM)+"mm;width:"+(s.w*MM)+"mm;height:"+(s.h*MM)+"mm;object-position:"+(s.left?"left":"center")+' center">';});}
   return h+"</div>";}
 // joiners always get every form plus the checklist and their documents
 const chosen=()=>MODE==="joiner"?DOCS.flatMap(d=>d[1]):DOCS.filter((d,i)=>$("pg"+i).checked).flatMap(d=>d[1]);
@@ -360,7 +381,7 @@ function checklistHtml(blank){const ax=annexPages(),f=(l,t)=>"<div><b>"+l+"</b><
       return"<tr><td>"+(i+1)+"</td><td>"+esc(n)+(m?" *":"")+(d?"<small>"+esc(d)+"</small>":"")+'</td><td class="s">'+(blank?"":p?"Received":ATT[k].na?"Not applicable":"Pending")+
         '</td><td class="s">'+(blank||!x?"":"Annexure "+x.a+"<small>"+plural(p,"page")+"</small>")+"</td></tr>";}).join("")+
     '</table><div style="font-size:8.5pt;color:#555;margin-top:2mm">* Mandatory</div>'+
-    '<div class="sig"><div>Employee signature</div><div>Verified by (HR)</div><div>Date</div></div></div>';}
+    '<div class="sig"><div>'+(sign&&!blank?'<img src="'+sign+'" alt="">':"")+'Employee signature</div><div>Verified by (HR)</div><div>Date</div></div></div>';}
 
 /* ---------- draft: HR keeps it for this tab only; a joiner keeps it on their own device ---------- */
 const store=(()=>{try{return MODE==="joiner"?localStorage:sessionStorage;}catch(e){return null;}})();
@@ -370,14 +391,47 @@ const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g
 const JL=(()=>{if(MODE!=="joiner")return{};try{const m=location.hash.match(/j=([\w-]+)/);return m?JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,"+").replace(/_/g,"/"))))):{};}catch(e){return{};}})();
 const JKEY=MODE==="joiner"?location.hash:"";
 function fromLink(){[["NAME","n"],["EMPID","id"],["DOJ","doj"],["MOBILE","m"],["EMAIL","e"]].forEach(([id,k])=>{if(JL[k]&&!$(id).value)$(id).value=JL[k];});}
-function keep(){try{const o={};ids().forEach(id=>o[id]=$(id).value);o.SAME=$("SAME").checked;o.__j=JKEY;store.setItem(K,JSON.stringify(o));}catch(e){}}
-try{const o=JSON.parse(store.getItem(K)||"null");if(o&&(o.__j||"")===JKEY){ids().forEach(id=>{if(o[id]!==undefined)$(id).value=o[id];});$("SAME").checked=!!o.SAME;}}catch(e){}
+function keep(){try{const o={};ids().forEach(id=>o[id]=$(id).value);o.SAME=$("SAME").checked;o.__sign=sign;o.__j=JKEY;store.setItem(K,JSON.stringify(o));}catch(e){}}
+try{const o=JSON.parse(store.getItem(K)||"null");if(o&&(o.__j||"")===JKEY){ids().forEach(id=>{if(o[id]!==undefined)$(id).value=o[id];});$("SAME").checked=!!o.SAME;sign=o.__sign||"";}}catch(e){}
 fromLink();
 if(MODE==="joiner"){const fn=(v("NAME")||JL.n||"").split(/\s+/)[0];if(fn)$("jName").textContent=", "+fn[0].toUpperCase()+fn.slice(1).toLowerCase();$("form").appendChild($("actCard"));}
 if(!$("SIGNDATE").value){const t=new Date();$("SIGNDATE").value=new Date(t.getTime()-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);}
 let T;document.getElementById("form").addEventListener("input",e=>{if(e.target.id==="PHOTO")return;clearTimeout(T);T=setTimeout(()=>{keep();preview();},120);});
 document.getElementById("form").addEventListener("change",e=>{if(e.target.id==="PHOTO")return;keep();preview();});
 $("PHOTO").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{photo=r.result;$("phPrev").style.backgroundImage="url("+photo+")";$("pvSel").value="2";preview();};r.readAsDataURL(f);});
+
+/* ---------- signature: drawn on the pad or uploaded, kept as a trimmed transparent PNG ---------- */
+const pad=$("sigPad"),pctx=pad.getContext("2d"),INK="#0b2a7a";let drawing=false,last=null,fromPad=false;
+function padBox(){const r=pad.getBoundingClientRect();return{w:r.width,h:r.height,l:r.left,t:r.top};}
+// size the canvas to the box (sharp on phones) and show the current signature in it
+function sigShow(){const b=padBox();$("sigState").textContent=sign?"· signed ✓":"· not signed yet";if(!b.w)return;
+  const d=window.devicePixelRatio||1;pad.width=Math.round(b.w*d);pad.height=Math.round(b.h*d);pctx.setTransform(d,0,0,d,0,0);
+  pctx.lineCap=pctx.lineJoin="round";pctx.strokeStyle=pctx.fillStyle=INK;pctx.lineWidth=2.6;fromPad=false;
+  if(sign){const im=new Image();im.onload=()=>{const k=Math.min((b.w-40)/im.width,(b.h-50)/im.height,1.6);pctx.drawImage(im,(b.w-im.width*k)/2,(b.h-34-im.height*k)/2,im.width*k,im.height*k);};im.src=sign;}}
+// cut the drawing down to its ink, with a small margin
+function trimmed(cv){const w=cv.width,h=cv.height,px=cv.getContext("2d").getImageData(0,0,w,h).data;let x0=w,y0=h,x1=-1,y1=-1;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(px[(y*w+x)*4+3]>16){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+  if(x1<0)return"";const m=6,o=document.createElement("canvas");o.width=x1-x0+1+2*m;o.height=y1-y0+1+2*m;o.getContext("2d").drawImage(cv,x0-m,y0-m,o.width,o.height,0,0,o.width,o.height);return o.toDataURL("image/png");}
+function sigSaved(){keep();$("sigState").textContent=sign?"· signed ✓":"· not signed yet";if($("pvSel").value!=="3"){$("pvSel").value="3";}preview();}
+const pt=e=>{const b=padBox();return[e.clientX-b.l,e.clientY-b.t];};
+pad.addEventListener("pointerdown",e=>{e.preventDefault();try{pad.setPointerCapture(e.pointerId);}catch(x){}
+  if(!fromPad){const b=padBox();pctx.clearRect(0,0,b.w,b.h);fromPad=true;}   // a new drawing replaces an uploaded or earlier signature
+  drawing=true;last=pt(e);pctx.beginPath();pctx.arc(last[0],last[1],1.3,0,7);pctx.fill();});
+pad.addEventListener("pointermove",e=>{if(!drawing)return;e.preventDefault();const p=pt(e);pctx.beginPath();pctx.moveTo(last[0],last[1]);pctx.lineTo(p[0],p[1]);pctx.stroke();last=p;});
+const endStroke=()=>{if(!drawing)return;drawing=false;sign=trimmed(pad);sigSaved();};
+pad.addEventListener("pointerup",endStroke);pad.addEventListener("pointercancel",endStroke);pad.addEventListener("pointerleave",endStroke);
+$("sigUp").onclick=()=>$("sigFile").click();
+$("sigClear").onclick=()=>{sign="";const b=padBox();pctx.clearRect(0,0,b.w,b.h);fromPad=true;sigSaved();};
+// a photo of a signature on white paper: the paper becomes transparent and the ink turns blue
+$("sigFile").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
+  const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");
+    c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);const g=c.getContext("2d");g.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);
+    const d=g.getImageData(0,0,c.width,c.height),px=d.data;
+    for(let i=0;i<px.length;i+=4){const lum=.299*px[i]+.587*px[i+1]+.114*px[i+2],a=Math.max(0,Math.min(1,(185-lum)/110));px[i]=11;px[i+1]=42;px[i+2]=122;px[i+3]=Math.round(a*255);}
+    g.putImageData(d,0,0);sign=trimmed(c);if(!sign){say("Couldn't find a signature in that photo — use dark ink on white paper.","err");return;}sigShow();sigSaved();};
+  im.onerror=()=>{URL.revokeObjectURL(u);say("That photo couldn't be opened (iPhone HEIC photos: send them as JPG).","err");};im.src=u;});
+if(window.ResizeObserver)new ResizeObserver(()=>{if(!drawing)sigShow();}).observe(pad);else window.addEventListener("resize",sigShow);
+sigShow();
 // jump the preview to the page that holds the field being edited
 const PAGE_OF={EMPID:0,UANOLD:0,ESICOLD:0,TOTEXP:0,EARLIER:0,MICR:0,UANNEW:0,ESICNEW:0,NOMINEE:1,NOMREL:1,FAMDET:1,DISP:1,MOTHER:2,BLOOD:2,EMNAME:2,EMREL:2,EMPH:2,PFNO:5,EPFOLD:4,EPSOLD:4,SPOUSE:4};
 document.getElementById("form").addEventListener("focusin",e=>{const id=e.target.id;let p=PAGE_OF[id];
@@ -412,9 +466,11 @@ function rule(g,x1,y1,x2,y2,color){g.strokeStyle=color||"#777";g.lineWidth=1.4;g
 async function formSheet(i,blank){const[c,g]=sheet();g.drawImage(await loadImg(PAGES[i]),0,0,PW,PH);
   if(!blank){pageTexts(i).forEach(([x,y,t,w])=>txt(g,t,x,y,w,FONT,"#0b2a7a"));
     if(i===PHOTO.p&&photo){const im=await loadImg(photo),s=Math.max(PHOTO.w/im.width,PHOTO.h/im.height),sw=PHOTO.w/s,sh=PHOTO.h/s;
-      g.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,PHOTO.x,PHOTO.y,PHOTO.w,PHOTO.h);}}
+      g.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,PHOTO.x,PHOTO.y,PHOTO.w,PHOTO.h);}
+    const here=SIGNS.filter(s=>s.p===i);
+    if(sign&&here.length){const im=await loadImg(sign);here.forEach(s=>{const k=Math.min(s.w/im.width,s.h/im.height),w=im.width*k,h=im.height*k;g.drawImage(im,s.x+(s.left?0:(s.w-w)/2),s.y+(s.h-h)/2,w,h);});}}
   return c;}
-function checklistSheet(blank){const[c,g]=sheet(),L=16*PX,R=PW-16*PX,ax=annexPages();
+async function checklistSheet(blank){const[c,g]=sheet(),L=16*PX,R=PW-16*PX,ax=annexPages();
   g.textAlign="center";txt(g,"Joining Documents Checklist",PW/2,18*PX+24,0,31,"#111","bold");
   txt(g,"Self-attested copies to be submitted on or before the date of joining",PW/2,18*PX+60,0,19,"#444");g.textAlign="left";
   const colW=(R-L-8*PX)/2;[["Name",v("NAME")],["Employee ID",v("EMPID")],["Date of joining",dmy(v("DOJ"))],["Mobile no.",v("MOBILE")]].forEach(([l,val],i)=>{
@@ -431,6 +487,7 @@ function checklistSheet(blank){const[c,g]=sheet(),L=16*PX,R=PW-16*PX,ax=annexPag
   rowsY.forEach(yy=>rule(g,L,yy,R,yy));X.forEach(xx=>rule(g,xx,rowsY[0],xx,y));
   txt(g,"* Mandatory",L,y+30,0,15,"#555");
   const sy=PH-22*PX,sw=(R-L-2*10*PX)/3;["Employee signature","Verified by (HR)","Date"].forEach((s,k)=>{const x=L+k*(sw+10*PX);rule(g,x,sy,x+sw,sy,"#333");g.textAlign="center";txt(g,s,x+sw/2,sy+26,0,17);g.textAlign="left";});
+  if(sign&&!blank){const im=await loadImg(sign),k=Math.min(sw/im.width,80/im.height);g.drawImage(im,L+(sw-im.width*k)/2,sy-6-im.height*k,im.width*k,im.height*k);}
   return c;}
 async function annexSheet(x){const[c,g]=sheet();txt(g,x.label,10*PX,6*PX+20,0,17,"#333");g.textAlign="right";txt(g,whoLine(),PW-10*PX,6*PX+20,0,17,"#333");g.textAlign="left";
   rule(g,10*PX,6*PX+31,PW-10*PX,6*PX+31,"#bbb");const im=await loadImg(x.src),bx=10*PX,by=15*PX,bw=190*PX,bh=274*PX,s=Math.min(bw/im.width,bh/im.height);
@@ -449,13 +506,15 @@ $("dl").onclick=async()=>{const r=await makePdf();if(!r)return;saveFile(r.blob,p
   say("Saved “"+pdfName()+"” ("+plural(r.pages,"page")+")."+(pend.length?" Pending documents: "+pend.join(", ")+".":""),"ok");};
 
 /* ---------- joiner: send the finished kit to HR ---------- */
+const signedOk=()=>{if(sign)return true;if(confirm("You haven't signed yet. Tap Cancel to sign in the Signature section, or OK to continue without a signature."))return true;
+  $("sigCard").open=true;$("sigCard").scrollIntoView({behavior:"smooth",block:"center"});return false;};
 const HRMAIL="__HRMAIL__",HRWA="__HRWA__";// HR's WhatsApp number, always the same
 const waNo=s=>{const d=String(s||"").replace(/\D/g,"");return d.length===10?"91"+d:d;};
 function showAfter(sent){const name=v("NAME"),body="Dear HR,\n\nPlease find my joining kit attached.\n\nRegards,\n"+name+(v("MOBILE")?"\n"+v("MOBILE"):"");
   let h=(sent?"":"Your PDF is saved as “"+esc(pdfName())+"”. Attach it and send it to HR: ")+'<a href="mailto:'+HRMAIL+"?subject="+encodeURIComponent("Joining kit – "+name)+"&body="+encodeURIComponent(body)+'">Email HR</a>';
   h+='<a href="https://wa.me/'+HRWA+"?text="+encodeURIComponent("Hello, this is "+name+". I'm sending my joining kit PDF.")+'" target="_blank" rel="noopener">WhatsApp HR</a>';
   $("after").innerHTML=h;$("after").hidden=false;}
-$("send").onclick=async()=>{if(!ready(false))return;const pend=pending();
+$("send").onclick=async()=>{if(!ready(false)||!signedOk())return;const pend=pending();
   if(pend.length&&!confirm("These documents are not attached yet:\n\n• "+pend.join("\n• ")+"\n\nSend your joining kit anyway?"))return;
   const r=await makePdf();if(!r)return;const file=new File([r.blob],pdfName(),{type:"application/pdf"});
   if(navigator.canShare&&navigator.canShare({files:[file]})){
@@ -471,11 +530,11 @@ const toB64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>
 async function smallPhoto(){if(!photo)return"";try{const im=await loadImg(photo),s=Math.min(1,600/Math.max(im.width,im.height)),c=document.createElement("canvas");
   c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.8);}catch(e){return"";}}
 let sending=false,lastPdf=null;
-$("submit").onclick=async()=>{if(sending||!ready(false))return;const pend=pending();
+$("submit").onclick=async()=>{if(sending||!ready(false)||!signedOk())return;const pend=pending();
   if(pend.length&&!confirm("These documents are not attached yet:\n\n• "+pend.join("\n• ")+"\n\nSubmit your joining kit anyway?"))return;
   sending=true;$("submit").disabled=true;
   try{const r=await makePdf();if(!r)return;lastPdf=r.blob;
-    const data={};ids().forEach(id=>{data[id]=$(id).value;});data.SAME=$("SAME").checked;data.__photo=await smallPhoto();
+    const data={};ids().forEach(id=>{data[id]=$(id).value;});data.SAME=$("SAME").checked;data.__photo=await smallPhoto();data.__sign=sign;
     data.__docs=REQ.map(q=>[q[1],pagesOf(q[0]),ATT[q[0]].na]);
     const pdf=await toB64(r.blob);
     say("Sending your joining kit to HR ("+(r.blob.size/1048576).toFixed(1)+" MB)… please keep this page open.");
@@ -508,7 +567,7 @@ function renderSubs(){const n=SUBS.filter(x=>x.status==="New").length,rows=subsA
       btn("open",x.id,"Open in kit")+btn("pdf",x.id,"PDF")+(x.status!=="Done"?btn("done",x.id,"Mark done"):"")+"</td></tr>").join("")+"</table></div>"+
     (SUBS.length>8?'<button class="b sm" id="subsMore" type="button">'+(subsAll?"Show fewer":"Show all "+SUBS.length)+"</button>":""):"";}
 // put a submitted kit into this form (attached documents stay in the PDF)
-function loadKit(d){ids().forEach(id=>{if(d[id]!==undefined)$(id).value=d[id];});$("SAME").checked=!!d.SAME;
+function loadKit(d){ids().forEach(id=>{if(d[id]!==undefined)$(id).value=d[id];});$("SAME").checked=!!d.SAME;sign=d.__sign||"";sigShow();
   photo=d.__photo||"";$("phPrev").style.backgroundImage=photo?"url("+photo+")":"";
   resetAtt();REQ.forEach(r=>{$("na-"+r[0]).checked=false;docUI(r[0]);});keep();shareUI();refreshPv();}
 if(MODE==="hr"){
@@ -547,7 +606,7 @@ const mailSend=anyone=>{const a=document.createElement("a");a.href="mailto:"+(an
 $("shCopy").onclick=()=>copyLink(false);$("shWapp").onclick=()=>waSend(false);$("shMail").onclick=()=>mailSend(false);
 
 $("clr").onclick=()=>{if(MODE==="joiner"&&!confirm("Clear everything you've filled in on this device?"))return;
-  ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";
+  ids().forEach(id=>{if(!["PLACE","SIGNDATE"].includes(id))$(id).value="";});$("SAME").checked=false;photo="";$("PHOTO").value="";$("phPrev").style.backgroundImage="";sign="";sigShow();
   resetAtt();REQ.forEach(r=>{$("na-"+r[0]).checked=false;docUI(r[0]);});
   try{store.removeItem(K);}catch(e){}if(MODE==="joiner")fromLink();shareUI();refreshPv();say(MODE==="joiner"?"Form cleared.":"Joiner cleared.");};
 refreshPv();
